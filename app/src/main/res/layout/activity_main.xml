@@ -10,9 +10,11 @@
         android:id="@+id/gameTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:fontFamily="sans-serif-black"
-        android:text="Quizz"
-        android:textSize="100dp"
+        android:text="@string/gameTitle"
+        android:textSize="100sp"
         app:layout_constraintBottom_toTopOf="@+id/singleplayerBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,17 +24,18 @@
         android:id="@+id/singleplayerBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Singleplayer"
+        android:layout_marginTop="100dp"
+        android:text="@string/SinglePlayerBtnText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="314dp" />
+        app:layout_constraintTop_toBottomOf="@+id/gameTitle" />
 
     <Button
         android:id="@+id/multiplayerBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Multiplayer"
+        android:text="@string/MultiPlayerBtnText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/singleplayerBtn" />
@@ -41,9 +44,11 @@
         android:id="@+id/statsBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Statistics"
+        android:text="@string/StatsBtnText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/multiplayerBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/multiplayerBtn"
+        app:layout_constraintVertical_bias="0.297" />
 </androidx.constraintlayout.widget.ConstraintLayout>

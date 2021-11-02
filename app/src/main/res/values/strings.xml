@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">quizz</string>
+    <string name="app_name">Quizz</string>
+    <string name="gameTitle">Quizz</string>
+    <string name="SinglePlayerBtnText">Singleplayer</string>
+    <string name="MultiPlayerBtnText">Multiplayer</string>
+    <string name="StatsBtnText">Statistics</string>
+    <string name="StatisticsTitle">Statistics</string>
 </resources>

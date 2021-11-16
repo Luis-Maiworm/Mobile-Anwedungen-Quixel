@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="falseBtnText">FALSE</string>
+    <string name="new_question_btn">New Question</string>
+    <string name="true_btn_text">True</string>
+</resources>

@@ -5,4 +5,16 @@
     <string name="MultiPlayerBtnText">Multiplayer</string>
     <string name="StatsBtnText">Statistics</string>
     <string name="StatisticsTitle">Statistics</string>
+    <string name="choose_a_category_text">Choose a Category</string>
+    <string name="falseBtnText">FALSE</string>
+    <string name="new_question_btn">New Question</string>
+    <string name="true_btn_text">True</string>
+
+    <string-array name="category_names">
+        <item>Sports</item>
+        <item>TV</item>
+    </string-array>
+
+
+
 </resources>

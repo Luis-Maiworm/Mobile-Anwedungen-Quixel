@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@drawable/mainmenubg"
+    tools:context=".view.MainMenuActivity">
 
     <TextView
         android:id="@+id/gameTitle"
@@ -12,9 +13,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:fontFamily="sans-serif-black"
+        android:fontFamily="@font/aldrich"
         android:text="@string/gameTitle"
-        android:textSize="100sp"
+        android:textSize="120sp"
+        android:textColor="#2C7B83"
         app:layout_constraintBottom_toTopOf="@+id/singleplayerBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:text="@string/SinglePlayerBtnText"
+        android:backgroundTint="#2C7B83"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gameTitle" />
@@ -36,6 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="@string/MultiPlayerBtnText"
+        android:backgroundTint="#2C7B83"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/singleplayerBtn" />
@@ -45,6 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/StatsBtnText"
+        android:backgroundTint="#2C7B83"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

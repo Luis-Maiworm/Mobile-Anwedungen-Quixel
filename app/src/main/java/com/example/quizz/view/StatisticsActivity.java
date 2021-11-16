@@ -1,4 +1,4 @@
-package com.example.quizz;
+package com.example.quizz.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,10 +7,11 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.quizz.R;
 import com.example.quizz.data.playerData.Player;
 
 
-public class Statistics extends AppCompatActivity {
+public class StatisticsActivity extends AppCompatActivity {
 
 
 

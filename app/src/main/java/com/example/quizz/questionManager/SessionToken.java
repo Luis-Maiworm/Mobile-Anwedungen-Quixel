@@ -2,6 +2,9 @@ package com.example.quizz.questionManager;
 
 import java.io.Serializable;
 
+/**
+ * Stores the data of a getToken request. The attributes are necessary to store the provided data of the API call.
+ */
 public class SessionToken implements Serializable {
 
     public String token;

@@ -1,68 +1,36 @@
 package com.example.quizz.questionManager;
 
+import com.example.quizz.data.enums.Categories;
+import com.example.quizz.data.enums.Difficulties;
+import com.example.quizz.data.enums.TriviaURL;
 import com.example.quizz.exceptions.QueryException;
 import com.google.gson.Gson;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
+import android.util.Base64;
 import java.util.List;
 import static java.lang.String.valueOf;
+
 
 
 /**
  * {@code QuestionManager} handelt alle Anfragen an die API und managet die einzelnen Datentypen.
  */
 
-//TODO: Decoden von Sonderzeichen.
+//TODO: Decoden von Sonderzeichen. !!!!!
 
 public class QuestionManager {
 
     private final Gson gson = new Gson();
-    public List<Category> categoryList = new ArrayList<>();
-    private final String categorie_api = "data/category.json";
-
-    public String url;
-    private final String resetToken = "https://opentdb.com/api_token.php?command=reset&token=";
-    private final String requestCategories = "https://opentdb.com/api_category.php";
 
 
-    //todo remove: nur für test zwecke!
-    public String testUrl = "";
-    public String getTestUrl(){
-        return this.testUrl;
+    public QuestionManager(){
+
     }
 
 
 
-
-    /**
-     * Get the categorly list from a saved json file
-     * @return a {@link QuestionData} object, which stores every {@link Category} name and id.
-     * @throws IOException
-     */
-    public QuestionData categoryFromJson() throws IOException {
-        return gson.fromJson(new FileReader(new File(categorie_api)), QuestionData.class);
-    }
-
-    /**
-     * Get the category list from a URL
-     * @return a {@link QuestionData} object, which stores every {@link Category} name and id.
-     * @throws IOException, if the object structure doesn't fit the given json file.
-     */
-    public QuestionData categoryFromJsonUrl() throws IOException {
-        URL questionURL = new URL(requestCategories);
-        return gson.fromJson(convertURL(questionURL), QuestionData.class);
-    }
-
-    /**
-     *
-     * @return List<Category> uses the {@link #categoryFromJson()} method, to return the
-     * Categories as a List, not a {@link QuestionData} object.
-     * @throws IOException, if the object structure doesn't fit the given json file.
-     */
-    public List<Category> getCategory() throws IOException {
-        return categoryFromJson().getTrivia_categories();
-    }
 
     /**
      * @param number checks if the number is valid.
@@ -73,14 +41,14 @@ public class QuestionManager {
     }
 
     /**
+     * This method decides if the URL String is concatenated with the category. If this method returns false,
+     * the category will not be specified, so it will just give out random category-Questions.
      * @param categoryId checks if the given categoryId is valid/existing.
      * @return returns true if valid, false if not.
      */
     public boolean checkCategory(int categoryId) throws IOException {
         if(categoryId == -1) return false;
-        // categoryList = categoryFromJson().getTrivia_categories();
-        categoryList = categoryFromJsonUrl().getTrivia_categories();
-        for (Category categories : categoryList) {
+        for (Categories categories : Categories.values()) {
             if (categories.getId() == categoryId) return true;
         }
         return false;
@@ -104,73 +72,7 @@ public class QuestionManager {
         return type.equals("multiple") || type.equals("boolean") || type.equals("");
     }
 
-    /**
-     * Uses parameters to create a specified API query.
-     * @param questionNumber indicates how many {@link Question}'s are requested.
-     * @param categoryId indicates the {@link Category} of the Questions, in form of the CategoryId. Check if the id is correct: {@link #checkCategory(int)}.
-     * @param difficulty indicates the difficulty as a String ("easy", "medium", "hard" or "").
-     * @param type indicates the type as a String ("boolean", "multiple" or "").
-     * @return a List<{@link Question}>, with Questions that fit ur query.
-     * @throws IOException, if the object structure of the recipient object (in this case {@link QuestionData} is valid with the json format
-     * @throws QueryException, if the URL being generated is not correct.
-     */
-    public List<Question> getApiData(int questionNumber, int categoryId, String difficulty, String type) throws IOException, QueryException {
 
-        List<Question> exampleList = new ArrayList<>();
-        QuestionData temp = convertJsonString(convertURL(createURL(questionNumber, categoryId, difficulty, type)));
-
-        switch(checkResponseCode(temp)) {
-            case 0: exampleList = getQuestions(temp); break;
-            case 1: throw new QueryException("No Results for the query");
-            case 2: throw new QueryException("Invalid Parameters in URL");
-            case 3: throw new QueryException("Token not found - Doesn't exist");
-            case 4: throw new QueryException("Token is empty, all possible questions for this query have been returnt");
-        }
-        return exampleList;
-    }
-
-    /**
-     * Creates the URL of the request. This method will then get used in the {@link #getApiData(int, int, String, String)} method.
-     * @param number Amount of {@link Question} requested. Needs to be 1 <= number <= 50. Needs to be specified.
-     * @param category ID of the {@link Category} requested. -1 for no specification needed.
-     * @param difficulty as String. "easy", "medium", "hard". "" for no specification.
-     * @param type as String. "multiple" or "boolean". "" for no specification.
-     * @return the specified URL including the requested attributes plus a new generated {@link SessionToken}.
-     * @throws QueryException throws, when the generated URL is not correct, which is the case when the requested amount of questions is below 1 or above 50.
-     * @throws IOException throws, when an I/O error occurs using the BufferedReader.
-     */
-    public URL createURL(int number, int category, String difficulty, String type) throws QueryException, IOException {
-
-        if (!checkNumber(number)){
-            throw new QueryException("Amount of questions, needs to be higher than 0 and less than 51");      //TODO Message?
-        }
-        url = "https://opentdb.com/api.php?amount=";
-        String amount = valueOf(number);
-        String categories = "&category=";
-        String difficulties = "&difficulty=";
-        String types = "&type=";
-        String token = "&token=";
-
-        url = url.concat(amount);
-
-        if (checkCategory(category)) {
-            categories = categories.concat(valueOf(category));
-            url = url.concat(categories);
-        }
-        if (checkDifficulty(difficulty)) {
-            difficulties = difficulties.concat(difficulty);
-            url = url.concat(difficulties);
-        }
-        if (checkType(type)) {
-            types = types.concat(type);
-            url = url.concat(types);
-        }
-        token = token.concat(getNewToken());
-        url = url.concat(token);
-
-        testUrl = url;
-        return new URL(url);
-    }
 
 
 
@@ -199,17 +101,133 @@ public class QuestionManager {
 
     /**
      * Generates a new {@link SessionToken}.
-     * @returns the String of the token.
+     * @return the String of the token.
      * @throws IOException, if the object doesn't fit the gson.
      */
     public String getNewToken() throws IOException {          //generates a new Token.
-        URL requestToken = new URL("https://opentdb.com/api_token.php?command=request");
+        URL requestToken = new URL(TriviaURL.NEWTOKEN.getLink());
 
         String json = convertURL(requestToken);
 
         SessionToken session = gson.fromJson(json, SessionToken.class);
 
         return session.getToken();
+    }
+
+    /**
+     * Uses parameters to create a specified API query.
+     * @param questionNumber indicates how many {@link Question}'s are requested.
+     * @param categoryId indicates the {@link Categories} of the Questions, in form of the CategoryId. Check if the id is correct: {@link #checkCategory(int)}.
+     * @param difficulty indicates the difficulty. Just use {@link Difficulties#getName()} to transfer the String needed.
+     * @param type indicates the type of a quesiton. Use {@link Difficulties#getName()} like above.
+     * @return a List<{@link Question}>, with Questions that fit ur query.
+     * @throws IOException, if the object structure of the recipient object (in this case {@link QuestionData} is valid with the json format
+     * @throws QueryException, if the URL being generated is not correct.
+     */
+    public List<Question> getApiData(int questionNumber, int categoryId, String difficulty, String type) throws IOException, QueryException {
+
+        List<Question> exampleList = new ArrayList<>();
+        QuestionData temp = convertJsonString(convertURL(createURL(questionNumber, categoryId, difficulty, type)));
+
+        switch(checkResponseCode(temp)) {
+            case 0: exampleList = getQuestions(temp); break;
+            case 1: throw new QueryException("No Results for the query");
+            case 2: throw new QueryException("Invalid Parameters in URL");
+            case 3: throw new QueryException("Token not found - Doesn't exist");
+            case 4: throw new QueryException("Token is empty, all possible questions for this query have been returnt");
+        }
+        return decodeBase64(exampleList);
+    }
+
+    /**
+     * Due to the fact, that the API can't show special characters properly, an encoded API call is necessary. To decode them this
+     * method will make use of the {@link java.util.Base64} library. Due to the fact, that only the results but not the
+     * variable names provided by the json file are encoded, we need to decode each object individually
+     * (e.g. a part in the json file can look like this -> "difficulty":"ZWFzeQ==") Only the second part needs to be decoded, not the first. "ZWFzeQ==" gets decoded to "easy".
+     * @param qList takes the temporary List<Question> exampleList from {@link #getApiData(int, int, String, String)} and decodes it's Strings with the Base64 decoding scheme.
+     * @return the decoded List<Question>.
+     */
+    public List<Question> decodeBase64(List<Question> qList){
+
+        for(Question q : qList){
+
+            byte[] decodedQuestion = android.util.Base64.decode(q.getQuestion(), Base64.DEFAULT);
+            q.setQuestion(new String (decodedQuestion));
+
+            byte[] decodedCorrAns = Base64.decode(q.getCorrect_answer(), Base64.DEFAULT);
+            q.setCorrect_answer(new String(decodedCorrAns));
+
+            List<String> tempIncorrectAns = q.getIncorrect_answers();
+            for(int i = 0; i < tempIncorrectAns.size(); i++){
+                byte[] decodedIncorrAns = Base64.decode(q.getIncorrect_answers().get(i), Base64.DEFAULT);
+                tempIncorrectAns.set(i, new String(decodedIncorrAns));
+            }
+            q.setIncorrect_answers(tempIncorrectAns);
+
+
+            byte[] decodedType = Base64.decode(q.getTypeString(), Base64.DEFAULT);
+            q.setType(new String(decodedType));
+
+            byte[] decodedDiff = Base64.decode(q.getDifficultyString(), Base64.DEFAULT);
+            q.setDifficulty(new String(decodedDiff));
+
+            byte[] decodedCat = Base64.decode(q.getCategoryString(), Base64.DEFAULT);
+            q.setCategory(new String(decodedCat));
+
+        }
+
+        return qList;
+    }
+    //todo whitespaces mit trim(deprecated) oder strip(aktueller). Evtl noch special split(regular expression) -> prog3 beleg
+
+
+    /**
+     * Creates the URL of the request. This method will then get used in the {@link #getApiData(int, int, String, String)} method.
+     * @param number Amount of {@link Question} requested. Needs to be 1 <= number <= 50. Needs to be specified.
+     * @param category ID of the {@link Categories} requested. -1 for no specification needed.
+     * @param difficulty as String. "easy", "medium", "hard". "" for no specification.
+     * @param type as String. "multiple" or "boolean". "" for no specification.
+     * @return the specified URL including the requested attributes plus a new generated {@link SessionToken}.
+     * @throws QueryException throws, when the generated URL is not correct, which is the case when the requested amount of questions is below 1 or above 50.
+     * @throws IOException throws, when an I/O error occurs using the BufferedReader.
+     */
+    public URL createURL(int number, int category, String difficulty, String type) throws QueryException, IOException {
+        String queryUrl;
+
+        if (!checkNumber(number)){
+            throw new QueryException("Amount of questions, needs to be higher than 0 and less than 51");
+        }
+        queryUrl = TriviaURL.BASICURL.getLink();
+
+        String amount = valueOf(number);
+        String categories = "&category=";
+        String difficulties = "&difficulty=";
+        String types = "&type=";
+        String decodeBase64 = "&encode=base64";     //change if other encoding protocol should be used
+        String token = "&token=";
+
+
+        queryUrl = queryUrl.concat(amount);
+
+        if (checkCategory(category)) {
+            categories = categories.concat(valueOf(category));
+            queryUrl = queryUrl.concat(categories);
+        }
+        if (checkDifficulty(difficulty)) {
+            difficulties = difficulties.concat(difficulty);
+            queryUrl = queryUrl.concat(difficulties);
+        }
+        if (checkType(type)) {
+            types = types.concat(type);
+            queryUrl = queryUrl.concat(types);
+        }
+
+        queryUrl = queryUrl.concat(decodeBase64);   //concat the URL decoding String
+
+        token = token.concat(getNewToken());
+        queryUrl = queryUrl.concat(token);
+
+        return new URL(queryUrl);
     }
 
     /**
@@ -229,7 +247,7 @@ public class QuestionManager {
     /**
      * Converts the jsonString to the {@link QuestionData} object.
      * @param jsonString will be generated from the {@link #convertURL(URL)} method.
-     * @returns {@link QuestionData} object, storing informations from the jsonString.
+     * @return {@link QuestionData} object, storing informations from the jsonString.
      */
     public QuestionData convertJsonString(String jsonString) {                   // jsonString -> Question Objekt
         return gson.fromJson(jsonString, QuestionData.class);
@@ -237,7 +255,7 @@ public class QuestionManager {
 
     /**
      * Gets response code to corresponding data
-     * @returns the responseCode of the data as Integer.
+     * @return the responseCode of the data as Integer.
      */
     public int checkResponseCode(QuestionData data) {
         return data.getResponse_code();
@@ -245,7 +263,7 @@ public class QuestionManager {
 
     /**
      * Gets a List<{@link Question}> from a given {@link QuestionData} object.
-     * @returns the List<Player>.
+     * @return the List<Player>.
      */
     public List<Question> getQuestions (QuestionData data) {
         return data.getResults();

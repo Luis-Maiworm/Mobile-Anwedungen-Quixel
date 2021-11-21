@@ -24,7 +24,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_main);
 
         // Testing
-        p1 = new Player(2);
+        p1 = new Player("Test", 2);
 
         // View Setup
         openSingleplayer = findViewById(R.id.singleplayerBtn);

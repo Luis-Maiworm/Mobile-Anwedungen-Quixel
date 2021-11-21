@@ -22,7 +22,7 @@ public class StatisticsActivity extends AppCompatActivity {
         Player player = (Player) getPlayer.getSerializableExtra("Player");
 
         TextView textView = (TextView) findViewById(R.id.wonStats);
-        textView.setText("Games won: " + player.getGamesWon());
+        textView.setText("Games won: " + player.getPlayerID());
 
     }
 }

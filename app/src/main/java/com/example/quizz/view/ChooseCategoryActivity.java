@@ -3,13 +3,10 @@ package com.example.quizz.view;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-
 import com.example.quizz.R;
 import com.example.quizz.viewControl.CategoryRVAdapter;
+
 
 public class ChooseCategoryActivity extends AppCompatActivity {
 
@@ -20,7 +17,6 @@ public class ChooseCategoryActivity extends AppCompatActivity {
     RecyclerView recyclerViewCategory;
     CategoryRVAdapter rvAdapter;
     GridLayoutManager gridLayoutManager;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

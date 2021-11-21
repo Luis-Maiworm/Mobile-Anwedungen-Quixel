@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
 import com.example.quizz.R;
 import com.example.quizz.data.playerData.Player;
 

@@ -3,7 +3,6 @@ package com.example.quizz.view;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -11,18 +10,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.quizz.R;
 import com.example.quizz.exceptions.QueryException;
 import com.example.quizz.gameLogic.timerLogic.Timer;
-import com.example.quizz.questionManager.Category;
 import com.example.quizz.questionManager.Question;
 import com.example.quizz.questionManager.QuestionManager;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+
 
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {

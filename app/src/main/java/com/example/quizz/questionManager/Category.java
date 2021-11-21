@@ -1,6 +1,5 @@
 package com.example.quizz.questionManager;
 
-import java.io.Serializable;
 
 /**
  *

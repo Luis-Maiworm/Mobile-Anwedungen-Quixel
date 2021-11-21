@@ -15,7 +15,7 @@
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/aldrich"
         android:text="@string/gameTitle"
-        android:textSize="120sp"
+        android:textSize="110sp"
         android:textColor="#2C7B83"
         app:layout_constraintBottom_toTopOf="@+id/singleplayerBtn"
         app:layout_constraintEnd_toEndOf="parent"

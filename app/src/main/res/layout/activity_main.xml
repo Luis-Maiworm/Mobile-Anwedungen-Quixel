@@ -15,8 +15,8 @@
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/aldrich"
         android:text="@string/gameTitle"
-        android:textSize="110sp"
         android:textColor="#2C7B83"
+        android:textSize="110sp"
         app:layout_constraintBottom_toTopOf="@+id/singleplayerBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,33 +27,36 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        android:text="@string/SinglePlayerBtnText"
         android:backgroundTint="#2C7B83"
+        android:layoutAnimation="@anim/layout_animation"
+        android:text="@string/SinglePlayerBtnText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gameTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/gameTitle"
+
+       />
 
     <Button
         android:id="@+id/multiplayerBtn"
-        android:text="@string/MultiPlayerBtnText"
-
         android:layout_width="wrap_content"
+
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-
         android:backgroundTint="#2C7B83"
+
+        android:text="@string/MultiPlayerBtnText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/singleplayerBtn" />
 
     <Button
         android:id="@+id/statsBtn"
-        android:text="@string/StatsBtnText"
-
-
         android:layout_width="wrap_content"
+
+
         android:layout_height="wrap_content"
         android:backgroundTint="#2C7B83"
+        android:text="@string/StatsBtnText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

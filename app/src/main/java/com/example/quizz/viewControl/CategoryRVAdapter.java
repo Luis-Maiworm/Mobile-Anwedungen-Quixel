@@ -20,6 +20,7 @@ public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.Ca
     Context context;
     LayoutInflater inflater;
 
+    //private int lastPosition = -1;
 
     public CategoryRVAdapter(Context context, String names[], int icons[]) {
         this.names = names;
@@ -41,6 +42,12 @@ public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.Ca
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
         holder.names.setText(names[position]);
         holder.icons.setImageResource(icons[position]);
+
+
+
+
+
+
 
         holder.mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,9 +76,11 @@ public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.Ca
             super(itemView);
 
             names = itemView.findViewById(R.id.categoryNameTextView);
-            icons = itemView.findViewById(R.id.categoryIcon);
+            icons = itemView.findViewById(R.id.profileIcon);
             mainLayout = itemView.findViewById(R.id.mainCategoryLayout);
         }
     }
+
+
 }
 

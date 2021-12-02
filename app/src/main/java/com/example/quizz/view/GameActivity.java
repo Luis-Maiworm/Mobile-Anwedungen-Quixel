@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.quizz.R;
+import com.example.quizz.data.enums.Categories;
 import com.example.quizz.exceptions.QueryException;
 import com.example.quizz.gameLogic.timerLogic.Timer;
 import com.example.quizz.questionManager.Question;
@@ -120,14 +121,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     private int interpretIncomingData() {
         if(!this.categoryIdentifier.equals("No Data Found")) {
-            switch(categoryIdentifier) {
-                case "Sports":
-                    return 21;
-                case "TV":
-                    return 14;
-                default:
-                    return -1;
-            }
+            return Categories.valueOf(categoryIdentifier).getId();
         }
         return -1;
     }

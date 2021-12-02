@@ -1,5 +1,8 @@
 package com.example.quizz.data.playerData;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.Gson;
 
 
@@ -14,7 +17,7 @@ import java.io.*;
 
 //todo StatisticsManager ->
 
-public class PlayerManager {
+public class PlayerManager implements Parcelable {
 
     private final String DEFAULTPATH = "data/stats.json";
     File json = new File(DEFAULTPATH);
@@ -24,6 +27,27 @@ public class PlayerManager {
 
     Player currentPlayer;
 
+    private String stuff;
+
+    public PlayerManager(){
+
+    }
+
+    protected PlayerManager(Parcel in) {
+        stuff = in.readString();
+    }
+
+    public static final Creator<PlayerManager> CREATOR = new Creator<PlayerManager>() {
+        @Override
+        public PlayerManager createFromParcel(Parcel in) {
+            return new PlayerManager(in);
+        }
+
+        @Override
+        public PlayerManager[] newArray(int size) {
+            return new PlayerManager[size];
+        }
+    };
 
     /**
      * Method sets the {@code currentPlayer} with a given ID.
@@ -36,6 +60,13 @@ public class PlayerManager {
             profiles.replacePlayerWithId(profiles.getPlayerWithId(newId), this.currentPlayer.getPlayerID());
         }
         this.currentPlayer = profiles.getPlayerWithId(newId);
+    }
+
+    public void chooseCurrentPlayer(String playerName){
+        if (currentPlayer != null) {
+            profiles.replacePlayerWithId(profiles.getPlayerWithName(playerName), this.currentPlayer.getPlayerID());
+        }
+        this.currentPlayer = profiles.getPlayerWithName(playerName);
     }
 
     /**
@@ -113,4 +144,13 @@ public class PlayerManager {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(DEFAULTPATH);
+    }
 }

@@ -65,6 +65,15 @@ public class Profile {
         return null;
     }
 
+    public Player getPlayerWithName(String playerName){
+        for(Player player : playerList) {
+            if(player.getPlayerName().equals(playerName)){
+                return player;
+            }
+        }
+        return null;
+    }
+
 
     /**
      * Simply adds a player to the {@code playerList}
@@ -100,7 +109,7 @@ public class Profile {
 
     /**
      * Removes a {@link Player} from the {@code playerList}.
-     * Iterates through to check if the {@code player} exists already. Use {@link #removePlayerFromList(int playerID)} if you have the Player ID.
+     * Iterates through to check if the {@code player} exists already. Use {@link #removePlayerFromList(String playerName)} if you have the Player ID.
      * @param player Will be removed.
      */
     public void removePlayerFromList(Player player){
@@ -110,14 +119,24 @@ public class Profile {
             }
         }
     }
-
+/*
     /**
      * Removes a {@link Player} from the {@code playerList}.
      * Iterates through to check if the {@code id} exists already. Use {@link #removePlayerFromList(Player player)} if you have a Player Object.
      * @param id Corresponding {@code Player} Will be removed.
      */
+    /*
     public void removePlayerFromList(int id){
         playerList.removeIf(player -> player.getPlayerID() == id);
+    }*/
+
+
+    public void removePlayerFromList(String playerName){
+        for(Player player : playerList){
+            if(player.getPlayerName().equals(playerName)){
+                playerList.remove(player);
+            }
+        }
     }
 
 

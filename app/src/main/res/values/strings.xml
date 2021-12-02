@@ -11,8 +11,39 @@
     <string name="true_btn_text">True</string>
 
     <string-array name="category_names">
-        <item>Sports</item>
+        <item>GENERALKNOWLEDGE</item>
+        <item>BOOKS</item>
+        <item>FILM</item>
+        <item>MUSIC</item>
+        <item>MUSICALS</item>
         <item>TV</item>
+        <item>VIDEOGAMES</item>
+        <item>BOARDGAMES</item>
+        <item>NATURE</item>
+        <item>COMPUTERS</item>
+        <item>MATHEMATICS</item>
+        <item>MYTHOLOGY</item>
+        <item>SPORTS</item>
+        <item>GEOGRAPHY</item>
+        <!--
+        <item>HISTORY</item>
+        <item>POLITICS</item>
+        -->
+        <item>ART</item>
+        <!--
+        <item>CELEBRITIES</item>
+        <item>ANIMALS</item>
+        <item>VEHICLES</item>
+        <item>COMICS</item>
+        <item>GADGETS</item>
+        <item>ANIME</item>
+        <item>CARTOONANIMATIONS</item>
+        -->
+    </string-array>
+
+    <string-array name="profile_names">
+        <item>First User</item>
+        <item>Second User</item>
     </string-array>
 
 

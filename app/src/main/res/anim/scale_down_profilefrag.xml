@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <alpha android:fromAlpha="1"
+        android:toAlpha="0"
+
+        android:duration="500" />
+
+
+    <!-- Pivot bei Bedarf verändern...-> scaling ist noch nicht optimal, läuft nicht auf allen handys gleich  -->
+    <scale android:fromXScale="100%"
+        android:toXScale="0%"
+
+        android:fromYScale="100%"
+        android:toYScale="0%"
+
+        android:pivotX="93%"
+        android:pivotY="93%"
+        android:startOffset="0"
+
+        android:duration="250"/>
+
+
+</set>

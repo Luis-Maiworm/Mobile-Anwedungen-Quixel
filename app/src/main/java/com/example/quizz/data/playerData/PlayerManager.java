@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 
 
 import java.io.*;
+import java.util.List;
 
 /**
  * The StatisticsManager includes methods and operations acting as the main interface between the GUI and the GameLogic.
@@ -24,13 +25,14 @@ public class PlayerManager implements Parcelable {
     Gson gson = new Gson();
 
     public Profile profiles = new Profile();
+    List<Player> playerList;
 
     Player currentPlayer;
 
-    private String stuff;
+    private String stuff;   //todo -> parcelable konstruktor .. - was das
 
     public PlayerManager(){
-
+        playerList = profiles.getPlayerList();
     }
 
     protected PlayerManager(Parcel in) {
@@ -117,6 +119,19 @@ public class PlayerManager implements Parcelable {
         this.profiles.addPlayer(player);
     }
 
+    /**
+     *
+     */
+    public void createNewPlayer(Player player) throws Exception {
+        if(!this.profiles.nameExists(player.getPlayerName())){
+            player.setPlayerID(this.profiles.getPlayerListSize() + 1);
+            player.setStats(new Statistics());
+        } else {
+            throw new Exception("Name already used. Please try again");
+        }
+        this.profiles.addPlayer(player);
+    }
+
 
     /**
      * Renames a player.
@@ -128,6 +143,24 @@ public class PlayerManager implements Parcelable {
     }
 
 
+    public String[] getPlayerNames(){
+        String [] temp = new String[playerList.size()];
+        for(int i = 0; i <  profiles.getPlayerList().size(); i++){
+            temp[i] = playerList.get(i).getPlayerName();
+
+        }
+        return temp;
+    }
+
+    public int[] getPlayerIcons(){
+
+        int [] temp = new int[playerList.size()];
+        for(int i = 0; i <  profiles.getPlayerList().size(); i++){
+            temp[i] = playerList.get(i).getPlayerIcon();
+
+        }
+        return temp;
+    }
 
 
 

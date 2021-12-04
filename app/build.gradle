@@ -32,6 +32,7 @@ android {
 
 dependencies {
 
+    implementation fileTree(dir: 'C:\\Users\\luism\\StudioProjects\\quixel\\app\\libs', include: ['*.aar', '*.jar'], exclude: [])
     def fragment_version = "1.4.0"
 
     implementation "androidx.fragment:fragment:$fragment_version"

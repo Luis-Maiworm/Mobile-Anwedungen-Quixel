@@ -22,8 +22,11 @@ public class LoginFragment extends Fragment{
 
 
 
-    private String [] profileNames = {"hallo", "nabend"};
-    private int [] icons = {R.drawable.cat_icon14_geography, R.drawable.cat_icon17_art};
+    //rivate String [] profileNames = {"hallo", "nabend"};
+    //private int [] icons = {R.drawable.cat_icon14_geography, R.drawable.cat_icon17_art};
+
+    private String[] profileNames;
+    private int [] icons;
 
     public static String TAG = "Login";
 
@@ -42,9 +45,11 @@ public class LoginFragment extends Fragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+
+
+
         view = inflater.inflate(R.layout.fragment_chooseuser, container, false);
 
-        recyclerViewLogin = view.findViewById(R.id.recyclerViewProfiles);
 
 
         Bundle bundle = this.getArguments();
@@ -52,9 +57,32 @@ public class LoginFragment extends Fragment{
             pManager = bundle.getParcelable("playerManager");
         }
 
+        try {
+
+
+            //test if works
+            pManager.createNewPlayer("TestName");
+            pManager.getProfiles().getPlayerWithName("TestName").setPlayerIcon(R.drawable.cat_icon01_generalknowledge);
+            profileNames = pManager.getPlayerNames();
+            icons = pManager.getPlayerIcons();
 
 
 
+            //send to child
+            Bundle bundle2 = new Bundle();
+            bundle2.putParcelable("playerManager", pManager);
+            childFrag.setArguments(bundle2);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("funktnet");
+        }
+
+
+
+
+
+        recyclerViewLogin = view.findViewById(R.id.recyclerViewProfiles);
 
         rvAdapter = new ProfileRVAdapter(getActivity(), profileNames, icons, pManager);
 

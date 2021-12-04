@@ -18,6 +18,14 @@ public class Player implements Serializable {
     public String playerName;
     public int playerID = 0;
     public Statistics stats;
+    public int playerIcon;
+
+    public int getPlayerIcon() {
+        return playerIcon;
+    }
+    public void setPlayerIcon(int playerIcon) {
+        this.playerIcon = playerIcon;
+    }
 
     public String getPlayerName() {
         return playerName;

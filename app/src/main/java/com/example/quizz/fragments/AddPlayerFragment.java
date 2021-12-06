@@ -18,12 +18,14 @@ import com.example.quizz.data.playerData.Player;
 import com.example.quizz.data.playerData.PlayerManager;
 import com.example.quizz.viewControl.AddPlayerRVAdapter;
 
+import java.util.List;
+
 public class AddPlayerFragment extends Fragment {
 
 
     ImageButton addPlayer;
     View view;
-    FragmentTransaction fT;
+
     static final String TAG = "addingFrag";
     RecyclerView recyclerViewIcons;
     AddPlayerRVAdapter rvAdapter;
@@ -51,8 +53,6 @@ public class AddPlayerFragment extends Fragment {
         } catch(Exception e){
             e.printStackTrace();
         }
-
-        //todo create new Player -> maybe also a new method "createNewPlayer(Player player)"..
 
         /*
         pManager.createNewPlayer("TestName");
@@ -88,19 +88,26 @@ public class AddPlayerFragment extends Fragment {
                     if(playerToCreate.getPlayerIcon() == 0){
                         throw new Exception("Select Icon");
                     }
+
+
                     System.out.println(playerToCreate.playerName);
                     System.out.println(playerToCreate.getPlayerIcon());
                     System.out.println(pManager);
                     pManager.createNewPlayer(playerToCreate);
+                    // todo MAYBE: create befehl außerhalb des try und catch (exception für namens kontrolle müsste dann auch wo anders laufen)
+
 
 
                     // todo -> HIER notify adapter
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());     //todo wenn name schon vergeben ist
+                    System.out.println(e.getMessage());     //todo wenn name schon vergeben ist -> auch: add "error popup"
                 }
 
+                //schließt das Fragment wenn ein Spieler hinzugefügt wurde
+                closeFragment();
 
-            }   //todo bei child einfügen das wieder zu
+            }
+
         });
 
 
@@ -112,6 +119,13 @@ public class AddPlayerFragment extends Fragment {
 
 
         return view;
+    }
+
+    public void closeFragment(){
+
+        FragmentTransaction fT = getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
+        fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
+        fT.remove(this);
     }
 
 

@@ -152,6 +152,8 @@ public class LoginFragment extends Fragment{
         View b = view.findViewById(R.id.child_fragment_addPlayer);
         b.setVisibility(View.VISIBLE);
 
+        //todo add a NEW fragment each time its called? (atm it remembers the position if the menü and basically just reopens one all the time
+
         FragmentTransaction fT;
         //calls the FragmentManager from the Activity this fragment is being used on.
         // It then removes the LoginFragment from the Fragments attached to that activity

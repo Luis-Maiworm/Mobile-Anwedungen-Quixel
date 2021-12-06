@@ -45,8 +45,6 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
     }
 
 
-
-
     @NonNull
     @Override
     public ProfileRVAdapter.ProfileViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -59,21 +57,33 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
         holder.profileNames.setText(profileNames[position]);
         holder.profilePictures.setImageResource(profilePictures[position]);
 
+        holder.mainLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                System.out.println("lüüüüüpppppppppppt");
 
+
+                //todo let a button appear "changePlayer" ->
+                // also: make it wiggle? AND let a button appear "deletePlayer"
+                // also: make it visible that the player is selected
+                return false;
+            }
+        });
         holder.mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
 
                 try {
-                    pManager.createNewPlayer("nabend");
+                    pManager.createNewPlayer("nabend");     //todo : weg? -> create NUR im childfrag
                     System.out.println(pManager);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+
+
                 pManager.chooseCurrentPlayer(profileNames[holder.getAdapterPosition()]);
-
-
 
                 System.out.println(pManager);
                 System.out.println(pManager.getCurrentPlayer());

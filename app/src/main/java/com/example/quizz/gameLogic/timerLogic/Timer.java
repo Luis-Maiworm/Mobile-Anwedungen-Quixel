@@ -1,50 +1,56 @@
 package com.example.quizz.gameLogic.timerLogic;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import static com.example.quizz.gameLogic.timerLogic.Status.*;
+import android.os.CountDownTimer;
+import android.widget.ProgressBar;
 
 public class Timer {
 
-    private int startValue;
+    /**
+     * NOT IN USE ANYMORE
+     *
+     *
+     */
+
     private Status status = STOPPED;
-    private final ScheduledExecutorService timer = Executors.newScheduledThreadPool(1);
+    private ProgressBar timerBar;
+    private CountDownTimer gameTimer;
+    private int time;
 
-    public Timer(int startValue) {
-        this.startValue = startValue;
+    public Timer(ProgressBar timerBar, int maxTime) {
 
-    }
-    public void startTimer() {
-        final Runnable runnable = new Runnable() {
+        status = RUNNING;
+        this.timerBar = timerBar;
+
+        gameTimer = new CountDownTimer(maxTime, 1000) {
             @Override
-            public void run() {
-                status = RUNNING;
-                System.out.println(startValue);
-                startValue--;
-                if(startValue < 0) {
-                    timer.shutdown();
-                    status = STOPPED;
-                }
+            public void onTick(long millisUntilFinished) {
+                time = time + 10;
+                timerBar.setProgress(time);
+            }
 
+            @Override
+            public void onFinish() {
+                status = STOPPED;
 
+                System.out.println("STOPPED");
             }
         };
-        timer.scheduleAtFixedRate(runnable, 0, 1, TimeUnit.SECONDS);
     }
 
-    public void stopTimer() {
-        timer.shutdown();
-        status = STOPPED;
+
+    public void start() {
+        gameTimer.start();
+    }
+    public void stop() {
+        time = 0;
+        timerBar.setProgress(time);
+        gameTimer.cancel();
     }
 
-    public Status getStatus() {
-        return status;
-    }
 
-    public int getStartValue() {
-        return startValue;
-    }
+
+
 
 
 

@@ -1,8 +1,8 @@
 package com.example.quizz.questionManager;
 
-import com.example.quizz.data.enums.Categories;
-import com.example.quizz.data.enums.Difficulties;
-import com.example.quizz.data.enums.TriviaURL;
+import com.example.quizz.data.gameData.Categories;
+import com.example.quizz.data.gameData.Difficulties;
+import com.example.quizz.data.gameData.QuestionData;
 import com.example.quizz.exceptions.QueryException;
 import com.google.gson.Gson;
 import java.io.*;
@@ -15,12 +15,12 @@ import static java.lang.String.valueOf;
 
 
 /**
- * {@code QuestionManager} handelt alle Anfragen an die API und managet die einzelnen Datentypen.
+ * {@code QuestionManager} manages all API calls and data types.
  */
 
 //TODO: Decoden von Sonderzeichen. !!!!!
 
-public class QuestionManager {
+public class QuestionManager implements IQuestionManager {
 
     private final Gson gson = new Gson();
 

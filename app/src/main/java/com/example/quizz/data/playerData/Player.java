@@ -1,5 +1,7 @@
 package com.example.quizz.data.playerData;
 
+import com.example.quizz.gameLogic.PlayerManager;
+
 import java.io.Serializable;
 
 /**

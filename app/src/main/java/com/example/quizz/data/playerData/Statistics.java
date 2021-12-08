@@ -1,9 +1,10 @@
 package com.example.quizz.data.playerData;
 
 
-import com.example.quizz.data.enums.*;
+import com.example.quizz.data.gameData.Types;
+import com.example.quizz.data.gameData.Categories;
+import com.example.quizz.data.gameData.Difficulties;
 
-import java.io.IOException;
 import java.util.*;
 
 /**

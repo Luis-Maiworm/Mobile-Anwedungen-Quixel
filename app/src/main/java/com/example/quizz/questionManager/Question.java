@@ -1,10 +1,11 @@
 package com.example.quizz.questionManager;
 
-import com.example.quizz.data.enums.Categories;
-import com.example.quizz.data.enums.Difficulties;
-import com.example.quizz.data.enums.Types;
+import com.example.quizz.data.gameData.Categories;
+import com.example.quizz.data.gameData.Difficulties;
+import com.example.quizz.data.gameData.Types;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -80,6 +81,14 @@ public class Question implements Serializable {
     }
     public void setCorrect_answer(String correct_answer) {
         this.correct_answer = correct_answer;
+    }
+
+    public ArrayList<String> getAllAnswers() {
+        ArrayList<String> allAnswers = new ArrayList<>();
+        allAnswers.add(getCorrect_answer());
+        allAnswers.addAll(getIncorrect_answers());
+
+        return allAnswers;
     }
 
     public List<String> getIncorrect_answers() {

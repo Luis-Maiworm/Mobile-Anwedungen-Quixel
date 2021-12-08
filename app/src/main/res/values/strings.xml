@@ -1,20 +1,66 @@
 <resources>
     <string name="app_name">Quixels</string>
     <string name="gameTitle">Quixels</string>
-    <string name="SinglePlayerBtnText">Singleplayer</string>
-    <string name="MultiPlayerBtnText">Multiplayer</string>
-    <string name="StatsBtnText">Statistics</string>
+    <string name="SinglePlayerBtnText">SINGLEPLAYER</string>
+    <string name="MultiPlayerBtnText">MULTIPLAYER</string>
+    <string name="StatsBtnText">STATISTICS</string>
     <string name="StatisticsTitle">Statistics</string>
     <string name="choose_a_category_text">Choose a Category</string>
     <string name="falseBtnText">FALSE</string>
     <string name="new_question_btn">New Question</string>
     <string name="true_btn_text">True</string>
+    <string name="roundOverText">ROUND OVER!</string>
+    <string name="homeBtnText">HOME</string>
+    <string name="back_to_categoriesBtn_text">BACK TO CATEGORIES</string>
+    <string name="againBtn_text">AGAIN</string>
+    <string name="question_x_out_of_y_label">Question %1$d / %2$d</string>
+    <string name="questionTextLabel">%1$s</string>
+    <string name="correctQuestionCounterLabel">Correct: %1$d</string>
+    <string name="incorrectQuestionCounterLabel">Incorrect: %1$d</string>
+    <string name="scoreLabel">Score: %1$d</string>
+    <string name="conMessageLabel">Congratulations, %1$s! Your Score is: %2$d</string>
+    <string name="selectedGamemodeLabel">Gamemode: %1$s</string>
+    <string name="quitYes">Yes</string>
+    <string name="QuitCancel">Cancel</string>
+    <string name="configuration_screen_label">Configuration</string>
+    <string name="quit_message">Do you really want to quit? Progress won\'t be saved!</string>
+    <string name="quit_title">Exit Game</string>
+    <string name="selected_category_config">Selected Category: %1$s</string>
 
     <string-array name="category_names">
-        <item>Sports</item>
+        <item>Generalknowledge</item>
+        <item>Books</item>
+        <item>Film</item>
+        <item>Music</item>
+        <item>Musicals</item>
         <item>TV</item>
+        <item>Videogames</item>
+        <item>Boardgames</item>
+        <item>Nature</item>
+        <item>Computers</item>
+        <item>Mathematics</item>
+        <item>Mythology</item>
+        <item>Sports</item>
+        <item>Geography</item>
+        <!--
+        <item>HISTORY</item>
+        <item>POLITICS</item>
+        -->
+        <item>Art</item>
+        <!--
+        <item>CELEBRITIES</item>
+        <item>ANIMALS</item>
+        <item>VEHICLES</item>
+        <item>COMICS</item>
+        <item>GADGETS</item>
+        <item>ANIME</item>
+        <item>CARTOONANIMATIONS</item>
+        -->
     </string-array>
 
-
-
+    <string-array name="gamemode_names">
+        <item>Quickplay Mode</item>
+        <item>Endless Mode</item>
+        <item>Custom Mode</item>
+    </string-array>
 </resources>

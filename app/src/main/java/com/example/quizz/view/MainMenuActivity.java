@@ -1,8 +1,8 @@
 package com.example.quizz.view;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,7 +10,9 @@ import android.widget.Button;
 import com.example.quizz.R;
 import com.example.quizz.data.playerData.Player;
 
-
+/**
+ * Main Menu Activity
+ */
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button openSingleplayer, openMultiplayer, openStats;
@@ -65,10 +67,24 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     public void openSettingsMenu() {
     }
     public void startSingleplayer() {
-        Intent toSingleplayer = new Intent(MainMenuActivity.this, ChooseCategoryActivity.class);
+        Intent toSingleplayer = new Intent(MainMenuActivity.this, ChooseGamemodeActivity.class);
         toSingleplayer.putExtra("Player", p1);
         startActivity(toSingleplayer);
     }
     public void startMultiplayer() {
     }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Exit");
+        builder.setMessage("Do you really want to quit?");
+        builder.setPositiveButton(R.string.quitYes, (dialog, id) -> {
+            finish();
+        });
+        builder.setNegativeButton(R.string.QuitCancel, (dialog, id) -> {
+        });
+        builder.show();
+    }
 }
+

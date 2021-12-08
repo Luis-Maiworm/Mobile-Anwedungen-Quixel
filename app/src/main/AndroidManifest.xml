@@ -1,29 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.quizz">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label=""
+        android:label="Quixel"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Quizz"
-        android:requestLegacyExternalStorage="true">
+        android:theme="@style/Theme.Quizz">
         <activity
-            android:name=".view.GameActivity"
-            android:exported="true" />
+            android:name=".view.MainMenuActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="false" />
+        <activity
+            android:name=".view.ConfigureGamemodeActivity"
+            android:label="Configuration"
+            android:exported="false" />
+        <activity
+            android:name=".view.ChooseGamemodeActivity"
+            android:label="Choose a Gamemode"
+            android:exported="false" />
+        <activity
+            android:name=".view.GamemodeActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="false" />
+        <activity
+            android:name=".gameLogic.gamemodes.Gamemode_endless"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="false" />
+        <activity
+            android:name=".gameLogic.gamemodes.Gamemode_configurable"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="false" />
+        <activity
+            android:name=".gameLogic.gamemodes.Gamemode_standard"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="false" />
+        <activity
+            android:name=".view.SettingsActivity"
+            android:label="Settings"
+            android:exported="false" />
+        <activity
+            android:name=".view.EndscreenActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="false" />
         <activity
             android:name=".view.ChooseCategoryActivity"
+            android:label="Choose a Category"
             android:exported="true" />
         <activity
             android:name=".view.StatisticsActivity"
             android:exported="true"
+            android:label="Statistics"
             android:parentActivityName=".view.MainMenuActivity" />
         <activity
-            android:name=".view.MainMenuActivity"
+            android:name=".view.SplashScreenActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

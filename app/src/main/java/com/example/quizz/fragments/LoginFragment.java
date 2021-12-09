@@ -1,11 +1,14 @@
 package com.example.quizz.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.quizz.R;
+import com.example.quizz.data.playerData.Player;
 import com.example.quizz.data.playerData.PlayerManager;
 import com.example.quizz.viewControl.ProfileRVAdapter;
 
@@ -41,13 +45,12 @@ public class LoginFragment extends Fragment{
     PlayerManager pManager;
 
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
-
-
+               // ?
         view = inflater.inflate(R.layout.fragment_chooseuser, container, false);
 
 
@@ -55,18 +58,13 @@ public class LoginFragment extends Fragment{
         Bundle bundle = this.getArguments();
         if(bundle != null){
             pManager = bundle.getParcelable("playerManager");
+            //sets the arrays needed for the recyclerView with the pManager's data
+            profileNames = pManager.getProfiles().getPlayerNames();
+            icons = pManager.profiles.getPlayerIcons();
         }
 
+
         try {
-
-
-            //test if works
-            pManager.createNewPlayer("TestName");
-            pManager.getProfiles().getPlayerWithName("TestName").setPlayerIcon(R.drawable.cat_icon01_generalknowledge);
-            profileNames = pManager.getPlayerNames();
-            icons = pManager.getPlayerIcons();
-
-
 
             //send to child
             Bundle bundle2 = new Bundle();
@@ -84,7 +82,8 @@ public class LoginFragment extends Fragment{
 
         recyclerViewLogin = view.findViewById(R.id.recyclerViewProfiles);
 
-        rvAdapter = new ProfileRVAdapter(getActivity(), profileNames, icons, pManager);
+        rvAdapter = new ProfileRVAdapter(getActivity(), profileNames, icons, pManager, this);
+        childFrag.setRvAdapter(rvAdapter);
 
         gridLayoutManager = new GridLayoutManager(getActivity(), 2, gridLayoutManager.VERTICAL, false);
         recyclerViewLogin.setLayoutManager(gridLayoutManager);
@@ -92,12 +91,13 @@ public class LoginFragment extends Fragment{
 
 
 
-
+        // onClick zum Aufrufen des addPlayer frag
         addPlayer = (ImageButton) view.findViewById(R.id.imageButton2);
 
         addPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if(view.findViewById(R.id.child_fragment_addPlayer).getVisibility() != View.GONE){
                     closeAddPlayerFrag();
                 } else{
@@ -111,6 +111,14 @@ public class LoginFragment extends Fragment{
 
 
 
+        // fügt das addPlayer fragment hinzu, falls es noch keinen spieler gibt
+        try {
+            if (pManager.getProfiles().getPlayerList().isEmpty()) {
+                addAddPlayerFrag();
+            }
+        } catch (NullPointerException e){
+
+        }
 
         return view;
     }
@@ -152,6 +160,9 @@ public class LoginFragment extends Fragment{
         View b = view.findViewById(R.id.child_fragment_addPlayer);
         b.setVisibility(View.VISIBLE);
 
+
+
+      //  ImageButton temp = (ImageButton) view.findViewById(R.id.imageButton2);
         //todo add a NEW fragment each time its called? (atm it remembers the position if the menü and basically just reopens one all the time
 
         FragmentTransaction fT;
@@ -161,10 +172,12 @@ public class LoginFragment extends Fragment{
         fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
         fT.replace(R.id.child_fragment_addPlayer, childFrag);
         fT.commit();
+        //ImageViewAnimatedChangeIn(getContext(), temp, R.drawable.ic_baseline_remove_circle_outline_24);
     }
 
     public void closeAddPlayerFrag(){
 
+        //ImageButton temp = (ImageButton) view.findViewById(R.id.imageButton2);
 
         FragmentTransaction fT;
         fT = getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
@@ -182,11 +195,62 @@ public class LoginFragment extends Fragment{
             }
         }, 500);
 
-
+      //  ImageViewAnimatedChangeOut(getContext(), temp, R.drawable.ic_baseline_add_circle_outline_24);
 
     }
 
 
+    /*
+    public void ImageViewAnimatedChangeIn(Context c, ImageButton v, int new_image){
+        final Animation anim_out = AnimationUtils.loadAnimation(c, R.anim.slide_out_imagebutton2);
+        final Animation anim_in = AnimationUtils.loadAnimation(c, R.anim.slide_in_imagebutton2);
+        anim_out.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                v.setImageResource(new_image);
+                anim_in.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {}
+                    @Override
+                    public void onAnimationEnd(Animation animation) {}
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {}
+                });
+                v.startAnimation(anim_in);
+            }
+        });
+        v.startAnimation(anim_out);
+    }
+
+    public void ImageViewAnimatedChangeOut(Context c, ImageView v, int new_image){
+        final Animation anim_out = AnimationUtils.loadAnimation(c, R.anim.slide_out_imagebutton2);
+        final Animation anim_in = AnimationUtils.loadAnimation(c, R.anim.slide_in_imagebutton2);
+        anim_out.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                v.setImageResource(new_image);
+                anim_in.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {}
+                    @Override
+                    public void onAnimationEnd(Animation animation) {}
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {}
+                });
+                v.startAnimation(anim_in);
+            }
+        });
+        v.startAnimation(anim_out);
+    }
+*/
 
 
 

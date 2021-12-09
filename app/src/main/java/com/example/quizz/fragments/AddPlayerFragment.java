@@ -1,5 +1,6 @@
 package com.example.quizz.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.example.quizz.R;
 import com.example.quizz.data.playerData.Player;
 import com.example.quizz.data.playerData.PlayerManager;
 import com.example.quizz.viewControl.AddPlayerRVAdapter;
+import com.example.quizz.viewControl.ProfileRVAdapter;
 
 import java.util.List;
 
@@ -29,13 +31,18 @@ public class AddPlayerFragment extends Fragment {
     static final String TAG = "addingFrag";
     RecyclerView recyclerViewIcons;
     AddPlayerRVAdapter rvAdapter;
-    ImageButton imageButtonTemP;
+
 
     GridLayoutManager gridLayoutManager;
 
     Player playerToCreate;
     PlayerManager pManager;
     EditText editText;
+    ProfileRVAdapter profAdapter;
+
+    public void setRvAdapter(ProfileRVAdapter profAdapter){
+        this.profAdapter = profAdapter;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,28 +90,52 @@ public class AddPlayerFragment extends Fragment {
                 try{
                     editText = view.findViewById(R.id.editTextTextPersonName2);
                     String name = editText.getText().toString();
-                    playerToCreate.setPlayerName(name);
+                    playerToCreate.setPlayerName(name);         // problem: immer der gleiche player auf dem operiert wird!
 
                     if(playerToCreate.getPlayerIcon() == 0){
                         throw new Exception("Select Icon");
                     }
 
 
-                    System.out.println(playerToCreate.playerName);
-                    System.out.println(playerToCreate.getPlayerIcon());
-                    System.out.println(pManager);
+                    System.out.println(pManager.getProfiles().getPlayerListSize());
                     pManager.createNewPlayer(playerToCreate);
+                    //todo player nullen?
                     // todo MAYBE: create befehl außerhalb des try und catch (exception für namens kontrolle müsste dann auch wo anders laufen)
 
 
+                   // profAdapter.notifyItemChanged(pManager.getProfiles().getPlayerListSize());      //todo
+                    System.out.println("hier wird genotified");
 
-                    // todo -> HIER notify adapter
+
+                    System.out.println("instanz des pmanager" + pManager);
+
+                    System.out.println(pManager.getProfiles().getPlayerList());
+
+
+                    profAdapter.setData(pManager.getProfiles().getPlayerIcons(), pManager.getProfiles().getPlayerNames());
+
+
+
+                    profAdapter.notifyDataSetChanged();     //todo change notify (notifyDataSetChanged -> performance problem)
+                    closeFragment();
+
+
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());     //todo wenn name schon vergeben ist -> auch: add "error popup"
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Error");
+                    builder.setMessage(e.getMessage());
+                    builder.setPositiveButton("Okay", (dialog, id) -> {
+
+                    });
+                    builder.show();
+
+
+                    System.out.println(e.getMessage());     //todo remove print
                 }
 
                 //schließt das Fragment wenn ein Spieler hinzugefügt wurde
-                closeFragment();
+
 
             }
 
@@ -126,6 +157,12 @@ public class AddPlayerFragment extends Fragment {
         FragmentTransaction fT = getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
         fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
         fT.remove(this);
+        fT.commit();
+
+
+
+        //todo delay? -> nach "add" geht ein klick ins leere
+
     }
 
 

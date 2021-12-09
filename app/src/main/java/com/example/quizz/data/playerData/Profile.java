@@ -8,10 +8,6 @@ import java.util.List;
  * Every operation which needs to operate on the {@code playerList} will be declared in this
  * class. Only one original {@link Profile} instance should exist in the {@link PlayerManager}
  */
-
-
-
-
 public class Profile {
 
 
@@ -19,6 +15,23 @@ public class Profile {
      * Includes every {@link Player}.
      */
     public List<Player> playerList = new ArrayList<Player>();
+
+
+
+
+    public String getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(String currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    /**
+     *
+     */
+    public String currentPlayer = ""; //todo needs to refer to an existing player -> store id maybe?
+
 
     /**
      * Getter method for the {@code playerList}
@@ -46,6 +59,14 @@ public class Profile {
     public void replacePlayerWithId(Player newPlayer, int oldPlayerId){
         for (int i = 0; i < playerList.size(); i++){
             if (playerList.get(i).getPlayerID() == oldPlayerId){
+                playerList.set(i, newPlayer);
+            }
+        }
+    }
+
+    public void replacePlayerWithName(Player newPlayer, String playerName){
+        for (int i = 0; i < playerList.size(); i++){
+            if (playerList.get(i).getPlayerName().equals(playerName)){
                 playerList.set(i, newPlayer);
             }
         }
@@ -137,6 +158,26 @@ public class Profile {
                 playerList.remove(player);
             }
         }
+    }
+
+
+    public String[] getPlayerNames(){
+
+        String [] temp = new String[playerList.size()];
+        for(int i = 0; i <  playerList.size(); i++){
+            temp[i] = playerList.get(i).getPlayerName();
+        }
+        return temp;
+    }
+
+    public int[] getPlayerIcons(){
+
+        int [] temp = new int[playerList.size()];
+        for(int i = 0; i <  playerList.size(); i++){
+            temp[i] = playerList.get(i).getPlayerIcon();
+
+        }
+        return temp;
     }
 
 

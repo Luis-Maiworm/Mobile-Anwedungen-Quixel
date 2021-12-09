@@ -2,6 +2,7 @@ package com.example.quizz.viewControl;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ public class AddPlayerRVAdapter extends RecyclerView.Adapter<AddPlayerRVAdapter.
     Context context;
     LayoutInflater inflater;
     Player playerToCreate;
+    int selectedItem;
     //private int lastPosition = -1;
 
     public AddPlayerRVAdapter(Context context, Player playerToCreate) {
@@ -60,6 +62,25 @@ public class AddPlayerRVAdapter extends RecyclerView.Adapter<AddPlayerRVAdapter.
 
                 playerToCreate.setPlayerIcon(icons[holder.getAdapterPosition()]);
 
+
+
+
+                if(holder.getOldPosition() != RecyclerView.NO_POSITION && holder.getOldPosition() != holder.getAdapterPosition()){
+                   // holder.getOldPosition().
+                }
+
+
+                holder.itemView.setBackgroundColor(Color.RED);
+
+
+
+
+                selectedItem = holder.getAdapterPosition();
+
+
+
+
+
                 //todo setzt Icon...dieses wird dann zusammen mit dem Namen in dem AddPlayerFragment übergeben und alles zusammen an das LoginFragment übergeben
                 // dort wird dann der RecyclerView geupdatet, sodass der neu erstellte Benutzer direkt sichtbar wird!!!
             }
@@ -77,6 +98,7 @@ public class AddPlayerRVAdapter extends RecyclerView.Adapter<AddPlayerRVAdapter.
 
         ImageView icons;
         ConstraintLayout mainLayout;
+
 
 
         public AddPlayerViewHolder(@NonNull View itemView) {

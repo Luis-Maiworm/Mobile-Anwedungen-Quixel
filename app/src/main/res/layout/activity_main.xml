@@ -70,9 +70,9 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/FrameLayout"
-        android:name="com.example.quizz.fragments.LoginFragment"
-        android:layout_width="380dp"
-        android:layout_height="694dp"
+
+        android:layout_width="331dp"
+        android:layout_height="533dp"
         android:layoutAnimation="@anim/layout_animation"
         android:translationZ="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -95,6 +95,31 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.976"
         app:srcCompat="@drawable/ic_baseline_close_24" />
+
+    <ImageButton
+        android:id="@+id/mainProfileIcon"
+        android:layout_width="101dp"
+        android:layout_height="100dp"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.048"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.969"
+        tools:srcCompat="@drawable/cat_icon01_generalknowledge" />
+
+    <TextView
+        android:id="@+id/mainProfileLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/mainProfileIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.096"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

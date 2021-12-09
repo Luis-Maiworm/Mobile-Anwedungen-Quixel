@@ -31,19 +31,25 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
     LayoutInflater inflater;
     FragmentTransaction fT;
     PlayerManager pManager;
+    LoginFragment loginFragment;
 
    // ArrayList contextMenuList;
     Context contextMenuContext;
 
 
-    public ProfileRVAdapter(Context context , String[] profileNames, int[] profilePictures, @NonNull PlayerManager pManager) {
+    public ProfileRVAdapter(Context context , String[] profileNames, int[] profilePictures, @NonNull PlayerManager pManager, LoginFragment frag) {
         this.profileNames = profileNames;
         this.profilePictures = profilePictures;
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.pManager = pManager;
+        this.loginFragment = frag;
     }
 
+    public void setData(int [] icons, String [] profileNames){
+        this.profilePictures = icons;
+        this.profileNames = profileNames;
+    }
 
     @NonNull
     @Override
@@ -66,7 +72,7 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
                 //todo let a button appear "changePlayer" ->
                 // also: make it wiggle? AND let a button appear "deletePlayer"
                 // also: make it visible that the player is selected
-                return false;
+                return true;        // returns true -> so the onClick doesn't get called
             }
         });
         holder.mainLayout.setOnClickListener(new View.OnClickListener() {
@@ -74,40 +80,26 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
             public void onClick(View view) {
 
 
-                try {
-                    pManager.createNewPlayer("nabend");     //todo : weg? -> create NUR im childfrag
-                    System.out.println(pManager);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+
+                pManager.chooseCurrentPlayer(profileNames[holder.getAdapterPosition()]);        // null pointer
+                System.out.println(pManager.getProfiles().getPlayerListSize());
+
+                // setzt den Text und das bild in der main activity (context = activity vom LoginFragment)
+                TextView tx = ((Activity)context).findViewById(R.id.mainProfileLabel);
+                tx.setText(pManager.getCurrentPlayer().getPlayerName());
+                ImageView iV = ((Activity)context).findViewById(R.id.mainProfileIcon);
+                iV.setImageResource(pManager.getCurrentPlayer().getPlayerIcon());
+                //todo animation later
+                System.out.println(pManager.getCurrentPlayer().getPlayerIcon());
+                System.out.println(pManager.getCurrentPlayer().getPlayerName());
 
 
 
-                pManager.chooseCurrentPlayer(profileNames[holder.getAdapterPosition()]);
-
-                System.out.println(pManager);
-                System.out.println(pManager.getCurrentPlayer());
-
-
-                if(pManager != null && pManager.getCurrentPlayer() != null){        //todo
-
-
-                    System.out.println(pManager.getCurrentPlayer().getPlayerName());
-
-
-
-                 //   TextView testView = get.findViewById(R.id.textViewTest);
-                   // testView.setText(pManager.getCurrentPlayer().getPlayerName() + pManager.getCurrentPlayer().getPlayerID());
-                   // testView.setText("nabend");
-                }
-
-
-
-
-                /*
+                //close fragment, when a profile is chosen
+                fT = loginFragment.getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
                 fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
-                fT.remove(fT.);
-                fT.commit();*/
+                fT.remove(loginFragment);
+                fT.commit();
 
                 //todo on click soll fragment schließen
                 // und zudem den currentPlayer setzen bzw. diese Daten mitgeben
@@ -125,7 +117,8 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
 
     @Override
     public int getItemCount() {
-        return profileNames.length;
+        if(profileNames != null) return profileNames.length;
+        return 0;
     }
 
     public class ProfileViewHolder extends RecyclerView.ViewHolder {

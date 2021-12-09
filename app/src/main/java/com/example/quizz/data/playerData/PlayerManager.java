@@ -1,5 +1,6 @@
 package com.example.quizz.data.playerData;
 
+import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -57,18 +58,35 @@ public class PlayerManager implements Parcelable {
      * or if the profile gets chosen for the first time in this session.
      * @param newId The ID will be the chosen {@link Player}.
      */
+    @Deprecated
     public void chooseCurrentPlayer(int newId){
+
         if (currentPlayer != null) {
             profiles.replacePlayerWithId(profiles.getPlayerWithId(newId), this.currentPlayer.getPlayerID());
         }
+
         this.currentPlayer = profiles.getPlayerWithId(newId);
     }
 
-    public void chooseCurrentPlayer(String playerName){
+    /**
+     * Sets the current Player.
+     * @param playerName should deliver an existing name within the {@code playerList}.
+     * The corresponding player will be set as the "currentPlayer".
+     */
+    public void chooseCurrentPlayer(String playerName) {
+        currentPlayer = null;
+        /*
         if (currentPlayer != null) {
-            profiles.replacePlayerWithId(profiles.getPlayerWithName(playerName), this.currentPlayer.getPlayerID());
-        }
+            profiles.replacePlayerWithName(profiles.getPlayerWithName(playerName), this.currentPlayer.getPlayerName());
+        }*/
         this.currentPlayer = profiles.getPlayerWithName(playerName);
+
+        this.profiles.setCurrentPlayer(currentPlayer.getPlayerName());
+
+    }
+
+    public void setCurrentPlayer(Player currentPlayer){
+        this.currentPlayer = currentPlayer;
     }
 
     /**
@@ -143,38 +161,41 @@ public class PlayerManager implements Parcelable {
     }
 
 
-    public String[] getPlayerNames(){
-        String [] temp = new String[playerList.size()];
-        for(int i = 0; i <  profiles.getPlayerList().size(); i++){
-            temp[i] = playerList.get(i).getPlayerName();
 
-        }
-        return temp;
-    }
 
-    public int[] getPlayerIcons(){
 
-        int [] temp = new int[playerList.size()];
-        for(int i = 0; i <  profiles.getPlayerList().size(); i++){
-            temp[i] = playerList.get(i).getPlayerIcon();
 
-        }
-        return temp;
+    public void loadFromJson(String jsonString) {
+        if(jsonString=="") this.profiles = null;
+        this.profiles = this.gson.fromJson(jsonString, Profile.class);
+
     }
 
 
+    public String saveToJson() {
+        return this.gson.toJson(profiles);
+    }
 
-    //todo exception handling
+    public void setProfiles(Profile profiles){
+        this.profiles = profiles;
+    }
+
+
+
+
+    /*
     public void loadFromJson() throws FileNotFoundException {
         this.profiles = this.gson.fromJson(new FileReader(this.json), Profile.class);
     }
 
-
+    @Deprecated
     public void saveToJson(Profile profiles) throws IOException {
-        try(FileWriter writer = new FileWriter(this.json)){                     //todo this. ja nein?
+         try(FileWriter writer = new FileWriter(this.json)){                     //todo this. ja nein?
             this.gson.toJson(profiles, writer);
-        }
-    }
+         }
+    }*/
+
+
 
 
     @Override

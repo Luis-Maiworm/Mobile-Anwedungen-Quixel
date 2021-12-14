@@ -99,8 +99,6 @@ public class AddPlayerFragment extends Fragment {
 
                     System.out.println(pManager.getProfiles().getPlayerListSize());
                     pManager.createNewPlayer(playerToCreate);
-                    //todo player nullen?
-                    // todo MAYBE: create befehl außerhalb des try und catch (exception für namens kontrolle müsste dann auch wo anders laufen)
 
 
                    // profAdapter.notifyItemChanged(pManager.getProfiles().getPlayerListSize());      //todo

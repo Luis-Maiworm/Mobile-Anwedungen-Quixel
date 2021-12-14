@@ -6,12 +6,22 @@ import com.example.quizz.questionManager.Question;
 import com.example.quizz.questionManager.QuestionManager;
 
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The {@code StatisticsAnalyser} automatically sets the information gathered when a {@link Question} has been answered.
  * It also processes the data, so in the Statistics Menu it doesn't just show Integer values.
+ *
+ * It takes a Player and modifies/reads the Statistics of it.
+ *
+ * The class is independent and can be created everytime it's needed. Doesn't need to get passed through the whole lifecycle!
+ *
  */
 
 public class StatisticsAnalyser {
@@ -21,6 +31,9 @@ public class StatisticsAnalyser {
     Player p;
     QuestionManager qManager = new QuestionManager();
 
+    public final boolean ASC = true;
+    public final boolean DESC = false;
+
 
     /**
      * Ablauf:
@@ -29,18 +42,6 @@ public class StatisticsAnalyser {
      *
      * Bei Frage: eine der "takeQuestion" Methoden.
      * Bei Runde: eine der "takeQuestions" Methoden.
-     *
-     * Am Ende wird die Methode "getUpdatedPlayer" aufgerufen, die die bearbeitete und geupdatete Instanz "p" als Player zurückgibt.
-     * Diese soll auf den currentPlayer übertragen werden.
-     *
-     * Verständnis:
-     * Ab da, wo der StatisticsAnalyser angelegt wird, verändern sich die ORIGINALEN Stats des currentPlayer NICHT.
-     * Erst wenn die Methode getUpdatedPlayer aufgerufen wird -> werden die aktualisierten Statistiken übergeben.
-     * In dem Fall kann die Instanz des StatisticsAnalyser einfach weitergegeben werden.
-     *
-     * Andere Möglichkeit wäre:
-     * currentPlayer muss jedesmal übergeben werden (über setter Methode möglich, oder über Konstruktor)
-     * und anschließend geupdatet werden -> aufwendig -> Vorteil: Spieler bleibt fast IMMER aktuell... ist das nötig?
      */
 
 
@@ -60,27 +61,11 @@ public class StatisticsAnalyser {
      */
 
 
-    /*
-    public Player getUpdatedPlayer(){
-        p.setStats(s);
-        return this.p;
-    }
-
-    public Player updatedPlayer(){
-        p.setStats(s);
-        return this.p;
-    }
-    */
-
-
-
     public void afterQuestion(Question q, boolean qCorrect){
         s.incrementTotal(qCorrect);
         s.incrementAnswerPerCategory(q.getCategory(), qCorrect);
         s.incrementAnswerPerDifficulty(q.getDifficulty(), qCorrect);
         s.incrementAnswerPerType(q.getType(), qCorrect);
-
-
     }
 
     public void afterQuestion(Question q, boolean qCorrect, int remainingTimer){
@@ -88,7 +73,6 @@ public class StatisticsAnalyser {
         s.incrementAnswerPerCategory(q.getCategory(), qCorrect);
         s.incrementAnswerPerDifficulty(q.getDifficulty(), qCorrect);
         s.incrementAnswerPerType(q.getType(), qCorrect);
-
     }
 
 
@@ -113,14 +97,47 @@ public class StatisticsAnalyser {
     HashMap<Categories, Double> categoriesPercentageList = new HashMap<>();
 
     //liste mit allen answerRatios. -> am besten sortiert, sodass eine auflistung der besten kategorien möglich ist
-    public HashMap<Categories, Double> percentageList(){
+    public HashMap<Categories, Double> percentageList(boolean includingEmpty, boolean order){        //todo variante: noch nie gespielte kategorien -> werden gar nicht erst ausgegeben
         for(Categories c : Categories.values()){
-            categoriesPercentageList.put(c, answerRatioPerCategory(c));
+            double ratio = answerRatioPerCategory(c);
+            if(includingEmpty) {
+                categoriesPercentageList.put(c, ratio);
+            }
+            else {
+                if (!Double.isNaN(ratio)) categoriesPercentageList.put(c, ratio);           // if the ratio is NOT A NUMBER, put the value+category in the map -> gives us a list with every category used
+            }
+
         }
-        return categoriesPercentageList;
+
+        return returnSortedList(categoriesPercentageList, order);
     }
 
-    //todo sort
+
+    public static HashMap<Categories, Double> returnSortedList(HashMap<Categories, Double> unsortedMap, boolean order){
+        List<Map.Entry<Categories, Double>> list = new LinkedList<Map.Entry<Categories, Double>>(unsortedMap.entrySet());
+
+        Collections.sort(list, new Comparator<Map.Entry<Categories, Double>>() {
+            public int compare(Map.Entry<Categories, Double> o1, Map.Entry<Categories, Double> o2) {
+                if(order){
+                    return o1.getValue().compareTo(o2.getValue());
+                } else {
+                    return o2.getValue().compareTo(o1.getValue());
+                }
+            }
+        });
+
+        HashMap<Categories, Double> sortedMap = new LinkedHashMap<Categories, Double>();
+
+        for(Map.Entry<Categories, Double> entry : list) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return sortedMap;
+
+    }
+
+
+
 
 
     /**
@@ -131,9 +148,10 @@ public class StatisticsAnalyser {
      */
 
     /*
-    public Player afterRound(List<Question> qList, GameSettings mode, boolean gWon){
+    public Player afterRound(List<Question> qList, GameSettings mode){
 
         switch(mode){
+
             for(Question q : qList){
                 s.afterQuestion(c, booleanIsCorrect)
             }

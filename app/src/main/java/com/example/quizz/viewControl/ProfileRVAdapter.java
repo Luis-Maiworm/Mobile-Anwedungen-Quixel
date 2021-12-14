@@ -82,7 +82,8 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
 
 
                 pManager.chooseCurrentPlayer(profileNames[holder.getAdapterPosition()]);        // null pointer
-                System.out.println(pManager.getProfiles().getPlayerListSize());
+                System.out.println("recycler " + pManager);
+                System.out.println("auc recycler " + pManager.getCurrentPlayer());
 
                 // setzt den Text und das bild in der main activity (context = activity vom LoginFragment)
                 TextView tx = ((Activity)context).findViewById(R.id.mainProfileLabel);

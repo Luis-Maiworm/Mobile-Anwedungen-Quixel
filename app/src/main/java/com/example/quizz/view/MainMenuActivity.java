@@ -15,13 +15,16 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.quizz.R;
+import com.example.quizz.data.enums.Categories;
+import com.example.quizz.data.enums.Difficulties;
+import com.example.quizz.data.enums.Types;
 import com.example.quizz.data.playerData.Player;
 import com.example.quizz.data.playerData.PlayerManager;
-import com.example.quizz.data.playerData.Profile;
+import com.example.quizz.data.playerData.Statistics;
+import com.example.quizz.data.playerData.StatisticsAnalyser;
 import com.example.quizz.fragments.LoginFragment;
 import com.example.quizz.fragments.ShowPlayerFragment;
 
@@ -30,43 +33,80 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     Button openSingleplayer, openMultiplayer, openStats;
     ImageButton openProfileChooser;
-    ImageButton profileIconButton;
-    TextView profileName;
-
-    // Global Player
-    private Player p1;
+    ImageButton openPlayerView;
+    TextView playerName;
 
     PlayerManager pManager = new PlayerManager();
-
     LoginFragment fragment = new LoginFragment();
     ShowPlayerFragment playerFragment = new ShowPlayerFragment();
 
     SharedPreferences pref;
     SharedPreferences.Editor ed;
 
-    public static boolean flag = false;     // könnte überprüfen ob eine activity schonmal gestartet wurde
-    //todo so auch testbar, ob beim erneuten ActivityStart (falls notwendig) der ProfileChooser erneut aufgerufen werden soll
+    private Player currentPlayer;
 
 
-    Player currentPlayer;
+    //fix variables und view variables werden gesetzt
+    public void initVariables(){
+        pref = getSharedPreferences("MYSTATS", 0);
 
+        openSingleplayer = findViewById(R.id.singleplayerBtn);
+        openMultiplayer = findViewById(R.id.multiplayerBtn);
+        openStats = findViewById(R.id.statsBtn);
+        // Button openSettings = findViewById(R.id.statsBtn);
+        openProfileChooser = findViewById(R.id.imageButton);
 
-    public void playerSetup(){
+        playerName = findViewById(R.id.mainProfileLabel);
+        openPlayerView = findViewById(R.id.mainProfileIcon);
+    }
+    private void loadData(){
+        //lädt daten aus shared preferences, setzt ggf. views
 
+        //daten werden in den pManager geladen.
+        pManager.loadFromJson(pref.getString("PROFILES", ""));
+        //wenn kein Profile existiert (wenn die json also leer ist), wird eins erstellt -> die fragments dafür werden geöffnet
+        if(pManager.getProfiles()==null){
+            pManager.setNewProfile();
+            openFragmentFirstTime();
+
+          //  currentPlayer = pManager.getCurrentPlayer();  // würde null ergeben!
+          //  System.out.println("!!!!!!!!!!!!" + currentPlayer);
+            //geht nur darum die Klassenvariable "currentPlayer" mit der Instanz ausm pManager zu connecten
+            // diese Connection kann erst aufgebaut werden, wenn die Instanz im pManager != null ist
+            //problem: currentPlayer kann hier NICHT gesetzt werden -> da die Referenz des currentPlayer zudiesem Zeitpunkt == null ist.
+            // Lösung -> dort wo der currentPlayer gebraucht wird muss dieser erneut durch currentPlayer = pManager.getCurrentPlayer() gesetzt werden.
+            // oder: es wird straigh up immer nur pManager.getCurrentPlayer() verwendet.
+            //im Endeffekt wird dann nur die Klassenvariable nicht perfekt einsatzbereit sein, das wars aber auch
+
+        } else{     //ansonsten wird die View für den CurrentPlayer gesetzt, welcher in den SharedPreferences gespeichert ist
+            pManager.setCurrentPlayer(pManager.getProfiles().getPlayerWithName(pManager.getProfiles().getCurrentPlayer()));
+            currentPlayer = pManager.getCurrentPlayer();
+            playerName.setText(currentPlayer.getPlayerName());
+            openPlayerView.setImageResource(currentPlayer.getPlayerIcon());
+        }
+    }
+    private void passManagerToFragments(){
         Bundle bundle = new Bundle();
-
-        currentPlayer = pManager.getCurrentPlayer();        //todo setzt den player = dem ausm pManager
-
         bundle.putParcelable("playerManager", pManager);
-
+        //sets Arguments for both fragments (playerView and playerChooser)
         fragment.setArguments(bundle);
         playerFragment.setArguments(bundle);
-
-
-
-
-        // Testing
-
+    }
+    private void openFragmentFirstTime(){
+        // wird in loadData aufgerufen
+        FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
+        fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
+        fT.replace(R.id.FrameLayout, fragment);
+        fT.commit();                                        // so the app knows that the fragment has been set and is != null
+    }
+    private void setUpOnClicks(){
+        //sets onClick listener for the buttons
+        openSingleplayer.setOnClickListener(this);
+        openMultiplayer.setOnClickListener(this);
+        openStats.setOnClickListener(this);
+        // openSettings.setOnClickListener(this);
+        openProfileChooser.setOnClickListener(this);
+        openPlayerView.setOnClickListener(this);
     }
 
     @Override
@@ -74,94 +114,10 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
-        pref = getSharedPreferences("MYSTATS", 0);
-
-
-
-        pManager.loadFromJson(pref.getString("PROFILES", ""));
-
-        if(pManager.getProfiles()==null){
-            Profile prof = new Profile();
-            pManager.setProfiles(prof);
-
-
-        }
-
-
-        profileName = findViewById(R.id.mainProfileLabel);
-        profileIconButton = findViewById(R.id.mainProfileIcon);
-
-        if(!pManager.getProfiles().getCurrentPlayer().equals("")){
-            pManager.setCurrentPlayer(pManager.getProfiles().getPlayerWithName(pManager.getProfiles().getCurrentPlayer()));
-            currentPlayer = pManager.getCurrentPlayer();
-            profileName.setText(currentPlayer.getPlayerName());
-            profileIconButton.setImageResource(currentPlayer.getPlayerIcon());
-        }
-
-
-
-
-
-
-
-        System.out.println(pManager.getProfiles());
-
-        System.out.println(pManager);
-        playerSetup();
-
-
-
-
-
-        openProfileChooser = findViewById(R.id.imageButton);
-
-        if(pManager.getProfiles().getPlayerListSize()==0) {
-            FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
-            fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
-            fT.replace(R.id.FrameLayout, fragment);
-            fT.commit();                                        // so the app knows that the fragment has been set and is != null
-        }
-        openProfileChooser.setOnClickListener(this);
-
-        // View Setup
-
-
-/*
-        //todo notwendig? -> wird erst gesetzt sobald ein spieler ausgewählt wird...ABER : evtl gibts schon einen currentPlayer (der von den stats aufgerufen wird)
-        try {
-            if (currentPlayer.getPlayerName().isEmpty()) {
-                profileName.setText(currentPlayer.getPlayerName());
-                profileName.postInvalidate();
-            }
-            if (currentPlayer.getPlayerIcon() == 0) {
-                profileIconButton.setImageResource(currentPlayer.getPlayerIcon());
-                profileIconButton.postInvalidate();
-            }
-        } catch (NullPointerException e){
-
-        }*/
-
-        profileIconButton.setOnClickListener(this);
-
-
-
-
-        openSingleplayer = findViewById(R.id.singleplayerBtn);
-        openMultiplayer = findViewById(R.id.multiplayerBtn);
-        openStats = findViewById(R.id.statsBtn);
-        // Button openSettings = findViewById(R.id.statsBtn);
-
-
-
-
-
-
-        openSingleplayer.setOnClickListener(this);
-        openMultiplayer.setOnClickListener(this);
-        openStats.setOnClickListener(this);
-        // openSettings.setOnClickListener(this);
+        initVariables();
+        loadData();
+        passManagerToFragments();
+        setUpOnClicks();
     }
 
     // Menu
@@ -176,20 +132,20 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 startMultiplayer();
                 break;
             case R.id.statsBtn:
-                openStatsMenu();
+                startStats();
                 break;
             case R.id.imageButton:
                 if(fragment.getView() != null){
-                    deleteProfileFrag();
+                    deleteOpenChooseProfileFrag();
                 } else{
-                    openProfileFrag();
+                    openChooseProfileFrag();
                 }
                 break;
             case R.id.mainProfileIcon:
                 if (playerFragment.getView() != null) {
-                    deletePlayerFrag();
+                    deleteCurrentPlayerFrag();
                 } else {
-                    openPlayerFrag();
+                    openCurrentPlayerFrag();
                 }
                 break;
 
@@ -199,16 +155,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-    public void openStatsMenu() {
-        Intent toStats = new Intent(MainMenuActivity.this, StatisticsActivity.class);
-        toStats.putExtra("Player", p1);
-        startActivity(toStats);
-    }
-    public void openSettingsMenu() {
-    }
     public void startSingleplayer() {
         Intent toSingleplayer = new Intent(MainMenuActivity.this, ChooseCategoryActivity.class);
-        toSingleplayer.putExtra("Player", p1);
+        toSingleplayer.putExtra("player", currentPlayer);
         startActivity(toSingleplayer);
     }
 
@@ -218,22 +167,61 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         ed.putString("PROFILES", pManager.saveToJson());
         ed.apply();
     }
+    public void startStats() {
+        Intent toStats = new Intent(MainMenuActivity.this, StatisticsActivity.class);
 
-    public void openPlayerFrag(){
+        currentPlayer = pManager.getCurrentPlayer();
+
+        //todo instanz im statsActivity ist nicht die gleiche wie hier!
+
+
+        setStatsTest();
+
+        toStats.putExtra("player", pManager.getCurrentPlayer());
+
+
+        startActivity(toStats);
+
+    }
+
+    //set custom stats
+    public void setStatsTest(){
+        Statistics stats = pManager.getCurrentPlayer().getStats();
+
+        for(int i = 0; i < 1000; i++){
+            int rCat = (int) (Math.random() * Categories.values().length);
+            int j = 0;
+            for(Categories c : Categories.values()){
+                if(j==rCat){
+                    boolean boo = Math.random() < 0.5;
+                    stats.incrementAnswerPerCategory(c, boo);
+                    stats.incrementTotal(boo);
+                }
+                j++;
+            }
+        }
+    }
+
+
+
+    public void startSettings() {
+        //todo main settings als activity -> "quickSettings" als Fragment
+    }
+
+    public void openCurrentPlayerFrag(){
         FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
-        fT.setCustomAnimations(R.anim.scale_up_profilefrag, R.anim.scale_down_profilefrag);
+        fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
         fT.replace(R.id.FrameLayout, playerFragment);
         fT.commit();
     }
-    public void deletePlayerFrag(){
+    public void deleteCurrentPlayerFrag(){
         FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
-        fT.setCustomAnimations(R.anim.scale_up_profilefrag, R.anim.scale_down_profilefrag); //todo replace animations
+        fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
         fT.remove(playerFragment);
         fT.commit();
     }
 
-
-    public void openProfileFrag(){
+    public void openChooseProfileFrag(){
         ImageButton temp = (ImageButton) findViewById(R.id.imageButton);
 
         FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
@@ -243,9 +231,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         ImageViewAnimatedChangeIn(this, temp, R.drawable.ic_baseline_close_24);
     }
-
-
-    public void deleteProfileFrag() {
+    public void deleteOpenChooseProfileFrag() {
         ImageButton temp = (ImageButton) findViewById(R.id.imageButton);
 
         FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
@@ -255,7 +241,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         ImageViewAnimatedChangeOut(this, temp, R.drawable.ic_baseline_check_circle_24);
     }
-
 
     public static void ImageViewAnimatedChangeIn(Context c, ImageButton v, int new_image){
         final Animation anim_out = AnimationUtils.loadAnimation(c, R.anim.slide_out_imagebutton2);
@@ -281,8 +266,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         });
         v.startAnimation(anim_out);
     }
-
-    public static void ImageViewAnimatedChangeOut(Context c, ImageView v, int new_image){
+    public static void ImageViewAnimatedChangeOut(Context c, ImageButton v, int new_image){     //todo ImageButton war ImageView (falls problem weischt bescheid)
         final Animation anim_out = AnimationUtils.loadAnimation(c, R.anim.slide_out_imagebutton2);
         final Animation anim_in = AnimationUtils.loadAnimation(c, R.anim.slide_in_imagebutton2);
         anim_out.setAnimationListener(new Animation.AnimationListener() {

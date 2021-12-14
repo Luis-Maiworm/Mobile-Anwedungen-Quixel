@@ -15,6 +15,7 @@ public class Player implements Serializable {
     }
 
 
+
     public String playerName;
     public int playerID = 0;
     public Statistics stats;

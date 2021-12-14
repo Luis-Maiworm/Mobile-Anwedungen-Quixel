@@ -60,11 +60,9 @@ public class PlayerManager implements Parcelable {
      */
     @Deprecated
     public void chooseCurrentPlayer(int newId){
-
         if (currentPlayer != null) {
             profiles.replacePlayerWithId(profiles.getPlayerWithId(newId), this.currentPlayer.getPlayerID());
         }
-
         this.currentPlayer = profiles.getPlayerWithId(newId);
     }
 
@@ -85,6 +83,11 @@ public class PlayerManager implements Parcelable {
 
     }
 
+    /**
+     * Sets currentPlayer from the SharedPreferences. (Profiles contains a String "currentPlayer" storing the name of the currentPlayer)
+     *
+     * @param currentPlayer
+     */
     public void setCurrentPlayer(Player currentPlayer){
         this.currentPlayer = currentPlayer;
     }
@@ -161,10 +164,11 @@ public class PlayerManager implements Parcelable {
     }
 
 
-
-
-
-
+    /**
+     * If the jsonString is == "", profiles will be set to null, so the main activity knows, that the User needs to create a player/profile.
+     * @param jsonString will be passed by the MainActivity. Contains the data, which is stored in the SharedPreferences.
+     *                   Passes an empty String "", if the App is being opened for the first time and therefore doesn't have any profiles/stored data.
+     */
     public void loadFromJson(String jsonString) {
         if(jsonString=="") this.profiles = null;
         this.profiles = this.gson.fromJson(jsonString, Profile.class);
@@ -176,8 +180,8 @@ public class PlayerManager implements Parcelable {
         return this.gson.toJson(profiles);
     }
 
-    public void setProfiles(Profile profiles){
-        this.profiles = profiles;
+    public void setNewProfile(){
+        this.profiles = new Profile();
     }
 
 

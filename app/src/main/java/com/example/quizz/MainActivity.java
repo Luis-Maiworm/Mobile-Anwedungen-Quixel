@@ -14,8 +14,10 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
+import android.network.BluetoothConnection;
 import com.example.quizz.data.playerData.Player;
+
+import network.BluetoothConnection;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -23,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private Button openStats;
     private Player p1;
     BluetoothAdapter bluetoothAdapter;
+
+    BluetoothConnection bluetoothConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(discoverableIntent, 1);
 
         boolean discoverySuccessful = bluetoothAdapter.startDiscovery();
+
+        Thread t1 = new AcceptThread(bluetoothConnection);
 }
 
     @Override

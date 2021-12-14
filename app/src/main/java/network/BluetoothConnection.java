@@ -1,5 +1,6 @@
 package network;
 
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -8,29 +9,47 @@ import android.content.Context;
 import android.util.Log;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.UUID;
 
 public class BluetoothConnection {
     private static final String TAG = "BluetoothConnection";
     private static final String NAME = "Quixel";
-    private static final UUID MY_UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
+    private static final UUID MY_UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");    // todo ?
+
+
 
     private final BluetoothAdapter bluetoothAdapter;
     Context mContext;
 
+    private AcceptThread mAcceptThread;
+
+    private ConnectThread mConnectThread;
+    private BluetoothDevice mmDevice;
+    private UUID deviceUUID;
+    ProgressDialog mProgressDialog;
+
+
+    private ConnectedThread mConnectedThread;
+
     public BluetoothConnection(Context context) {
         mContext = context;
-        bluetoothAdapter =BluetoothAdapter.getDefaultAdapter();
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
     }
 
     private class AcceptThread extends Thread {
+        //local server socket
         private final BluetoothServerSocket mmServerSocket;
+
 
         public AcceptThread() {
             // Use a temporary object that is later assigned to mmServerSocket
             // because mmServerSocket is final.
             BluetoothServerSocket tmp = null;
+
             try {
                 // MY_UUID is the app's UUID string, also used by the client code.
                 tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord(NAME, MY_UUID);
@@ -41,24 +60,36 @@ public class BluetoothConnection {
         }
 
         public void run() {
+            Log.d(TAG, "run: AcceptThread Running");
+
             BluetoothSocket socket = null;
             // Keep listening until exception occurs or a socket is returned.
-            while (true) {
+
+            try{
+                Log.d(TAG, "run: RFCOM server socket start..");
+
+                socket = mmServerSocket.accept();
+
+                Log.d(TAG, "run: RFCOM server socket accepted connection");
+
+            } catch(IOException e){
+                Log.e(TAG, "AcceptThread: IOEXception: " + e.getMessage());
+            }
+
+            if(socket != null){
+                connected(socket, mmDevice);
+
                 try {
-                    socket = mmServerSocket.accept();
+                    mmServerSocket.close();     //todo ? necesary?
                 } catch (IOException e) {
-                    Log.e(TAG, "Socket's accept() method failed", e);
-                    break;
+                    e.printStackTrace();
                 }
 
-                if (socket != null) {
-                    // A connection was accepted. Perform work associated with
-                    // the connection in a separate thread.
-                    manageMyConnectedSocket(socket);
-                    mmServerSocket.close();
-                    break;
-                }
+
+
             }
+
+            Log.i(TAG, "End mAcceptThread");
         }
 
         // Closes the connect socket and causes the thread to finish.
@@ -71,26 +102,37 @@ public class BluetoothConnection {
         }
     }
     private class ConnectThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final BluetoothDevice mmDevice;
+        private BluetoothSocket mmSocket;
 
-        public ConnectThread(BluetoothDevice device) {
+
+        public ConnectThread(BluetoothDevice device, UUID uuid) {
             // Use a temporary object that is later assigned to mmSocket
             // because mmSocket is final.
-            BluetoothSocket tmp = null;
+            Log.d(TAG, "ConnectThread: started");
+
             mmDevice = device;
+            deviceUUID = uuid;
+
+        }
+
+        public void run() {
+            BluetoothSocket tmp = null;
+            Log.i(TAG, "RUN mConnectThread ");
+
 
             try {
+
+                Log.d(TAG, "ConnectThread: Trying to create InsecureRfcommSocket using UUID: "
+                        +MY_UUID );
                 // Get a BluetoothSocket to connect with the given BluetoothDevice.
                 // MY_UUID is the app's UUID string, also used in the server code.
-                tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
+                tmp = mmDevice.createRfcommSocketToServiceRecord(deviceUUID);
             } catch (IOException e) {
                 Log.e(TAG, "Socket's create() method failed", e);
             }
             mmSocket = tmp;
-        }
 
-        public void run() {
+
             // Cancel discovery because it otherwise slows down the connection.
             bluetoothAdapter.cancelDiscovery();
 
@@ -110,7 +152,8 @@ public class BluetoothConnection {
 
             // The connection attempt succeeded. Perform work associated with
             // the connection in a separate thread.
-            manageMyConnectedSocket(mmSocket);
+
+            connected(mmSocket, mmDevice);
         }
 
         // Closes the client socket and causes the thread to finish.
@@ -122,4 +165,142 @@ public class BluetoothConnection {
             }
         }
     }
+
+
+    /**
+     *
+     */
+    public synchronized void start(){
+        Log.d(TAG, "start");
+
+        if(mConnectThread != null){
+            mConnectThread.cancel();
+            mConnectThread = null;
+        }
+
+        if(mAcceptThread == null){
+            mAcceptThread = new AcceptThread();
+            mAcceptThread.start();
+        }
+    }
+
+
+
+
+
+    /**
+     *  AcceptThread starts and sits waiting for a connection.
+     *  Then ConnectThread starts and attempts to make a connection with the other devices AcceptThread.
+     * @param device
+     * @param uuid
+     */
+    public void startClient(BluetoothDevice device, UUID uuid){
+        Log.d(TAG, "startClient: Started.");
+
+
+        mProgressDialog = ProgressDialog.show(mContext,"Connecting Bluetooth"
+                ,"Please Wait...",true);
+
+
+
+        mConnectThread = new ConnectThread(device, uuid);
+        mConnectThread.start();
+    }
+
+
+
+    private class ConnectedThread extends Thread {
+        private final BluetoothSocket mmSocket;
+        private final InputStream mmInStream;
+        private final OutputStream mmOutStream;
+
+        public ConnectedThread(BluetoothSocket socket) {
+            Log.d(TAG, "ConnectedThread: Starting");
+
+            mmSocket = socket;
+            InputStream tmpIn = null;
+            OutputStream tmpOut = null;
+
+            //dismiss progdialog when connection is established
+            try {
+                mProgressDialog.dismiss();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                tmpIn = mmSocket.getInputStream();
+                tmpOut = mmSocket.getOutputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            mmInStream = tmpIn;
+            mmOutStream = tmpOut;
+        }
+
+        public void run(){
+            byte[] buffer  = new byte[1024]; //buffer store for the stream
+
+            int bytes; //bytes returned by "read()"
+
+            while(true){
+
+                try{
+                    bytes = mmInStream.read(buffer);
+                    String incomingMessage = new String(buffer, 0, bytes);
+
+                    Log.d(TAG, "InputStream: " + incomingMessage);
+                } catch (IOException e){
+                    Log.e(TAG, "write: error reading input stream. " + e.getMessage());
+                    break;
+                }
+            }
+
+        }
+        //call from the main activity to send data from the remote device
+        public void write(byte[] bytes){
+            String text = new String(bytes, Charset.defaultCharset());
+            Log.d(TAG, "write: writing to outputstream");
+
+            try{
+                mmOutStream.write(bytes);
+            } catch (IOException e){
+                Log.e(TAG, "write: error writing to output stream. " + e.getMessage());
+            }
+        }
+
+
+
+        public void cancel(){
+            try{
+                mmSocket.close();
+            } catch(IOException e){
+
+            }
+        }
+    }
+
+
+    private void connected(BluetoothSocket mmSocket, BluetoothDevice mmDevice){
+        Log.d(TAG, "connected: Starting.");
+
+        mConnectedThread = new ConnectedThread(mmSocket);
+        mConnectThread.start();
+    }
+
+    //write to connectedThread in unsynchronized manner
+    public void write(byte[] out){
+        //temporary object
+        ConnectedThread r;
+
+        //synchronize copy of ConnectedThread
+        Log.d(TAG, "write: write called.");
+        //perform the write
+        mConnectedThread.write(out);
+    }
+
+
+
+
 }

@@ -3,15 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/AndroidStudioProjects/quizz/app/src/main/res/layout/activity_main.xml" value="0.3591485507246377" />
-        <entry key="..\:/AndroidStudioProjects/quizz/app/src/main/res/layout/activity_statistics.xml" value="0.3591485507246377" />
+        <entry key="..\:/Users/luism/AndroidStudioProjects/quizz/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/physi/AndroidStudioProjects/quizz/app/src/main/res/layout/activity_main.xml" value="0.2957427536231884" />
-        <entry key="..\:/quizz/app/src/main/res/layout/activity_main.xml" value="0.33" />
-        <entry key="..\:/quizz/app/src/main/res/layout/activity_statistics.xml" value="0.2817028985507246" />
+        <entry key="..\:/Users/soenk/AndroidStudioProjects/quizz/app/src/main/res/layout/activity_main.xml" value="0.4041666666666667" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

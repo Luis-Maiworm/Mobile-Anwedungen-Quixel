@@ -19,8 +19,6 @@ public class BluetoothConnection {
     private static final String NAME = "Quixel";
     private static final UUID MY_UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");    // todo ?
 
-
-
     private final BluetoothAdapter bluetoothAdapter;
     Context mContext;
 
@@ -31,12 +29,18 @@ public class BluetoothConnection {
     private UUID deviceUUID;
     ProgressDialog mProgressDialog;
 
-
     private ConnectedThread mConnectedThread;
 
+    public String getIncomingMessage() {
+        return this.incomingMessage;
+    }
+
+    String incomingMessage;
     public BluetoothConnection(Context context) {
         mContext = context;
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        start();
+
 
     }
 
@@ -84,9 +88,6 @@ public class BluetoothConnection {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-
-
             }
 
             Log.i(TAG, "End mAcceptThread");
@@ -185,9 +186,6 @@ public class BluetoothConnection {
     }
 
 
-
-
-
     /**
      *  AcceptThread starts and sits waiting for a connection.
      *  Then ConnectThread starts and attempts to make a connection with the other devices AcceptThread.
@@ -240,7 +238,7 @@ public class BluetoothConnection {
         }
 
         public void run(){
-            byte[] buffer  = new byte[1024]; //buffer store for the stream
+            byte[] buffer  = new byte[4096]; //buffer store for the stream
 
             int bytes; //bytes returned by "read()"
 
@@ -248,7 +246,7 @@ public class BluetoothConnection {
 
                 try{
                     bytes = mmInStream.read(buffer);
-                    String incomingMessage = new String(buffer, 0, bytes);
+                    incomingMessage = new String(buffer, 0, bytes);
 
                     Log.d(TAG, "InputStream: " + incomingMessage);
                 } catch (IOException e){
@@ -270,8 +268,6 @@ public class BluetoothConnection {
             }
         }
 
-
-
         public void cancel(){
             try{
                 mmSocket.close();
@@ -281,12 +277,11 @@ public class BluetoothConnection {
         }
     }
 
-
     private void connected(BluetoothSocket mmSocket, BluetoothDevice mmDevice){
         Log.d(TAG, "connected: Starting.");
 
         mConnectedThread = new ConnectedThread(mmSocket);
-        mConnectThread.start();
+        mConnectedThread.start();
     }
 
     //write to connectedThread in unsynchronized manner
@@ -299,8 +294,4 @@ public class BluetoothConnection {
         //perform the write
         mConnectedThread.write(out);
     }
-
-
-
-
 }

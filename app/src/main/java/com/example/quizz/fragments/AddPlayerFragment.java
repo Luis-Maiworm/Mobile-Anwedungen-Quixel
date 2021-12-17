@@ -96,15 +96,9 @@ public class AddPlayerFragment extends Fragment {
                         throw new Exception("Select Icon");
                     }
 
-
                     pManager.createNewPlayer(playerToCreate);
 
-
-
-
-
                     profAdapter.setData(pManager.getProfiles().getPlayerIcons(), pManager.getProfiles().getPlayerNames());
-
 
                     // profAdapter.notifyItemChanged(pManager.getProfiles().getPlayerListSize());      //todo
                     profAdapter.notifyDataSetChanged();     //todo change notify (notifyDataSetChanged -> performance problem)
@@ -119,25 +113,10 @@ public class AddPlayerFragment extends Fragment {
 
                     });
                     builder.show();
-
-
-                    System.out.println(e.getMessage());     //todo remove print
                 }
-
-                //schließt das Fragment wenn ein Spieler hinzugefügt wurde
-
-
             }
 
         });
-
-
-
-
-        //todo hier wird nur eine Instanz des PlayerManager benötigt.
-        // in dem recycler view für die icons muss lediglich ein integer wert zurück gegeben
-        // werden.. dieser setzt das icon für den player
-
 
         return view;
     }
@@ -148,11 +127,7 @@ public class AddPlayerFragment extends Fragment {
         fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
         fT.remove(this);
         fT.commit();
-
-
-
         //todo delay? -> nach "add" geht ein klick ins leere
-
     }
 
 

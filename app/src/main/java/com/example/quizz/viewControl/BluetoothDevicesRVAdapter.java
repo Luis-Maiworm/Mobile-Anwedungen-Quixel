@@ -1,5 +1,6 @@
 package com.example.quizz.viewControl;
 
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,6 +14,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.quizz.R;
+import com.example.quizz.bluetooth.BluetoothManager;
+import com.example.quizz.exceptions.BluetoothException;
 
 import java.util.List;
 
@@ -21,23 +24,19 @@ public class BluetoothDevicesRVAdapter extends RecyclerView.Adapter<BluetoothDev
     Context c;
     List<BluetoothDevice> mDevices;
     LayoutInflater inflater;
+    BluetoothManager btManager;
 
-
-    public BluetoothDevicesRVAdapter(Context c, List<BluetoothDevice> mDevices){
+    public BluetoothDevicesRVAdapter(Context c, List<BluetoothDevice> mDevices, BluetoothManager btManager){
         this.c = c;
         this.mDevices = mDevices;
         this.inflater = LayoutInflater.from(c);
+        this.btManager = btManager;
     }
-
-
 
     @NonNull
     @Override
     public BluetoothDeviceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view = inflater.inflate(R.layout.rv_bluetooth_device_grid_layout, parent, false);
-
-
         return new BluetoothDeviceViewHolder(view);
     }
 
@@ -46,7 +45,22 @@ public class BluetoothDevicesRVAdapter extends RecyclerView.Adapter<BluetoothDev
         holder.names.setText(mDevices.get(position).getName());
         holder.adresses.setText(mDevices.get(position).getAddress());
 
-
+        holder.mainLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //is mDevice setalready at this point?
+                try {
+                    btManager.pair(mDevices.get(holder.getAdapterPosition()));
+                } catch (BluetoothException e) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(c);
+                    builder.setTitle("Error");
+                    builder.setMessage(e.getMessage());
+                    builder.setPositiveButton("Okay", (dialog, id) -> {
+                    });
+                    builder.show();
+                }
+            }
+        });
     }
 
     @Override
@@ -55,16 +69,12 @@ public class BluetoothDevicesRVAdapter extends RecyclerView.Adapter<BluetoothDev
         return 0;
     }
 
-
-
     public class BluetoothDeviceViewHolder extends RecyclerView.ViewHolder {
-
-        ImageView icons;
+        ImageView icons;    //todo -> icon?
         ConstraintLayout mainLayout;
 
         TextView adresses;
         TextView names;
-
 
         public BluetoothDeviceViewHolder(@NonNull View itemView) {
             super(itemView);

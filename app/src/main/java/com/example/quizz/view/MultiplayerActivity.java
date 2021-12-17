@@ -1,5 +1,6 @@
 package com.example.quizz.view;
 
+import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -16,6 +17,9 @@ import com.example.quizz.bluetooth.BluetoothManager;
 import com.example.quizz.exceptions.BluetoothException;
 import com.example.quizz.viewControl.BluetoothDevicesRVAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MultiplayerActivity extends AppCompatActivity implements View.OnClickListener{
 
     BluetoothManager bManager;
@@ -29,12 +33,12 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
  //   List<BluetoothDevice> mDevices;
     LinearLayoutManager linearLayoutManager;
 
+    //todo observer einbauen -> resettet automatisch mDevices und notifyItemChanged() wenn devices sich verändert
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiplayer);
-
-
 
         bManager = new BluetoothManager(this);
 
@@ -42,11 +46,11 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
 
 
         recyclerView = findViewById(R.id.recyclerViewBluetooth);
-        rvAdapter = new BluetoothDevicesRVAdapter(this, bManager.getmDevices());
+        rvAdapter = new BluetoothDevicesRVAdapter(this, bManager.getmDevices(), bManager);
+
 
       //  gridLayoutManager = new GridLayoutManager(this,2, GridLayoutManager.VERTICAL, false);
       //  recyclerView.setLayoutManager(gridLayoutManager);
-
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
@@ -89,7 +93,7 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onRefresh() {
 
-                rvAdapter.notifyDataSetChanged();
+                refresh();
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -111,6 +115,27 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
         bManager.terminate();
     }
 
+    public void refresh(){
+        rvAdapter.notifyDataSetChanged(); //evtl mDevices ausgeben lassen, und alle die neu hinzugekommen sind einzeln eintragen
+        //notifyAlgo();
+    }
+
+
+
+    List<BluetoothDevice> prevState = new ArrayList<>();
+    /**
+     * Algo to avoid using the notifyDataSetChanged() method.
+     */
+    public void notifyAlgo(){
+        List<BluetoothDevice> temp = bManager.getmDevices();
+
+        for(int i = prevState.size(); prevState.size() < temp.size(); i++){
+            if(i == 0) return;
+            rvAdapter.notifyItemChanged(i-1);
+        }
+        prevState = temp;
+    }
+
     @Override
     public void onClick(View v) {
         switch(v.getId()){
@@ -123,13 +148,6 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
             case R.id.discover:
                 bManager.discover();
                 break;
-            case R.id.pair:
-                try {
-                    bManager.pair();
-                } catch (BluetoothException e){
-                    System.out.println(e.getMessage()); //todo alertdialog
-                }
-                break;
             case R.id.connect:
                 bManager.connect();
                 break;
@@ -137,8 +155,7 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
                 bManager.visible();
                 break;
             case R.id.refresh:                        //todo nicht über button, sonder nach unten swipen
-                rvAdapter.notifyDataSetChanged();
-                System.out.println("lüppt");
+                refresh();
                 break;
 
         }

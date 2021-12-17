@@ -77,9 +77,6 @@ public class LoginFragment extends Fragment {
         }
 
 
-
-
-
         recyclerViewLogin = view.findViewById(R.id.recyclerViewProfiles);
 
         rvAdapter = new ProfileRVAdapter(getActivity(), profileNames, icons, pManager, this);
@@ -140,7 +137,6 @@ public class LoginFragment extends Fragment {
             fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
             fT.remove(childFrag);
             fT.commit();
-
 
 
             View b = view.findViewById(R.id.child_fragment_addPlayer);

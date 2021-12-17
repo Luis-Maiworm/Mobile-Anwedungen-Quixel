@@ -44,7 +44,6 @@ public class BluetoothManager implements IBluetoothManager{
 
     @Override
     public void init() throws BluetoothException {
-
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
         c.registerReceiver(mBroadcastReceiver4, filter);
 
@@ -101,11 +100,9 @@ public class BluetoothManager implements IBluetoothManager{
         if(btAdapter.isDiscovering()){          //restart discovering
             btAdapter.cancelDiscovery();
 
-            Log.d(TAG, ": restart discovering");
-
+            Log.d(TAG, ": restart! discovering");
 
             checkPermissions();
-
 
             btAdapter.startDiscovery();
             IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -127,16 +124,16 @@ public class BluetoothManager implements IBluetoothManager{
 
 
     @Override
-    public void pair() throws BluetoothException {                       //get context from activity
-        //todo mDevice = chosen Device (listView)
+    public void pair(BluetoothDevice device) throws BluetoothException {
 
         Log.d(TAG, ": cancels discovery, and creates bond with device");
         btAdapter.cancelDiscovery();
 
+        mDevice = device;
+
         if(mDevice == null){
             throw new BluetoothException("No device selected"); //todo richtige message?
         }
-
 
         mDevice.createBond();
         btConnection = new BluetoothConnection(c);

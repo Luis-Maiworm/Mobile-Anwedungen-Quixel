@@ -22,7 +22,7 @@ public interface IBluetoothManager {
 
     void discover();
 
-    void pair() throws BluetoothException;
+    void pair(BluetoothDevice mDevice) throws BluetoothException;
 
     void connect();
 

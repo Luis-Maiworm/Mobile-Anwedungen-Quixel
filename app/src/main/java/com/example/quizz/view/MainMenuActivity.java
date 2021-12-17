@@ -1,6 +1,7 @@
 package com.example.quizz.view;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 
@@ -214,6 +215,25 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     public void startSettings() {
         //todo main settings als activity -> "quickSettings" als Fragment
+    }
+
+    //TODO !! use this methods
+    public void openFragment(Fragment frag, int ... animationId){
+        FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);     //reordering? true or false
+        if(animationId.length != 0){
+            fT.setCustomAnimations(animationId[0], animationId[1]);
+        }
+        fT.replace(R.id.FrameLayout, frag);
+        fT.commit();
+    }
+
+    public void closeFragment(Fragment frag, int ... animationId){
+        FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);     //reordering? true or false
+        if(animationId.length != 0){
+            fT.setCustomAnimations(animationId[0], animationId[1]);
+        }
+        fT.remove(frag);
+        fT.commit();
     }
 
     public void openCurrentPlayerFrag(){

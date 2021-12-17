@@ -29,8 +29,6 @@ public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.Ca
         this.inflater = LayoutInflater.from(context);
     }
 
-
-
     @NonNull
     @Override
     public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -42,12 +40,6 @@ public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.Ca
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
         holder.names.setText(names[position]);
         holder.icons.setImageResource(icons[position]);
-
-
-
-
-
-
 
         holder.mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override

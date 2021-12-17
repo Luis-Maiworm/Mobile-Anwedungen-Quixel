@@ -148,7 +148,7 @@ public class PlayerManager implements Parcelable {
             player.setPlayerID(this.profiles.getPlayerListSize() + 1);
             player.setStats(new Statistics());
         } else {
-            throw new Exception("Name already used. Please try again");
+            throw new Exception("Name already used. Please try again"); //todo create different exception?
         }
         this.profiles.addPlayer(player);
     }

@@ -1,19 +1,17 @@
 package com.example.quizz.viewControl;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.quizz.R;
 import com.example.quizz.data.playerData.Player;
-import com.example.quizz.view.GameActivity;
 
 /**
  *Recyler View für die Icon Auswahl bei Spielererstellung
@@ -26,11 +24,14 @@ public class AddPlayerRVAdapter extends RecyclerView.Adapter<AddPlayerRVAdapter.
             R.drawable.cat_icon08_boardgames, R.drawable.cat_icon09_naturescience, R.drawable.cat_icon10_computer, R.drawable.cat_icon11_math,
             R.drawable.cat_icon12_mythology, R.drawable.cat_icon13_sports, R.drawable.cat_icon14_geography, R.drawable.cat_icon17_art};
 
+    //todo different icons?
+
     Context context;
     LayoutInflater inflater;
     Player playerToCreate;
-    int selectedItem;
-    //private int lastPosition = -1;
+
+    int selectedItemIndex = -1;
+
 
     public AddPlayerRVAdapter(Context context, Player playerToCreate) {
        // this.names = names;
@@ -38,10 +39,7 @@ public class AddPlayerRVAdapter extends RecyclerView.Adapter<AddPlayerRVAdapter.
         this.playerToCreate = playerToCreate;
         this.context = context;
         this.inflater = LayoutInflater.from(context);
-
     }
-
-
 
     @NonNull
     @Override
@@ -50,43 +48,33 @@ public class AddPlayerRVAdapter extends RecyclerView.Adapter<AddPlayerRVAdapter.
         return new AddPlayerViewHolder(view);
     }
 
+    /**
+     * onClick sets the icon for the playerToCreate.
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull AddPlayerViewHolder holder, int position) {
         holder.icons.setImageResource(icons[position]);
 
-
-
         holder.mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int index = holder.getAdapterPosition();
 
-                playerToCreate.setPlayerIcon(icons[holder.getAdapterPosition()]);
+                playerToCreate.setPlayerIcon(icons[index]);
 
-
-
-
-                if(holder.getOldPosition() != RecyclerView.NO_POSITION && holder.getOldPosition() != holder.getAdapterPosition()){
-                   // holder.getOldPosition().
+                /*
+                if(selectedItemIndex != index){
+                    holder.itemView.setBackgroundColor(Color.RED);
+                    notifyItemChanged(selectedItemIndex);
+                    selectedItemIndex = index;
                 }
 
-
-                holder.itemView.setBackgroundColor(Color.RED);
-
-
-
-
-                selectedItem = holder.getAdapterPosition();
-
-
-
-
-
-                //todo setzt Icon...dieses wird dann zusammen mit dem Namen in dem AddPlayerFragment übergeben und alles zusammen an das LoginFragment übergeben
-                // dort wird dann der RecyclerView geupdatet, sodass der neu erstellte Benutzer direkt sichtbar wird!!!
+                selectedItemIndex = holder.getAdapterPosition();
+                */
             }
         });
-
-
     }
 
     @Override
@@ -98,8 +86,6 @@ public class AddPlayerRVAdapter extends RecyclerView.Adapter<AddPlayerRVAdapter.
 
         ImageView icons;
         ConstraintLayout mainLayout;
-
-
 
         public AddPlayerViewHolder(@NonNull View itemView) {
             super(itemView);

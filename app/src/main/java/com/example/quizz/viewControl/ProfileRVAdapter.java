@@ -66,8 +66,6 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
         holder.mainLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                System.out.println("lüüüüüpppppppppppt");
-
 
                 //todo let a button appear "changePlayer" ->
                 // also: make it wiggle? AND let a button appear "deletePlayer"
@@ -79,41 +77,23 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
             @Override
             public void onClick(View view) {
 
-
-
                 pManager.chooseCurrentPlayer(profileNames[holder.getAdapterPosition()]);        // null pointer
-                System.out.println("recycler " + pManager);
-                System.out.println("auc recycler " + pManager.getCurrentPlayer());
 
                 // setzt den Text und das bild in der main activity (context = activity vom LoginFragment)
                 TextView tx = ((Activity)context).findViewById(R.id.mainProfileLabel);
                 tx.setText(pManager.getCurrentPlayer().getPlayerName());
                 ImageView iV = ((Activity)context).findViewById(R.id.mainProfileIcon);
                 iV.setImageResource(pManager.getCurrentPlayer().getPlayerIcon());
-                //todo animation later
-                System.out.println(pManager.getCurrentPlayer().getPlayerIcon());
-                System.out.println(pManager.getCurrentPlayer().getPlayerName());
-
-
+                //todo animate later?
 
                 //close fragment, when a profile is chosen
                 fT = loginFragment.getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
                 fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
                 fT.remove(loginFragment);
                 fT.commit();
-
-                //todo on click soll fragment schließen
-                // und zudem den currentPlayer setzen bzw. diese Daten mitgeben
-                // https://developer.android.com/guide/fragments/communicate            !!!
-                // https://www.codegrepper.com/code-examples/java/How+to+send+data+from+recyclerview+adapter+to+fragment+in+android     !!
-
             }
 
         });
-
-
-
-
     }
 
     @Override
@@ -126,7 +106,6 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
         TextView profileNames;
         ImageView profilePictures;
         ConstraintLayout mainLayout;
-
 
         public ProfileViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -97,26 +97,18 @@ public class AddPlayerFragment extends Fragment {
                     }
 
 
-                    System.out.println(pManager.getProfiles().getPlayerListSize());
                     pManager.createNewPlayer(playerToCreate);
 
 
-                   // profAdapter.notifyItemChanged(pManager.getProfiles().getPlayerListSize());      //todo
-                    System.out.println("hier wird genotified");
 
-
-                    System.out.println("instanz des pmanager" + pManager);
-
-                    System.out.println(pManager.getProfiles().getPlayerList());
 
 
                     profAdapter.setData(pManager.getProfiles().getPlayerIcons(), pManager.getProfiles().getPlayerNames());
 
 
-
+                    // profAdapter.notifyItemChanged(pManager.getProfiles().getPlayerListSize());      //todo
                     profAdapter.notifyDataSetChanged();     //todo change notify (notifyDataSetChanged -> performance problem)
                     closeFragment();
-
 
                 } catch (Exception e) {
 

@@ -22,7 +22,7 @@ import com.example.quizz.data.playerData.Player;
 import com.example.quizz.data.playerData.PlayerManager;
 import com.example.quizz.viewControl.ProfileRVAdapter;
 
-public class LoginFragment extends Fragment{
+public class LoginFragment extends Fragment {
 
 
 

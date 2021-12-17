@@ -31,7 +31,7 @@ import com.example.quizz.fragments.ShowPlayerFragment;
 
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button openSingleplayer, openMultiplayer, openStats;
+    Button openSingleplayer, openMultiplayer, openStats, saveStats;
     ImageButton openProfileChooser;
     ImageButton openPlayerView;
     TextView playerName;
@@ -50,6 +50,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     public void initVariables(){
         pref = getSharedPreferences("MYSTATS", 0);
 
+        saveStats = findViewById(R.id.saveStats);
+
         openSingleplayer = findViewById(R.id.singleplayerBtn);
         openMultiplayer = findViewById(R.id.multiplayerBtn);
         openStats = findViewById(R.id.statsBtn);
@@ -59,6 +61,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         playerName = findViewById(R.id.mainProfileLabel);
         openPlayerView = findViewById(R.id.mainProfileIcon);
     }
+
     private void loadData(){
         //lädt daten aus shared preferences, setzt ggf. views
 
@@ -69,14 +72,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             pManager.setNewProfile();
             openFragmentFirstTime();
 
-          //  currentPlayer = pManager.getCurrentPlayer();  // würde null ergeben!
-          //  System.out.println("!!!!!!!!!!!!" + currentPlayer);
-            //geht nur darum die Klassenvariable "currentPlayer" mit der Instanz ausm pManager zu connecten
-            // diese Connection kann erst aufgebaut werden, wenn die Instanz im pManager != null ist
-            //problem: currentPlayer kann hier NICHT gesetzt werden -> da die Referenz des currentPlayer zudiesem Zeitpunkt == null ist.
-            // Lösung -> dort wo der currentPlayer gebraucht wird muss dieser erneut durch currentPlayer = pManager.getCurrentPlayer() gesetzt werden.
-            // oder: es wird straigh up immer nur pManager.getCurrentPlayer() verwendet.
-            //im Endeffekt wird dann nur die Klassenvariable nicht perfekt einsatzbereit sein, das wars aber auch
+            //currentPlayer kann hier nicht gesetzt werden (klassen instanz) , läuft die App also zum ersten mal, muss pManager.getCurrentPlayer(); verwendet werden
 
         } else{     //ansonsten wird die View für den CurrentPlayer gesetzt, welcher in den SharedPreferences gespeichert ist
             pManager.setCurrentPlayer(pManager.getProfiles().getPlayerWithName(pManager.getProfiles().getCurrentPlayer()));
@@ -107,6 +103,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         // openSettings.setOnClickListener(this);
         openProfileChooser.setOnClickListener(this);
         openPlayerView.setOnClickListener(this);
+
+        saveStats.setOnClickListener(this);
     }
 
     @Override
@@ -148,6 +146,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                     openCurrentPlayerFrag();
                 }
                 break;
+            case R.id.saveStats:
+                saveStats();
+                break;
 
             default:
                 break;
@@ -162,11 +163,18 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void startMultiplayer() {        //todo aktuell noch stats speichern
-       // SharedPreferences.Editor ed = pref.edit();
+       Intent toMultiplayer = new Intent(MainMenuActivity.this, MultiplayerActivity.class);
+       toMultiplayer.putExtra("player", currentPlayer);
+       startActivity(toMultiplayer);
+
+    }
+
+    public void saveStats(){
         ed = pref.edit();
         ed.putString("PROFILES", pManager.saveToJson());
         ed.apply();
     }
+
     public void startStats() {
         Intent toStats = new Intent(MainMenuActivity.this, StatisticsActivity.class);
 

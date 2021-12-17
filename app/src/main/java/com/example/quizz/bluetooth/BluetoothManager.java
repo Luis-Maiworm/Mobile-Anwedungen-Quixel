@@ -45,10 +45,15 @@ public class BluetoothManager implements IBluetoothManager{
     @Override
     public void init() throws BluetoothException {
 
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+        c.registerReceiver(mBroadcastReceiver4, filter);
+
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         if(btAdapter == null) {
             throw new BluetoothException("Bluetooth is not supported on your device.");
         }
+
+
 
     }
 
@@ -160,11 +165,18 @@ public class BluetoothManager implements IBluetoothManager{
 
     @Override
     public void terminate() {
-        c.unregisterReceiver(mBroadcastReceiver1);
-        c.unregisterReceiver(mBroadcastReceiver2);
-        c.unregisterReceiver(mBroadcastReceiver3);
-        c.unregisterReceiver(mBroadcastReceiver4);
+        unregisterBroadcastReceiver(mBroadcastReceiver1);
+        unregisterBroadcastReceiver(mBroadcastReceiver2);
+        unregisterBroadcastReceiver(mBroadcastReceiver3);
+        unregisterBroadcastReceiver(mBroadcastReceiver4);
+    }
 
+    public void unregisterBroadcastReceiver(BroadcastReceiver br){
+        try {
+            c.unregisterReceiver(br);
+        } catch (IllegalArgumentException e){
+            e.printStackTrace();
+        }
     }
 
 

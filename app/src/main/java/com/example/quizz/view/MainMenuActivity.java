@@ -20,12 +20,9 @@ import android.widget.TextView;
 
 import com.example.quizz.R;
 import com.example.quizz.data.enums.Categories;
-import com.example.quizz.data.enums.Difficulties;
-import com.example.quizz.data.enums.Types;
 import com.example.quizz.data.playerData.Player;
 import com.example.quizz.data.playerData.PlayerManager;
 import com.example.quizz.data.playerData.Statistics;
-import com.example.quizz.data.playerData.StatisticsAnalyser;
 import com.example.quizz.fragments.LoginFragment;
 import com.example.quizz.fragments.ShowPlayerFragment;
 
@@ -38,18 +35,18 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     TextView playerName;
 
     PlayerManager pManager = new PlayerManager();
-    LoginFragment fragment = new LoginFragment();
+    LoginFragment choosePlayerFragment = new LoginFragment();
     ShowPlayerFragment playerFragment = new ShowPlayerFragment();
 
     SharedPreferences pref;
     SharedPreferences.Editor ed;
 
-    private Player currentPlayer;
+    private Player currentPlayer = new Player();
 
 
     //fix variables und view variables werden gesetzt
     public void initVariables(){
-        pref = getSharedPreferences("MYSTATS", 0);
+        pref = getSharedPreferences("MYSTATS", 0);      //todo replace with file Strings -> set to "MYAPP" -> or app ID
 
         saveStats = findViewById(R.id.saveStats);
 
@@ -67,13 +64,25 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         //lädt daten aus shared preferences, setzt ggf. views
 
         //daten werden in den pManager geladen.
-        pManager.loadFromJson(pref.getString("PROFILES", ""));
+        pManager.loadFromJson(pref.getString("PROFILES", ""));      //todo replace with string file -> change to "stats"
         //wenn kein Profile existiert (wenn die json also leer ist), wird eins erstellt -> die fragments dafür werden geöffnet
         if(pManager.getProfiles()==null){
             pManager.setNewProfile();
             openFragmentFirstTime();
 
+            pManager.setCurrentPlayer(currentPlayer);
+            currentPlayer.setStats(new Statistics());
+
+
+            System.out.println("klassenvariable" + currentPlayer);
+            System.out.println("manager variable" + pManager.getCurrentPlayer());
+            // following: nur drin, damit die spielerreferenz hier, die gleiche ist wie im playerManager
+            // dafür dürfen die variablen aber keine null - WErte zurückgeben, um null pointers zu avoiden...
+            // (es wird also zuerst ein leerer spieler erzeugt, der dem currentPlayer zugewiesen wird) ... dieser wird dann später einfach überschrieben
+
+
             //currentPlayer kann hier nicht gesetzt werden (klassen instanz) , läuft die App also zum ersten mal, muss pManager.getCurrentPlayer(); verwendet werden
+            //todo leerer Player Construktor um null value zu vermeiden und referenz herzustellen
 
         } else{     //ansonsten wird die View für den CurrentPlayer gesetzt, welcher in den SharedPreferences gespeichert ist
             pManager.setCurrentPlayer(pManager.getProfiles().getPlayerWithName(pManager.getProfiles().getCurrentPlayer()));
@@ -86,14 +95,14 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         Bundle bundle = new Bundle();
         bundle.putParcelable("playerManager", pManager);
         //sets Arguments for both fragments (playerView and playerChooser)
-        fragment.setArguments(bundle);
+        choosePlayerFragment.setArguments(bundle);
         playerFragment.setArguments(bundle);
     }
     private void openFragmentFirstTime(){
         // wird in loadData aufgerufen
         FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
         fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
-        fT.replace(R.id.FrameLayout, fragment);
+        fT.replace(R.id.FrameLayout, choosePlayerFragment);
         fT.commit();                                        // so the app knows that the fragment has been set and is != null
     }
     private void setUpOnClicks(){
@@ -134,7 +143,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 startStats();
                 break;
             case R.id.imageButton:
-                if(fragment.getView() != null){
+                if(choosePlayerFragment.getView() != null){
                     deleteOpenChooseProfileFrag();
                 } else{
                     openChooseProfileFrag();
@@ -179,25 +188,17 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     public void startStats() {
         Intent toStats = new Intent(MainMenuActivity.this, StatisticsActivity.class);
 
-        currentPlayer = pManager.getCurrentPlayer();
+        statisticsSimulation(); //test zwecke, simuliert zufällige statistiken
 
-        //todo instanz im statsActivity ist nicht die gleiche wie hier!
-
-
-        setStatsTest();
-
-        toStats.putExtra("player", pManager.getCurrentPlayer());
-
-
+        toStats.putExtra("player", currentPlayer);
         startActivity(toStats);
 
     }
 
     //set custom stats
-    public void setStatsTest(){
-        Statistics stats = pManager.getCurrentPlayer().getStats();
-
-        for(int i = 0; i < 1000; i++){
+    public void statisticsSimulation(){
+        Statistics stats = currentPlayer.getStats();
+        for(int i = 0; i < 1000; i++) {
             int rCat = (int) (Math.random() * Categories.values().length);
             int j = 0;
             for(Categories c : Categories.values()){
@@ -215,9 +216,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     public void startSettings() {
         //todo main settings als activity -> "quickSettings" als Fragment
+
     }
 
-    //TODO !! use this methods
     public void openFragment(Fragment frag, int ... animationId){
         FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);     //reordering? true or false
         if(animationId.length != 0){
@@ -237,35 +238,24 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void openCurrentPlayerFrag(){
-        FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
-        fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
-        fT.replace(R.id.FrameLayout, playerFragment);
-        fT.commit();
+        openFragment(playerFragment, R.anim.scale_up, R.anim.scale_down);
     }
+
     public void deleteCurrentPlayerFrag(){
-        FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
-        fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
-        fT.remove(playerFragment);
-        fT.commit();
+        closeFragment(playerFragment, R.anim.scale_up, R.anim.scale_down);
     }
 
     public void openChooseProfileFrag(){
         ImageButton temp = (ImageButton) findViewById(R.id.imageButton);
 
-        FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
-        fT.setCustomAnimations(R.anim.scale_up_profilefrag, R.anim.scale_down_profilefrag);
-        fT.replace(R.id.FrameLayout, fragment);
-        fT.commit();
+        openFragment(choosePlayerFragment, R.anim.scale_up_profilefrag, R.anim.scale_down_profilefrag);
 
         ImageViewAnimatedChangeIn(this, temp, R.drawable.ic_baseline_close_24);
     }
     public void deleteOpenChooseProfileFrag() {
         ImageButton temp = (ImageButton) findViewById(R.id.imageButton);
 
-        FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
-        fT.setCustomAnimations(R.anim.scale_up_profilefrag, R.anim.scale_down_profilefrag);
-        fT.remove(fragment);
-        fT.commit();
+        closeFragment(choosePlayerFragment, R.anim.scale_up_profilefrag, R.anim.scale_down_profilefrag);
 
         ImageViewAnimatedChangeOut(this, temp, R.drawable.ic_baseline_check_circle_24);
     }

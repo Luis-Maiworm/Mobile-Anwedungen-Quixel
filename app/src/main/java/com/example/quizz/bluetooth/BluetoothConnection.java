@@ -10,7 +10,11 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.UUID;
 
@@ -36,11 +40,14 @@ public class BluetoothConnection {
     }
 
     String incomingMessage;
+
+    private ObjectInputStream ois;
+    private ObjectOutputStream oos;
+
     public BluetoothConnection(Context context) {
         mContext = context;
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         start();
-
 
     }
 
@@ -153,6 +160,7 @@ public class BluetoothConnection {
 
             // The connection attempt succeeded. Perform work associated with
             // the connection in a separate thread.
+            // connected opens a new connectedThread
 
             connected(mmSocket, mmDevice);
         }
@@ -233,24 +241,50 @@ public class BluetoothConnection {
                 e.printStackTrace();
             }
 
+
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
+
+
+
+            // this code should be executed, if its determined what format ur reading from... if its an object, this code should be executed
+            // or: execute it always. it doesnt change the way
+            try{
+                oos = new ObjectOutputStream(mmOutStream);
+                oos.flush();
+                ois = new ObjectInputStream(mmInStream);
+
+            } catch (IOException e){
+                Log.e(TAG, "Error");
+                Log.d(TAG, e.getMessage());
+                e.printStackTrace();
+            }
+
+            //todo another stream (object in/output stream)
+            //todo switch after Object type (parameter), so the program can send strings, bytes OR objects as it pleases -> generic
         }
 
+
+
         public void run(){
-            byte[] buffer  = new byte[4096]; //buffer store for the stream
+            byte[] buffer  = new byte[1024]; //buffer store for the stream
 
             int bytes; //bytes returned by "read()"
 
             while(true){
 
                 try{
+
+
+                    //todo check how long this while is being executed... -> check hows it acting (is it consistently reading?
+                    // and if it read some bytes, and some more are being added, what happens?
+                    // test it.
                     bytes = mmInStream.read(buffer);
                     incomingMessage = new String(buffer, 0, bytes);
 
                     Log.d(TAG, "InputStream: " + incomingMessage);
                 } catch (IOException e){
-                    Log.e(TAG, "write: error reading input stream. " + e.getMessage());
+                    Log.e(TAG, "write: input stream is disconnected. " + e.getMessage());
                     break;
                 }
             }
@@ -265,6 +299,18 @@ public class BluetoothConnection {
                 mmOutStream.write(bytes);
             } catch (IOException e){
                 Log.e(TAG, "write: error writing to output stream. " + e.getMessage());
+            }
+        }
+
+
+        public void write(Serializable object) {
+            Log.d(TAG, "writing Object to outputstream");
+
+            try{
+                oos.writeObject(object);
+
+            } catch (IOException e){
+                Log.e(TAG, "write: error writing object to output stream. " + e.getMessage());
             }
         }
 

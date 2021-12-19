@@ -29,7 +29,7 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
 
     RecyclerView recyclerView;
     BluetoothDevicesRVAdapter rvAdapter;
-    GridLayoutManager gridLayoutManager;
+ //   GridLayoutManager gridLayoutManager;
  //   List<BluetoothDevice> mDevices;
     LinearLayoutManager linearLayoutManager;
 
@@ -44,7 +44,6 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
 
         initVariables();
 
-
         recyclerView = findViewById(R.id.recyclerViewBluetooth);
         rvAdapter = new BluetoothDevicesRVAdapter(this, bManager.getmDevices(), bManager);
 
@@ -56,18 +55,11 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
 
         recyclerView.setAdapter(rvAdapter);
 
-
         try {
             bManager.init();
         } catch (BluetoothException e) {
             e.printStackTrace();
         }
-
-
-    //    bManager.enableBt();
-     //   bManager.discover();
-
-
 
     }
 
@@ -112,6 +104,7 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
     protected void onDestroy(){
         super.onDestroy();
 
+        bManager.disableBt();
         bManager.terminate();
     }
 
@@ -160,6 +153,7 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
 
         }
     }
+
 
 
 

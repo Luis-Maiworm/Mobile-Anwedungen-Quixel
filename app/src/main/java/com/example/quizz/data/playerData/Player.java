@@ -15,6 +15,12 @@ public class Player implements Serializable {
     }
 
 
+    //todo create empty constructor? just for one time reference use in loading the app for the first time
+
+    public Player(){
+
+    }
+
 
     public String playerName;
     public int playerID = 0;

@@ -73,12 +73,8 @@ public class PlayerManager implements Parcelable {
      */
     public void chooseCurrentPlayer(String playerName) {
         currentPlayer = null;
-        /*
-        if (currentPlayer != null) {
-            profiles.replacePlayerWithName(profiles.getPlayerWithName(playerName), this.currentPlayer.getPlayerName());
-        }*/
-        this.currentPlayer = profiles.getPlayerWithName(playerName);
 
+        this.currentPlayer = profiles.getPlayerWithName(playerName);
         this.profiles.setCurrentPlayer(currentPlayer.getPlayerName());
 
     }

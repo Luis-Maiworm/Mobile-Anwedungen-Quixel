@@ -8,8 +8,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
+
+import androidx.activity.result.ActivityResultCallback;
+import androidx.core.content.ContextCompat;
 
 import com.example.quizz.exceptions.BluetoothException;
 import com.example.quizz.view.MainMenuActivity;
@@ -42,8 +46,11 @@ public class BluetoothManager implements IBluetoothManager{
         return this.mDevices;
     }
 
+
+
     @Override
     public void init() throws BluetoothException {
+        checkPermission();
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
         c.registerReceiver(mBroadcastReceiver4, filter);
 
@@ -166,6 +173,7 @@ public class BluetoothManager implements IBluetoothManager{
         unregisterBroadcastReceiver(mBroadcastReceiver2);
         unregisterBroadcastReceiver(mBroadcastReceiver3);
         unregisterBroadcastReceiver(mBroadcastReceiver4);
+
     }
 
     public void unregisterBroadcastReceiver(BroadcastReceiver br){
@@ -187,9 +195,30 @@ public class BluetoothManager implements IBluetoothManager{
 
                 activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001); //Any number
             }
+
         }else{
             Log.d(TAG, "checkBTPermissions: No need to check permissions. SDK version < LOLLIPOP.");
         }
+    }
+
+
+    public void checkPermission(){
+
+        ActivityResultCallback test;
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            Activity activity = (Activity) c;
+            int ASK_MULTIPLE_PERMISSION_REQUEST_CODE = 0;
+
+
+            activity.requestPermissions(new String[]{
+                    Manifest.permission.BLUETOOTH_SCAN,
+                    Manifest.permission.BLUETOOTH_CONNECT,
+                    Manifest.permission.BLUETOOTH_ADVERTISE}, ASK_MULTIPLE_PERMISSION_REQUEST_CODE);
+        } else {
+            return;
+        }
+
     }
 
 
@@ -197,7 +226,7 @@ public class BluetoothManager implements IBluetoothManager{
 
 
 
-
+    // add broadcast receiver to send and read methods?
 
 
     private final BroadcastReceiver mBroadcastReceiver1 = new BroadcastReceiver() {
@@ -267,12 +296,19 @@ public class BluetoothManager implements IBluetoothManager{
 
             if (action.equals(BluetoothDevice.ACTION_FOUND)){
                 BluetoothDevice mmDevice = intent.getParcelableExtra (BluetoothDevice.EXTRA_DEVICE);
-                if(mmDevice.getName() != null && !mDevices.contains(mmDevice)){
+                if(mmDevice.getName() != null && !mDevices.contains(mmDevice)){         // checks if the name of the found bluetooth device is == null and if the list already contains the found device (avoids duplicates)
                     mDevices.add(mmDevice);
+
+                    /*
+                    if(mmDevice.getName == null){
+                        mmDevice.getName() = "";
+                    }
+                     */
+                    //todo should null names be added to the list?
                 }
 
                 Log.d(TAG, "onReceive: " + mmDevice.getName() + ": " + mmDevice.getAddress());
-                Log.d(TAG, "size of list" + mDevices.size());
+                Log.d(TAG, "size of list " + mDevices.size());
 
                 //    mDeviceListAdapter = new DeviceListAdapter(context, R.layout.device_adapter_view, mBTDevices);
                 //    lvNewDevices.setAdapter(mDeviceListAdapter);

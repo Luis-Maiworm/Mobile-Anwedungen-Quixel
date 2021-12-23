@@ -28,25 +28,21 @@ public class BluetoothManager implements IBluetoothManager{
 
     private static final String TAG = "BluetoothManager";
 
-    ArrayList<BluetoothDevice> mDevices = new ArrayList<>();
-    BluetoothDevice mDevice;
-    BluetoothConnection btConnection;
-    BluetoothAdapter btAdapter;
+    private ArrayList<BluetoothDevice> mDevices = new ArrayList<>();
+    private BluetoothDevice mDevice;
+    private BluetoothConnection btConnection;
+    private BluetoothAdapter btAdapter;
     Context c;
-
 
 
     public BluetoothManager(Context c){
         this.c = c;
     }
 
-
     @Override
     public ArrayList<BluetoothDevice> getmDevices() {
         return this.mDevices;
     }
-
-
 
     @Override
     public void init() throws BluetoothException {
@@ -58,9 +54,6 @@ public class BluetoothManager implements IBluetoothManager{
         if(btAdapter == null) {
             throw new BluetoothException("Bluetooth is not supported on your device.");
         }
-
-
-
     }
 
     @Override
@@ -128,8 +121,6 @@ public class BluetoothManager implements IBluetoothManager{
         }
     }
 
-
-
     @Override
     public void pair(BluetoothDevice device) throws BluetoothException {
 
@@ -181,7 +172,7 @@ public class BluetoothManager implements IBluetoothManager{
 
     }
 
-    public void unregisterBroadcastReceiver(BroadcastReceiver br){
+    private void unregisterBroadcastReceiver(BroadcastReceiver br){
         try {
             c.unregisterReceiver(br);
         } catch (IllegalArgumentException e){
@@ -190,7 +181,7 @@ public class BluetoothManager implements IBluetoothManager{
     }
 
 
-    public void checkPermissions(){
+    private void checkPermissions(){
         Activity activity = (Activity) c;                           // cast ok?
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
             int permissionCheck = activity.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION");
@@ -214,7 +205,6 @@ public class BluetoothManager implements IBluetoothManager{
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             Activity activity = (Activity) c;
             int ASK_MULTIPLE_PERMISSION_REQUEST_CODE = 0;
-
 
             activity.requestPermissions(new String[]{
                     Manifest.permission.BLUETOOTH_SCAN,

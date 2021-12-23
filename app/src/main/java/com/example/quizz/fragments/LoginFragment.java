@@ -1,14 +1,10 @@
 package com.example.quizz.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,43 +15,42 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.quizz.R;
 import com.example.quizz.data.enums.Constants;
-import com.example.quizz.data.playerData.Player;
 import com.example.quizz.data.playerData.PlayerManager;
 import com.example.quizz.viewControl.ProfileRVAdapter;
 
 public class LoginFragment extends Fragment {
-
-
-
-    //rivate String [] profileNames = {"hallo", "nabend"};
-    //private int [] icons = {R.drawable.cat_icon14_geography, R.drawable.cat_icon17_art};
 
     private String[] profileNames;
     private int [] icons;
 
     public static String TAG = "Login";
 
-    RecyclerView recyclerViewLogin;
-    ProfileRVAdapter rvAdapter;
-    GridLayoutManager gridLayoutManager;
-    View view;
-    ImageButton closeFragment, addPlayer;
+    private RecyclerView recyclerViewLogin;
+    private ProfileRVAdapter rvAdapter;
+    private GridLayoutManager gridLayoutManager;
+    private View view;
+    private ImageButton closeFragment, addProfileBtn;
 
-    AddPlayerFragment childFrag = new AddPlayerFragment();
+    private AddPlayerFragment childFrag = new AddPlayerFragment();
 
-    PlayerManager pManager;
+    private PlayerManager pManager;
 
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-               // ?
         view = inflater.inflate(R.layout.fragment_chooseuser, container, false);
 
+       init();
+       initButton();
+       finish();
+
+        return view;
+    }
 
 
+    private void init(){
         Bundle bundle = this.getArguments();
         if(bundle != null){
             pManager = bundle.getParcelable(Constants.playerManagerConstant);
@@ -64,9 +59,7 @@ public class LoginFragment extends Fragment {
             icons = pManager.profiles.getPlayerIcons();
         }
 
-
         try {
-
             //send to child
             Bundle bundle2 = new Bundle();
             bundle2.putParcelable(Constants.playerManagerConstant, pManager);
@@ -77,7 +70,6 @@ public class LoginFragment extends Fragment {
             System.out.println("funktnet");
         }
 
-
         recyclerViewLogin = view.findViewById(R.id.recyclerViewProfiles);
 
         rvAdapter = new ProfileRVAdapter(getActivity(), profileNames, icons, pManager, this);
@@ -86,13 +78,12 @@ public class LoginFragment extends Fragment {
         gridLayoutManager = new GridLayoutManager(getActivity(), 2, gridLayoutManager.VERTICAL, false);
         recyclerViewLogin.setLayoutManager(gridLayoutManager);
         recyclerViewLogin.setAdapter(rvAdapter);
-
-
-
+    }
+    private void initButton(){
         // onClick zum Aufrufen des addPlayer frag
-        addPlayer = (ImageButton) view.findViewById(R.id.imageButton2);
+        addProfileBtn = (ImageButton) view.findViewById(R.id.imageButton2);
 
-        addPlayer.setOnClickListener(new View.OnClickListener() {
+        addProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -102,14 +93,11 @@ public class LoginFragment extends Fragment {
                     addAddPlayerFrag();
                 }
 
-
             }   //todo bei child einfügen das wieder zu
         });
-
-
-
-
-        // fügt das addPlayer fragment hinzu, falls es noch keinen spieler gibt
+    }
+    private void finish(){
+        //opens addPlayerFragment if no user has been created yet
         try {
             if (pManager.getProfiles().getPlayerList().isEmpty()) {
                 addAddPlayerFrag();
@@ -117,15 +105,8 @@ public class LoginFragment extends Fragment {
         } catch (NullPointerException e){
 
         }
-
-        return view;
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState){
-
-
-    }
 
     @Override
     public void onDestroyView(){
@@ -157,32 +138,21 @@ public class LoginFragment extends Fragment {
         View b = view.findViewById(R.id.child_fragment_addPlayer);
         b.setVisibility(View.VISIBLE);
 
-
-
-      //  ImageButton temp = (ImageButton) view.findViewById(R.id.imageButton2);
         //todo add a NEW fragment each time its called? (atm it remembers the position if the menü and basically just reopens one all the time
-
         FragmentTransaction fT;
-        //calls the FragmentManager from the Activity this fragment is being used on.
-        // It then removes the LoginFragment from the Fragments attached to that activity
         fT = getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
         fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
         fT.replace(R.id.child_fragment_addPlayer, childFrag);
         fT.commit();
-        //ImageViewAnimatedChangeIn(getContext(), temp, R.drawable.ic_baseline_remove_circle_outline_24);
+
     }
 
     public void closeAddPlayerFrag(){
-
-        //ImageButton temp = (ImageButton) view.findViewById(R.id.imageButton2);
-
         FragmentTransaction fT;
         fT = getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
         fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
         fT.remove(childFrag);
         fT.commit();
-
-
 
         View b = view.findViewById(R.id.child_fragment_addPlayer);
         view.postDelayed(new Runnable() {
@@ -192,67 +162,7 @@ public class LoginFragment extends Fragment {
             }
         }, 500);
 
-      //  ImageViewAnimatedChangeOut(getContext(), temp, R.drawable.ic_baseline_add_circle_outline_24);
-
     }
-
-
-    /*
-    public void ImageViewAnimatedChangeIn(Context c, ImageButton v, int new_image){
-        final Animation anim_out = AnimationUtils.loadAnimation(c, R.anim.slide_out_imagebutton2);
-        final Animation anim_in = AnimationUtils.loadAnimation(c, R.anim.slide_in_imagebutton2);
-        anim_out.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {}
-            @Override
-            public void onAnimationRepeat(Animation animation) {}
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                v.setImageResource(new_image);
-                anim_in.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {}
-                    @Override
-                    public void onAnimationEnd(Animation animation) {}
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {}
-                });
-                v.startAnimation(anim_in);
-            }
-        });
-        v.startAnimation(anim_out);
-    }
-
-    public void ImageViewAnimatedChangeOut(Context c, ImageView v, int new_image){
-        final Animation anim_out = AnimationUtils.loadAnimation(c, R.anim.slide_out_imagebutton2);
-        final Animation anim_in = AnimationUtils.loadAnimation(c, R.anim.slide_in_imagebutton2);
-        anim_out.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {}
-            @Override
-            public void onAnimationRepeat(Animation animation) {}
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                v.setImageResource(new_image);
-                anim_in.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {}
-                    @Override
-                    public void onAnimationEnd(Animation animation) {}
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {}
-                });
-                v.startAnimation(anim_in);
-            }
-        });
-        v.startAnimation(anim_out);
-    }
-*/
-
-
-
-
-
 
 
 

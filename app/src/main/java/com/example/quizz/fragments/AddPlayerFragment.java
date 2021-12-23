@@ -21,55 +21,47 @@ import com.example.quizz.data.playerData.PlayerManager;
 import com.example.quizz.viewControl.AddPlayerRVAdapter;
 import com.example.quizz.viewControl.ProfileRVAdapter;
 
-import java.util.List;
-
 public class AddPlayerFragment extends Fragment {
 
-
-    ImageButton addPlayer;
-    View view;
+    private Button addPlayerBtn;
+    private View view;
 
     static final String TAG = "addingFrag";
     RecyclerView recyclerViewIcons;
     AddPlayerRVAdapter rvAdapter;
 
+    private GridLayoutManager gridLayoutManager;
 
-    GridLayoutManager gridLayoutManager;
-
-    Player playerToCreate;
-    PlayerManager pManager;
-    EditText editText;
-    ProfileRVAdapter profAdapter;
+    private Player playerToCreate;
+    private PlayerManager pManager;
+    private EditText editText;
+    private ProfileRVAdapter profAdapter;
 
     public void setRvAdapter(ProfileRVAdapter profAdapter){
         this.profAdapter = profAdapter;
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
         view = inflater.inflate(R.layout.fragment_child, container, false);
 
+        init();
+        initButton();
 
-        try {
-            Bundle bundle = this.getArguments();
+        return view;
+    }
 
+
+
+    private void init(){
+        Bundle bundle = this.getArguments();
+
+        if(bundle != null) {
             pManager = bundle.getParcelable(Constants.playerManagerConstant);       //todo null pointer evtl?
-            System.out.println(pManager);
-
-        } catch(Exception e){
-            e.printStackTrace();
         }
 
-        /*
-        pManager.createNewPlayer("TestName");
-        pManager.getProfiles().getPlayerWithName("TestName").setPlayerIcon(R.drawable.cat_icon01_generalknowledge);
-        profileNames = pManager.getPlayerNames();
-        icons = pManager.getPlayerIcons();
-        */
-
-        playerToCreate = new Player("Bsp", 0); //todo remove player id from constructor
+        playerToCreate = new Player(); //todo remove player id from constructor
 
         recyclerViewIcons = view.findViewById(R.id.recyclerViewIcons);
 
@@ -78,16 +70,15 @@ public class AddPlayerFragment extends Fragment {
         gridLayoutManager = new GridLayoutManager(getActivity(), 2, gridLayoutManager.VERTICAL, false);
         recyclerViewIcons.setLayoutManager(gridLayoutManager);
         recyclerViewIcons.setAdapter(rvAdapter);
+    }
 
+    private void initButton(){
+        addPlayerBtn = view.findViewById(R.id.submitPlayerBtn);
 
-
-        Button button = view.findViewById(R.id.enterButton);
-
-        button.setOnClickListener(new View.OnClickListener() {
+        addPlayerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //todo check if properties are correct, and then Create the Player.
-                // createPlayer(playerToCreate);
+
                 try{
                     editText = view.findViewById(R.id.editTextTextPersonName2);
                     String name = editText.getText().toString();
@@ -100,13 +91,11 @@ public class AddPlayerFragment extends Fragment {
                     pManager.createNewPlayer(playerToCreate);
 
                     profAdapter.setData(pManager.getProfiles().getPlayerIcons(), pManager.getProfiles().getPlayerNames());
-
                     // profAdapter.notifyItemChanged(pManager.getProfiles().getPlayerListSize());      //todo
                     profAdapter.notifyDataSetChanged();     //todo change notify (notifyDataSetChanged -> performance problem)
                     closeFragment();
 
                 } catch (Exception e) {
-
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle("Error");
                     builder.setMessage(e.getMessage());
@@ -117,11 +106,10 @@ public class AddPlayerFragment extends Fragment {
             }
 
         });
-
-        return view;
     }
 
-    public void closeFragment(){
+
+    private void closeFragment(){
 
         FragmentTransaction fT = getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
         fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);

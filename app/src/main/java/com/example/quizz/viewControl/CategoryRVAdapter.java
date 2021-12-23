@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.quizz.R;
+import com.example.quizz.data.enums.Constants;
 import com.example.quizz.view.GameActivity;
 
 public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.CategoryViewHolder> {
@@ -45,7 +46,7 @@ public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.Ca
             @Override
             public void onClick(View view) {
                 Intent startGameIntent = new Intent(context, GameActivity.class);
-                startGameIntent.putExtra("category", names[holder.getAdapterPosition()]);
+                startGameIntent.putExtra(Constants.categoryConstant, names[holder.getAdapterPosition()]);
                 context.startActivity(startGameIntent);
             }
         });

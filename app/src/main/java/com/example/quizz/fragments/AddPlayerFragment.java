@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.quizz.R;
+import com.example.quizz.data.enums.Constants;
 import com.example.quizz.data.playerData.Player;
 import com.example.quizz.data.playerData.PlayerManager;
 import com.example.quizz.viewControl.AddPlayerRVAdapter;
@@ -54,7 +55,7 @@ public class AddPlayerFragment extends Fragment {
         try {
             Bundle bundle = this.getArguments();
 
-            pManager = bundle.getParcelable("playerManager");       //todo null pointer evtl?
+            pManager = bundle.getParcelable(Constants.playerManagerConstant);       //todo null pointer evtl?
             System.out.println(pManager);
 
         } catch(Exception e){
@@ -110,7 +111,6 @@ public class AddPlayerFragment extends Fragment {
                     builder.setTitle("Error");
                     builder.setMessage(e.getMessage());
                     builder.setPositiveButton("Okay", (dialog, id) -> {
-
                     });
                     builder.show();
                 }

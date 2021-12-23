@@ -13,6 +13,15 @@
         android:layout_height="match_parent">
 
 
+        <ListView
+            android:id="@+id/statisticList"
+            android:layout_width="301dp"
+            android:layout_height="226dp"
+            app:layout_constraintBottom_toTopOf="@+id/sortButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/statsScreenTitle" />
+
         <TextView
             android:id="@+id/statsScreenTitle"
             android:layout_width="wrap_content"
@@ -27,36 +36,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/wonStats"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/sortButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.121"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/statsScreenTitle"
-            app:layout_constraintVertical_bias="0.742" />
-
         <com.github.mikephil.charting.charts.HorizontalBarChart
             android:id="@+id/barChartCats"
             android:layout_width="360dp"
             android:layout_height="769dp"
+            android:layout_marginTop="356dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.49"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sortButton"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toBottomOf="@+id/statsScreenTitle" />
 
         <ImageView
             android:id="@+id/sortButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_marginBottom="4dp"
             app:layout_constraintBottom_toTopOf="@+id/barChartCats"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/statsScreenTitle"
             app:layout_constraintVertical_bias="1.0"

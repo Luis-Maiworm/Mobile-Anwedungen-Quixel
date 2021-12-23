@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.quizz.R;
+import com.example.quizz.data.enums.Constants;
 import com.example.quizz.data.playerData.Player;
 import com.example.quizz.data.playerData.PlayerManager;
 import com.example.quizz.viewControl.AddPlayerRVAdapter;
@@ -41,7 +42,7 @@ public class ShowPlayerFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if(bundle != null){
-            pManager = bundle.getParcelable("playerManager");
+            pManager = bundle.getParcelable(Constants.playerManagerConstant);
             //sets the arrays needed for the recyclerView with the pManager's data
             currentPlayer = pManager.getCurrentPlayer();
         }

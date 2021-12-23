@@ -44,12 +44,20 @@
         app:layout_constraintTop_toBottomOf="@+id/disable"
         app:layout_constraintVertical_bias="0.048" />
 
-    <Button
-        android:id="@+id/pair"
+        <EditText
+            android:id="@+id/editSend"
+            android:layout_width="155dp"
+            android:layout_height="49dp"
+            app:layout_constraintEnd_toStartOf="@+id/refresh"
+            app:layout_constraintStart_toEndOf="@+id/send"
+            app:layout_constraintTop_toBottomOf="@+id/discover" />
+
+        <Button
+        android:id="@+id/send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="136dp"
-        android:text="pair"
+        android:text="send"
 
         app:layout_constraintBottom_toTopOf="@+id/recyclerViewBluetooth"
         app:layout_constraintEnd_toStartOf="@+id/discover"
@@ -74,7 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="visible"
-        app:layout_constraintBottom_toTopOf="@+id/pair"
+        app:layout_constraintBottom_toTopOf="@+id/send"
         app:layout_constraintEnd_toStartOf="@+id/discover"
         app:layout_constraintHorizontal_bias="0.253"
         app:layout_constraintStart_toStartOf="parent"

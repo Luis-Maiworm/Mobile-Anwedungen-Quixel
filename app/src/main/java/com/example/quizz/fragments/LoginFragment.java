@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.quizz.R;
+import com.example.quizz.data.enums.Constants;
 import com.example.quizz.data.playerData.Player;
 import com.example.quizz.data.playerData.PlayerManager;
 import com.example.quizz.viewControl.ProfileRVAdapter;
@@ -57,7 +58,7 @@ public class LoginFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if(bundle != null){
-            pManager = bundle.getParcelable("playerManager");
+            pManager = bundle.getParcelable(Constants.playerManagerConstant);
             //sets the arrays needed for the recyclerView with the pManager's data
             profileNames = pManager.getProfiles().getPlayerNames();
             icons = pManager.profiles.getPlayerIcons();
@@ -68,7 +69,7 @@ public class LoginFragment extends Fragment {
 
             //send to child
             Bundle bundle2 = new Bundle();
-            bundle2.putParcelable("playerManager", pManager);
+            bundle2.putParcelable(Constants.playerManagerConstant, pManager);
             childFrag.setArguments(bundle2);
 
         } catch (Exception e) {

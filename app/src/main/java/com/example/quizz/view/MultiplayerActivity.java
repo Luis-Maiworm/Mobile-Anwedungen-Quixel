@@ -5,15 +5,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.quizz.R;
 import com.example.quizz.bluetooth.BluetoothManager;
+import com.example.quizz.data.playerData.Player;
 import com.example.quizz.exceptions.BluetoothException;
 import com.example.quizz.viewControl.BluetoothDevicesRVAdapter;
 
@@ -23,7 +24,8 @@ import java.util.List;
 public class MultiplayerActivity extends AppCompatActivity implements View.OnClickListener{
 
     BluetoothManager bManager;
-    Button enable, disable, discover, pair, connect, visible, refresh;
+    Button enable, disable, discover, send, connect, visible, refresh;
+    EditText textEdit;
 
     SwipeRefreshLayout swipeLayout;
 
@@ -63,20 +65,24 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
 
     }
 
+
+
     public void initVariables(){
         swipeLayout = findViewById(R.id.swipeLayout);
         enable = findViewById(R.id.enable);
         disable = findViewById(R.id.disable);
         discover = findViewById(R.id.discover);
-        pair = findViewById(R.id.pair);
+        send = findViewById(R.id.send);
         connect = findViewById(R.id.connect);
         visible = findViewById(R.id.visible);
         refresh = findViewById(R.id.refresh);
 
+        textEdit = findViewById(R.id.editSend);
+
         enable.setOnClickListener(this);
         disable.setOnClickListener(this);
         discover.setOnClickListener(this);
-        pair.setOnClickListener(this);
+        send.setOnClickListener(this);
         connect.setOnClickListener(this);
         visible.setOnClickListener(this);
         refresh.setOnClickListener(this);
@@ -116,9 +122,7 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
 
 
     List<BluetoothDevice> prevState = new ArrayList<>();
-    /**
-     * Algo to avoid using the notifyDataSetChanged() method.
-     */
+    // sollte eigentlich an allen neu hinzugekommenen positionen updaten / notifien...
     public void notifyAlgo(){
         List<BluetoothDevice> temp = bManager.getmDevices();
 
@@ -150,7 +154,10 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
             case R.id.refresh:                        //todo nicht über button, sonder nach unten swipen
                 refresh();
                 break;
-
+            case R.id.send:
+                bManager.write(textEdit.getText().toString());
+              //  bManager.write(new Player(textEdit.getText().toString(), 0));
+                break;
         }
     }
 

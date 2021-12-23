@@ -15,11 +15,13 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.quizz.R;
 import com.example.quizz.data.enums.Categories;
+import com.example.quizz.data.enums.Constants;
 import com.example.quizz.data.playerData.Player;
 import com.example.quizz.data.playerData.PlayerManager;
 import com.example.quizz.data.playerData.Statistics;
@@ -44,9 +46,10 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private Player currentPlayer = new Player();
 
 
+
     //fix variables und view variables werden gesetzt
     public void initVariables(){
-        pref = getSharedPreferences("MYSTATS", 0);      //todo replace with file Strings -> set to "MYAPP" -> or app ID
+        pref = getSharedPreferences(Constants.appConstant, 0);      //todo replace with file Strings -> set to "MYAPP" -> or app ID
 
         saveStats = findViewById(R.id.saveStats);
 
@@ -54,7 +57,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         openMultiplayer = findViewById(R.id.multiplayerBtn);
         openStats = findViewById(R.id.statsBtn);
         // Button openSettings = findViewById(R.id.statsBtn);
-        openProfileChooser = findViewById(R.id.imageButton);
+        openProfileChooser = findViewById(R.id.fragmentBtn);
 
         playerName = findViewById(R.id.mainProfileLabel);
         openPlayerView = findViewById(R.id.mainProfileIcon);
@@ -64,9 +67,10 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         //lädt daten aus shared preferences, setzt ggf. views
 
         //daten werden in den pManager geladen.
-        pManager.loadFromJson(pref.getString("PROFILES", ""));      //todo replace with string file -> change to "stats"
+        pManager.loadFromJson(pref.getString(Constants.statsConstant, ""));      //todo replace with string file -> change to "stats"
         //wenn kein Profile existiert (wenn die json also leer ist), wird eins erstellt -> die fragments dafür werden geöffnet
         if(pManager.getProfiles()==null){
+            openProfileChooser.setImageResource(R.drawable.ic_baseline_close_24);
             pManager.setNewProfile();
             openFragmentFirstTime();
 
@@ -77,7 +81,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             System.out.println("klassenvariable" + currentPlayer);
             System.out.println("manager variable" + pManager.getCurrentPlayer());
             // following: nur drin, damit die spielerreferenz hier, die gleiche ist wie im playerManager
-            // dafür dürfen die variablen aber keine null - WErte zurückgeben, um null pointers zu avoiden...
+            // dafür dürfen die variablen aber keine null - WErte zurückgeben, um null pointers zu avoiden...DAHER :
             // (es wird also zuerst ein leerer spieler erzeugt, der dem currentPlayer zugewiesen wird) ... dieser wird dann später einfach überschrieben
 
 
@@ -93,7 +97,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     }
     private void passManagerToFragments(){
         Bundle bundle = new Bundle();
-        bundle.putParcelable("playerManager", pManager);
+        bundle.putParcelable(Constants.playerManagerConstant, pManager);
         //sets Arguments for both fragments (playerView and playerChooser)
         choosePlayerFragment.setArguments(bundle);
         playerFragment.setArguments(bundle);
@@ -128,6 +132,27 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         setUpOnClicks();
     }
 
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+
+        //todo close fragment
+
+        FrameLayout layout = findViewById(R.id.FrameLayout);
+
+        Fragment frag = ((Fragment) getSupportFragmentManager().findFragmentById(R.id.FrameLayout));
+
+        try {
+            if (frag.getView() != null) {
+                closeFragment(frag);
+            }
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
+
+        //todo if back pressed: it shall not exit the activity, BUT if a fragment is opened it should close it
+    }
+
     // Menu
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -142,10 +167,15 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             case R.id.statsBtn:
                 startStats();
                 break;
-            case R.id.imageButton:
+            case R.id.fragmentBtn:
+                // events mit dem imageButton, der wiederverwendet wird
+                // kann schöner gelöst werden! UND settingsfragment ist noch nicht drin
                 if(choosePlayerFragment.getView() != null){
                     deleteOpenChooseProfileFrag();
-                } else{
+                } else if (playerFragment.getView() != null){
+                    deleteCurrentPlayerFrag();
+                }
+                else{
                     openChooseProfileFrag();
                 }
                 break;
@@ -159,29 +189,27 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             case R.id.saveStats:
                 saveStats();
                 break;
-
             default:
                 break;
         }
     }
 
-
     public void startSingleplayer() {
         Intent toSingleplayer = new Intent(MainMenuActivity.this, ChooseCategoryActivity.class);
-        toSingleplayer.putExtra("player", currentPlayer);
+        toSingleplayer.putExtra(Constants.playerConstant, currentPlayer);
         startActivity(toSingleplayer);
     }
 
     public void startMultiplayer() {        //todo aktuell noch stats speichern
        Intent toMultiplayer = new Intent(MainMenuActivity.this, MultiplayerActivity.class);
-       toMultiplayer.putExtra("player", currentPlayer);
+       toMultiplayer.putExtra(Constants.playerConstant, currentPlayer);
        startActivity(toMultiplayer);
 
     }
 
     public void saveStats(){
         ed = pref.edit();
-        ed.putString("PROFILES", pManager.saveToJson());
+        ed.putString(Constants.statsConstant, pManager.saveToJson());  // save to the key Constants.statsConstant
         ed.apply();
     }
 
@@ -190,7 +218,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         statisticsSimulation(); //test zwecke, simuliert zufällige statistiken
 
-        toStats.putExtra("player", currentPlayer);
+        toStats.putExtra(Constants.playerConstant, currentPlayer);
         startActivity(toStats);
 
     }
@@ -219,45 +247,49 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    public void openFragment(Fragment frag, int ... animationId){
+    public void openFragment(Fragment frag, int ... anim){
+
         FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);     //reordering? true or false
-        if(animationId.length != 0){
-            fT.setCustomAnimations(animationId[0], animationId[1]);
+        if(anim.length != 0){
+            fT.setCustomAnimations(anim[0], anim[1]);
         }
         fT.replace(R.id.FrameLayout, frag);
         fT.commit();
+
+        //todo add boolean to determine if its connected to the button
+
+        ImageViewAnimatedChangeIn(this, openProfileChooser, R.drawable.ic_baseline_close_24);
     }
 
-    public void closeFragment(Fragment frag, int ... animationId){
+    public void closeFragment(Fragment frag, int ... anim){
+
         FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);     //reordering? true or false
-        if(animationId.length != 0){
-            fT.setCustomAnimations(animationId[0], animationId[1]);
+        if(anim.length > 1){
+            fT.setCustomAnimations(anim[0], anim[1]);
         }
         fT.remove(frag);
         fT.commit();
+
+        //ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this .findViewById(android.R.id.content)).getChildAt(0);
+        //add greyscale when fragment is open.
+
+        ImageViewAnimatedChangeOut(this, openProfileChooser, R.drawable.ic_baseline_check_circle_24);
     }
 
     public void openCurrentPlayerFrag(){
         openFragment(playerFragment, R.anim.scale_up, R.anim.scale_down);
     }
-
     public void deleteCurrentPlayerFrag(){
+
         closeFragment(playerFragment, R.anim.scale_up, R.anim.scale_down);
+
     }
 
     public void openChooseProfileFrag(){
-        ImageButton temp = (ImageButton) findViewById(R.id.imageButton);
-
         openFragment(choosePlayerFragment, R.anim.scale_up_profilefrag, R.anim.scale_down_profilefrag);
-
-        ImageViewAnimatedChangeIn(this, temp, R.drawable.ic_baseline_close_24);
     }
     public void deleteOpenChooseProfileFrag() {
-        ImageButton temp = (ImageButton) findViewById(R.id.imageButton);
-
         closeFragment(choosePlayerFragment, R.anim.scale_up_profilefrag, R.anim.scale_down_profilefrag);
-
-        ImageViewAnimatedChangeOut(this, temp, R.drawable.ic_baseline_check_circle_24);
     }
 
     public static void ImageViewAnimatedChangeIn(Context c, ImageButton v, int new_image){

@@ -8,11 +8,13 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 
 import com.example.quizz.R;
 import com.example.quizz.data.enums.Categories;
+import com.example.quizz.data.enums.Constants;
 import com.example.quizz.data.playerData.Player;
 
 import com.example.quizz.data.playerData.StatisticsAnalyser;
@@ -29,7 +31,6 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class StatisticsActivity extends AppCompatActivity {
     StatisticsAnalyser analyser;
 
     //views
-    TextView textView;
+    ListView listView;
     ImageView sortButton;
 
     //chart
@@ -60,10 +61,10 @@ public class StatisticsActivity extends AppCompatActivity {
 
 
     private void initVariables(){
-        currentPlayer = (Player) getIntent().getSerializableExtra("player");
+        currentPlayer = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
         analyser = new StatisticsAnalyser(currentPlayer);
 
-        textView = (TextView) findViewById(R.id.wonStats);
+        listView = findViewById(R.id.statisticList);
 
         sortButton = (ImageView) findViewById(R.id.sortButton);
     }
@@ -100,7 +101,7 @@ public class StatisticsActivity extends AppCompatActivity {
             }
         });
 
-        textView.setText("\nTotal Ratio" + analyser.totalAnswerRatio() + "%");
+       // listView.addView(new TextView(this, "");
     }
 
 
@@ -121,7 +122,6 @@ public class StatisticsActivity extends AppCompatActivity {
 
         categoryChart(analyser.percentageList(false, analyser.ASC));    //due to the fact how the graph is being filled, "ASC"
                                                                                     // is visually equal to the actual Descending view of the graph
-
     }
 
 
@@ -184,7 +184,6 @@ public class StatisticsActivity extends AppCompatActivity {
         for(Map.Entry<Categories, Double> entry : map.entrySet()){
             values.add(new BarEntry(d, entry.getValue().intValue()));
             xAxisValues.add(entry.getKey().getName());
-            System.out.println(d + ".  " + entry.getKey().getName());       //todo raus
             d++;
         }
 

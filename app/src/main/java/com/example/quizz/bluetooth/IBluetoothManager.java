@@ -27,6 +27,7 @@ public interface IBluetoothManager {
     void connect();
 
     void write(String input);
+    void write(Object o);
 
     String read();
 

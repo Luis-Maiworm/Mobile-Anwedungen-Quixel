@@ -27,6 +27,18 @@ public class Player implements Serializable {
     public Statistics stats;
     public int playerIcon;
 
+    /*
+    private Settings settings;
+
+    public Settings getSettings(){
+        return this.settings;
+    }
+    public void setSettings(Settings settings){
+        this.settings = settings;
+    }
+
+     */
+
     public int getPlayerIcon() {
         return playerIcon;
     }

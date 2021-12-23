@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.quizz.R;
 import com.example.quizz.data.enums.Categories;
+import com.example.quizz.data.enums.Constants;
 import com.example.quizz.exceptions.QueryException;
 import com.example.quizz.gameLogic.timerLogic.Timer;
 import com.example.quizz.questionManager.Question;
@@ -111,8 +112,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void receiveCategory() {
-        if(getIntent().hasExtra("category")) {
-            categoryIdentifier = getIntent().getStringExtra("category");
+        if(getIntent().hasExtra(Constants.categoryConstant)) {
+            categoryIdentifier = getIntent().getStringExtra(Constants.categoryConstant);
         }
         else {
             Toast.makeText(this, "No Data Found", Toast.LENGTH_SHORT).show();

@@ -163,6 +163,11 @@ public class BluetoothManager implements IBluetoothManager{
     }
 
     @Override
+    public void write(Object o) {
+        btConnection.write(o);
+    }
+
+    @Override
     public String read() {
         return btConnection.getIncomingMessage();
     }

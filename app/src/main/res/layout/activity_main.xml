@@ -71,6 +71,8 @@
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/FrameLayout"
 
+
+
         android:layout_width="331dp"
         android:layout_height="533dp"
         android:layoutAnimation="@anim/layout_animation"
@@ -83,7 +85,7 @@
         app:layout_constraintVertical_bias="0.486" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/fragmentBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -94,7 +96,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.976"
-        app:srcCompat="@drawable/ic_baseline_close_24" />
+        app:srcCompat="@drawable/ic_baseline_check_circle_24" />
 
     <ImageButton
         android:id="@+id/mainProfileIcon"
@@ -113,6 +115,8 @@
         android:id="@+id/mainProfileLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:gravity="center"
         android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/mainProfileIcon"
         app:layout_constraintEnd_toEndOf="parent"

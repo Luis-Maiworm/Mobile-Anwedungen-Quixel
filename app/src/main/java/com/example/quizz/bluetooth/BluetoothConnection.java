@@ -1,5 +1,6 @@
 package com.example.quizz.bluetooth;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -7,6 +8,8 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.util.Log;
+
+import com.example.quizz.data.playerData.Player;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -282,6 +285,23 @@ public class BluetoothConnection {
                     bytes = mmInStream.read(buffer);
                     incomingMessage = new String(buffer, 0, bytes);
 
+                    System.out.println(incomingMessage);
+
+                    /*
+                    Player player = null;
+                    try {
+                        Object o = ois.readObject();
+                        player = (Player) o;
+                        System.out.println("player" + player.getPlayerName());
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                     */
+
+
+
+
                     Log.d(TAG, "InputStream: " + incomingMessage);
                 } catch (IOException e){
                     Log.e(TAG, "write: input stream is disconnected. " + e.getMessage());
@@ -303,7 +323,7 @@ public class BluetoothConnection {
         }
 
 
-        public void write(Serializable object) {
+        public void write(Object object) {
             Log.d(TAG, "writing Object to outputstream");
 
             try{
@@ -339,5 +359,13 @@ public class BluetoothConnection {
         Log.d(TAG, "write: write called.");
         //perform the write
         mConnectedThread.write(out);
+    }
+
+    public void write(Object o){
+        ConnectedThread r;
+
+        Log.d(TAG, "write: write called");
+
+        mConnectedThread.write(o);
     }
 }

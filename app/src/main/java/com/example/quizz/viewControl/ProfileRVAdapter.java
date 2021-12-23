@@ -58,6 +58,7 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
         return new ProfileRVAdapter.ProfileViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull ProfileViewHolder holder, int position) {
         holder.profileNames.setText(profileNames[position]);
@@ -67,6 +68,7 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
             @Override
             public boolean onLongClick(View v) {
 
+                System.out.println("lol");
                 //todo let a button appear "changePlayer" ->
                 // also: make it wiggle? AND let a button appear "deletePlayer"
                 // also: make it visible that the player is selected
@@ -77,6 +79,7 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
             @Override
             public void onClick(View view) {
 
+                System.out.println("haha");
                 pManager.chooseCurrentPlayer(profileNames[holder.getAdapterPosition()]);        // null pointer
 
                 // setzt den Text und das bild in der main activity (context = activity vom LoginFragment)

@@ -7,6 +7,9 @@
     android:layout_height="match_parent"
     android:id="@+id/frag_layout"
 
+    android:clickable="true"
+    android:focusable="true"
+
     android:background="@drawable/border_frag_profiles"
 
     >
@@ -45,6 +48,8 @@
         app:srcCompat="@drawable/ic_baseline_add_circle_outline_24" />
 
     <FrameLayout
+
+
         android:id="@+id/child_fragment_addPlayer"
         android:layout_width="281dp"
         android:layout_height="504dp"

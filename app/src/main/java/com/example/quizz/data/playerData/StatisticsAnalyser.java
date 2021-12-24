@@ -6,6 +6,8 @@ import com.example.quizz.questionManager.Question;
 import com.example.quizz.questionManager.QuestionManager;
 
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -74,6 +76,7 @@ public class StatisticsAnalyser {
         s.incrementAnswerPerDifficulty(q.getDifficulty(), qCorrect);
         s.incrementAnswerPerType(q.getType(), qCorrect);
     }
+
 
 
 

@@ -74,8 +74,8 @@ public class PlayerManager implements Parcelable {
     public void chooseCurrentPlayer(String playerName) {
         currentPlayer = null;
 
-        this.currentPlayer = profiles.getPlayerWithName(playerName);
-        this.profiles.setCurrentPlayer(currentPlayer.getPlayerName());
+        this.currentPlayer = profiles.getPlayerWithName(playerName);        //setzt den currentPlayer, damit das Player Objekt wiederverwertet werden kann
+        this.profiles.setCurrentPlayer(currentPlayer.getPlayerName());      //setzt den String für den currentPlayer (name) -> später id, damit dieser in einer json gespeichert werden kann
 
     }
 

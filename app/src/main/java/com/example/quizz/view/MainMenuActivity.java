@@ -27,11 +27,12 @@ import com.example.quizz.data.playerData.PlayerManager;
 import com.example.quizz.data.playerData.Statistics;
 import com.example.quizz.fragments.LoginFragment;
 import com.example.quizz.fragments.ShowPlayerFragment;
+import com.google.gson.Gson;
 
 
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button openSingleplayer, openMultiplayer, openStats, saveStats;
+    Button openSingleplayer, openMultiplayer, openStats, saveStats, resetStats;
     ImageButton openProfileChooser;
     ImageButton openPlayerView;
     TextView playerName;
@@ -51,8 +52,10 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     public void initVariables(){
         pref = getSharedPreferences(Constants.appConstant, 0);      //todo replace with file Strings -> set to "MYAPP" -> or app ID
 
+        // Test zwecke
         saveStats = findViewById(R.id.saveStats);
-
+        resetStats = findViewById(R.id.resetStats);
+        //
         openSingleplayer = findViewById(R.id.singleplayerBtn);
         openMultiplayer = findViewById(R.id.multiplayerBtn);
         openStats = findViewById(R.id.statsBtn);
@@ -119,6 +122,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         openPlayerView.setOnClickListener(this);
 
         saveStats.setOnClickListener(this);
+        resetStats.setOnClickListener(this);
     }
 
     @Override
@@ -189,6 +193,10 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             case R.id.saveStats:
                 saveStats();
                 break;
+            case R.id.resetStats:
+                resetStats();
+                System.out.println("lüppen tuts aber");
+                break;
             default:
                 break;
         }
@@ -210,6 +218,13 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     public void saveStats(){
         ed = pref.edit();
         ed.putString(Constants.statsConstant, pManager.saveToJson());  // save to the key Constants.statsConstant
+        ed.apply();
+    }
+
+    public void resetStats(){
+        ed = pref.edit();
+        pManager.getCurrentPlayer().setStats(new Statistics());             //set empty Statistics as new Stats.
+        ed.putString(Constants.statsConstant, pManager.saveToJson());
         ed.apply();
     }
 
@@ -316,7 +331,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         });
         v.startAnimation(anim_out);
     }
-    public static void ImageViewAnimatedChangeOut(Context c, ImageButton v, int new_image){     //todo ImageButton war ImageView (falls problem weischt bescheid)
+    public static void ImageViewAnimatedChangeOut(Context c, ImageButton v, int new_image){
         final Animation anim_out = AnimationUtils.loadAnimation(c, R.anim.slide_out_imagebutton2);
         final Animation anim_in = AnimationUtils.loadAnimation(c, R.anim.slide_in_imagebutton2);
         anim_out.setAnimationListener(new Animation.AnimationListener() {

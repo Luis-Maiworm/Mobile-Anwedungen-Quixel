@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -89,6 +92,14 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
                 iV.setImageResource(pManager.getCurrentPlayer().getPlayerIcon());
                 //todo animate later?
 
+
+
+                // für den ImageButton im Main menü
+                ImageButton openProfileChooser = ((Activity) context).findViewById(R.id.fragmentBtn);
+                ImageViewAnimatedChangeOut(context, openProfileChooser, R.drawable.ic_baseline_check_circle_24);
+
+
+
                 //close fragment, when a profile is chosen
                 fT = loginFragment.getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
                 fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
@@ -119,6 +130,31 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
         }
     }
 
+
+    public static void ImageViewAnimatedChangeOut(Context c, ImageButton v, int new_image){
+        final Animation anim_out = AnimationUtils.loadAnimation(c, R.anim.slide_out_imagebutton2);
+        final Animation anim_in = AnimationUtils.loadAnimation(c, R.anim.slide_in_imagebutton2);
+        anim_out.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                v.setImageResource(new_image);
+                anim_in.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {}
+                    @Override
+                    public void onAnimationEnd(Animation animation) {}
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {}
+                });
+                v.startAnimation(anim_in);
+            }
+        });
+        v.startAnimation(anim_out);
+    }
 
 
 }

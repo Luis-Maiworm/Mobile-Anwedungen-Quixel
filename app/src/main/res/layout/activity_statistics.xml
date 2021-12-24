@@ -15,8 +15,8 @@
 
         <ListView
             android:id="@+id/statisticList"
-            android:layout_width="301dp"
-            android:layout_height="226dp"
+            android:layout_width="362dp"
+            android:layout_height="296dp"
             app:layout_constraintBottom_toTopOf="@+id/sortButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

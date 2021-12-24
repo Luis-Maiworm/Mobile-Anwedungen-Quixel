@@ -7,9 +7,9 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 
 import com.example.quizz.R;
@@ -17,6 +17,7 @@ import com.example.quizz.data.enums.Categories;
 import com.example.quizz.data.enums.Constants;
 import com.example.quizz.data.playerData.Player;
 
+import com.example.quizz.data.playerData.Statistics;
 import com.example.quizz.data.playerData.StatisticsAnalyser;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
@@ -29,6 +30,8 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +43,7 @@ public class StatisticsActivity extends AppCompatActivity {
     //model
     Player currentPlayer;
     StatisticsAnalyser analyser;
+    Statistics stats;
 
     //views
     ListView listView;
@@ -58,11 +62,34 @@ public class StatisticsActivity extends AppCompatActivity {
 
     boolean flag = true;
 
+    ArrayList<String> statsArray = new ArrayList<>();
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_statistics);
+
+        //todo maybe checken ob überhaupt schon genug gespielt wurde -> dementsprechend statistiken zeigen
+        // an sich: smarte View -> weiß was gespielt wurde was nicht (wurden gamemodes noch nicht gespielt -> wird nicht angezeigt)
+        // kategorien, schwierigkeiten, types nicht gespielt -> nicht anzeigen (immer nur die, die schon gezockt wurden)
+
+
+        initVariables();
+        setVariables();
+        setListView();
+
+
+        categoryChart(analyser.percentageList(false, analyser.ASC));    //due to the fact how the graph is being filled, "ASC"
+                                                                                    // is visually equal to the actual Descending view of the graph
+    }
+
 
 
     private void initVariables(){
         currentPlayer = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
         analyser = new StatisticsAnalyser(currentPlayer);
+        stats = currentPlayer.getStats();
 
         listView = findViewById(R.id.statisticList);
 
@@ -101,28 +128,43 @@ public class StatisticsActivity extends AppCompatActivity {
             }
         });
 
-       // listView.addView(new TextView(this, "");
     }
 
+    NumberFormat formatter = new DecimalFormat("#0.00");
+    String percentEnd = "%";
+    String secEnd = " seconds";
+    String answerRatio = "Correct Questions Percentage: ";
+    String totalRight = "Total correct answers: ";
+    String totalWrong = "Total wrong answers: ";
+    String totalQuestions = "Total answered questions: ";
+    String highscoreEndless = "Endless-Mode: Highscore: ";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_statistics);
+    String remainingTime = "Time-Mode: Avg. time/Question: ";
 
-        //todo maybe checken ob überhaupt schon genug gespielt wurde -> dementsprechend statistiken zeigen
-        // an sich: smarte View -> weiß was gespielt wurde was nicht (wurden gamemodes noch nicht gespielt -> wird nicht angezeigt)
-        // kategorien, schwierigkeiten, types nicht gespielt -> nicht anzeigen (immer nur die, die schon gezockt wurden)
+    private void setListViewArray(){
 
+        statsArray.add(totalQuestions.concat(String.valueOf(stats.getTotalAnswers())));
 
-        initVariables();
-        setVariables();
+        statsArray.add(answerRatio.concat(formatter.format(analyser.totalAnswerRatio()).concat(percentEnd)));
 
+        statsArray.add(totalRight.concat(String.valueOf(stats.getTotalRightAnswers())));
+        statsArray.add(totalWrong.concat(String.valueOf(stats.getTotalWrongAnswers())));
 
+        statsArray.add(highscoreEndless.concat(String.valueOf(stats.getHighScore())));
 
-        categoryChart(analyser.percentageList(false, analyser.ASC));    //due to the fact how the graph is being filled, "ASC"
-                                                                                    // is visually equal to the actual Descending view of the graph
+        statsArray.add(remainingTime.concat(String.valueOf(2)).concat(secEnd));
+
     }
+
+    private void setListView(){
+
+        setListViewArray();
+
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, statsArray);
+
+        listView.setAdapter(arrayAdapter);
+    }
+
 
 
     private void initChartVariables(){

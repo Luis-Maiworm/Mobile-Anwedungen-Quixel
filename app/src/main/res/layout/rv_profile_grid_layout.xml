@@ -50,6 +50,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/profileIcon" />
 
+            <ImageButton
+                android:visibility="gone"
+                android:id="@+id/deletePlayerButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_button"
+                app:layout_constraintBottom_toBottomOf="@+id/profileIcon"
+                app:layout_constraintEnd_toEndOf="@+id/profileIcon"
+                app:layout_constraintStart_toStartOf="@+id/profileIcon"
+                app:layout_constraintTop_toTopOf="@+id/profileIcon"
+                app:layout_constraintVertical_bias="0.509"
+                app:srcCompat="@drawable/ic_baseline_close_24" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

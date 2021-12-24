@@ -152,11 +152,15 @@ public class PlayerManager implements Parcelable {
 
     /**
      * Renames a player.
-     * @param id Is the {@code Player} which will be renamed.
+     * @param oldPlayerName Is the {@code Player} which will be renamed.
      * @param newPlayerName Is the new name for the player.
      */
-    public void renamePlayer(int id, String newPlayerName){
-        this.profiles.getPlayerWithId(id).setPlayerName(newPlayerName);
+    public void renamePlayer(String oldPlayerName, String newPlayerName){
+        this.profiles.getPlayerWithName(oldPlayerName).setPlayerName(newPlayerName);
+    }
+
+    public void deletePlayer(String playerName){
+        this.profiles.removePlayerFromList(playerName);
     }
 
 

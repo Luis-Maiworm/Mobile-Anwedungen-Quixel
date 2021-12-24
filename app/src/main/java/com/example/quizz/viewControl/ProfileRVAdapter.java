@@ -67,6 +67,8 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
         holder.profileNames.setText(profileNames[position]);
         holder.profilePictures.setImageResource(profilePictures[position]);
 
+        ImageButton deletePlayer = (ImageButton) holder.mainLayout.findViewById(R.id.deletePlayerButton);
+
         holder.mainLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -75,12 +77,19 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
                 //todo let a button appear "changePlayer" ->
                 // also: make it wiggle? AND let a button appear "deletePlayer"
                 // also: make it visible that the player is selected
+                deletePlayer.setVisibility(View.VISIBLE);
+
                 return true;        // returns true -> so the onClick doesn't get called
             }
         });
         holder.mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //closes the "deletePlayerButton"
+                if(deletePlayer.getVisibility() == View.VISIBLE){
+                    deletePlayer.setVisibility(View.GONE);
+                    return;
+                }
 
                 System.out.println("haha");
                 pManager.chooseCurrentPlayer(profileNames[holder.getAdapterPosition()]);        // null pointer
@@ -92,12 +101,9 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
                 iV.setImageResource(pManager.getCurrentPlayer().getPlayerIcon());
                 //todo animate later?
 
-
-
                 // für den ImageButton im Main menü
                 ImageButton openProfileChooser = ((Activity) context).findViewById(R.id.fragmentBtn);
                 ImageViewAnimatedChangeOut(context, openProfileChooser, R.drawable.ic_baseline_check_circle_24);
-
 
 
                 //close fragment, when a profile is chosen
@@ -107,6 +113,17 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
                 fT.commit();
             }
 
+        });
+        deletePlayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pManager.deletePlayer(profileNames[holder.getAdapterPosition()]);
+                setData(pManager.getProfiles().getPlayerIcons(), pManager.getProfiles().getPlayerNames());
+
+                //todo delete Player + updates recyclerView (arrays)
+               // notifyItemChanged(holder.getAdapterPosition());
+                notifyDataSetChanged();
+            }
         });
     }
 

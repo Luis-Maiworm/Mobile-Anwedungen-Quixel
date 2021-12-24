@@ -30,7 +30,7 @@ public class AddPlayerRVAdapter extends RecyclerView.Adapter<AddPlayerRVAdapter.
     LayoutInflater inflater;
     Player playerToCreate;
 
-    int selectedItemIndex = -1;
+    private int selectedItemIndex = RecyclerView.NO_POSITION;
 
 
     public AddPlayerRVAdapter(Context context, Player playerToCreate) {
@@ -57,22 +57,23 @@ public class AddPlayerRVAdapter extends RecyclerView.Adapter<AddPlayerRVAdapter.
     public void onBindViewHolder(@NonNull AddPlayerViewHolder holder, int position) {
         holder.icons.setImageResource(icons[position]);
 
+        holder.itemView.clearFocus();
+        holder.itemView.setSelected(selectedItemIndex == position);
+        System.out.println(selectedItemIndex == position);
+
         holder.mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int index = holder.getAdapterPosition();
 
+
+                notifyItemChanged(selectedItemIndex);
+                selectedItemIndex = holder.getLayoutPosition();
+                notifyItemChanged(selectedItemIndex);
+
+
                 playerToCreate.setPlayerIcon(icons[index]);
 
-                /*
-                if(selectedItemIndex != index){
-                    holder.itemView.setBackgroundColor(Color.RED);
-                    notifyItemChanged(selectedItemIndex);
-                    selectedItemIndex = index;
-                }
-
-                selectedItemIndex = holder.getAdapterPosition();
-                */
             }
         });
     }

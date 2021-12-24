@@ -155,8 +155,8 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
                 refresh();
                 break;
             case R.id.send:
-                bManager.write(textEdit.getText().toString());
-              //  bManager.write(new Player(textEdit.getText().toString(), 0));
+              //  bManager.write(textEdit.getText().toString());
+                bManager.write(new Player(textEdit.getText().toString(), 0));
                 break;
         }
     }

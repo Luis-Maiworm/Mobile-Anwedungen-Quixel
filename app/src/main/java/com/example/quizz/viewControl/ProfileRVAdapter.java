@@ -1,8 +1,8 @@
 package com.example.quizz.viewControl;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +13,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.quizz.R;
-import com.example.quizz.data.playerData.Player;
 import com.example.quizz.data.playerData.PlayerManager;
+import com.example.quizz.fragments.AddPlayerFragment;
 import com.example.quizz.fragments.LoginFragment;
-import com.example.quizz.view.GameActivity;
-import com.example.quizz.view.MainMenuActivity;
-
-import java.util.ArrayList;
 
 public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.ProfileViewHolder> {
 
@@ -35,18 +32,20 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
     FragmentTransaction fT;
     PlayerManager pManager;
     LoginFragment loginFragment;
+    AddPlayerFragment childFrag;
 
    // ArrayList contextMenuList;
     Context contextMenuContext;
 
 
-    public ProfileRVAdapter(Context context , String[] profileNames, int[] profilePictures, @NonNull PlayerManager pManager, LoginFragment frag) {
+    public ProfileRVAdapter(Context context , String[] profileNames, int[] profilePictures, @NonNull PlayerManager pManager, LoginFragment frag, AddPlayerFragment childFrag) {
         this.profileNames = profileNames;
         this.profilePictures = profilePictures;
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.pManager = pManager;
         this.loginFragment = frag;
+        this.childFrag = childFrag;
     }
 
     public void setData(int [] icons, String [] profileNames){
@@ -67,7 +66,8 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
         holder.profileNames.setText(profileNames[position]);
         holder.profilePictures.setImageResource(profilePictures[position]);
 
-        ImageButton deletePlayer = (ImageButton) holder.mainLayout.findViewById(R.id.deletePlayerButton);
+        ImageButton deletePlayer = (ImageButton) holder.mainLayout.findViewById(R.id.deletePlayerBtn);
+        ImageButton changePlayer = (ImageButton) holder.mainLayout.findViewById(R.id.changePlayerBtn);
 
         holder.mainLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -77,7 +77,36 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
                 //todo let a button appear "changePlayer" ->
                 // also: make it wiggle? AND let a button appear "deletePlayer"
                 // also: make it visible that the player is selected
-                deletePlayer.setVisibility(View.VISIBLE);
+                deletePlayer.setScaleX(0);
+                deletePlayer.setScaleY(0);
+                deletePlayer.setAlpha(0f);
+                deletePlayer.animate().scaleX(100).scaleY(100).alpha(1f).setDuration(100).setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        deletePlayer.clearAnimation();
+                        deletePlayer.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+
+
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+                changePlayer.animate();
+
+
+                changePlayer.setVisibility(View.VISIBLE);
 
                 return true;        // returns true -> so the onClick doesn't get called
             }
@@ -86,8 +115,9 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
             @Override
             public void onClick(View view) {
                 //closes the "deletePlayerButton"
-                if(deletePlayer.getVisibility() == View.VISIBLE){
+                if(deletePlayer.getVisibility() == View.VISIBLE && changePlayer.getVisibility() == View.VISIBLE){
                     deletePlayer.setVisibility(View.GONE);
+                    changePlayer.setVisibility(View.GONE);
                     return;
                 }
 
@@ -117,12 +147,54 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
         deletePlayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pManager.deletePlayer(profileNames[holder.getAdapterPosition()]);
-                setData(pManager.getProfiles().getPlayerIcons(), pManager.getProfiles().getPlayerNames());
 
-                //todo delete Player + updates recyclerView (arrays)
-               // notifyItemChanged(holder.getAdapterPosition());
-                notifyDataSetChanged();
+                //todo asks if the user is sure to delete -> doesn't work properly
+                AlertDialog.Builder permissionBuilder = new AlertDialog.Builder(context);
+                permissionBuilder.setTitle("Error");
+                permissionBuilder.setMessage("You sure you wanna delete this? ;)");
+                permissionBuilder.setPositiveButton("Okay", (dialog, id) -> {
+
+                });
+                permissionBuilder.setNegativeButton("Nevermind.", (dialog, id) -> {
+
+                });
+                permissionBuilder.show();
+
+
+                try {
+
+                    pManager.deletePlayer(profileNames[holder.getAdapterPosition()]);
+
+                    setData(pManager.getProfiles().getPlayerIcons(), pManager.getProfiles().getPlayerNames());
+
+                    //todo delete Player + updates recyclerView (arrays)
+                    notifyItemChanged(holder.getAdapterPosition());
+                    // notifyDataSetChanged();
+                } catch(Exception e){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Error");
+                    builder.setMessage(e.getMessage());
+                    builder.setPositiveButton("Okay", (dialog, id) -> {
+                    });
+                    builder.show();
+                }
+
+
+            }
+        });
+
+        changePlayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //todo playerFragment
+
+                FragmentTransaction fT;
+
+                fT = loginFragment.getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
+                fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
+                fT.replace(R.id.child_fragment_addPlayer, childFrag);
+                fT.commit();
+
             }
         });
     }
@@ -132,6 +204,7 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
         if(profileNames != null) return profileNames.length;
         return 0;
     }
+
 
     public class ProfileViewHolder extends RecyclerView.ViewHolder {
         TextView profileNames;

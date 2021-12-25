@@ -63,6 +63,8 @@ public class AddPlayerFragment extends Fragment {
 
         playerToCreate = new Player(); //todo remove player id from constructor
 
+        //todo check if bundle contains a specific key
+
         recyclerViewIcons = view.findViewById(R.id.recyclerViewIcons);
 
         rvAdapter = new AddPlayerRVAdapter(getActivity(), playerToCreate);

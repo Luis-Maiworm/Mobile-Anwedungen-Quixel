@@ -1,9 +1,12 @@
 package com.example.quizz.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,7 +22,9 @@ public class ShowPlayerFragment extends Fragment {
 
     private View view;
     private ImageView playerIconView;
+    private ImageButton changeName;
     private TextView playerNameView;
+    private EditText editName;
 
     private PlayerManager pManager;
     private Player currentPlayer;
@@ -32,6 +37,7 @@ public class ShowPlayerFragment extends Fragment {
 
         init();
         initVariables();
+        initBtn();
 
         return view;
     }
@@ -50,6 +56,54 @@ public class ShowPlayerFragment extends Fragment {
 
         playerNameView = view.findViewById(R.id.playerNameView);
         playerNameView.setText(currentPlayer.getPlayerName());
+
+        changeName = view.findViewById(R.id.changeNameBtn);
+        editName = view.findViewById(R.id.playerChangeInputView);
+    }
+
+    private boolean editFlag = true;
+    private void initBtn(){
+        changeName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(editFlag) {
+
+                    playerNameView.setVisibility(View.GONE);
+                    changeName.setImageResource(R.drawable.ic_baseline_check_circle_24);
+
+                    editName.setText(playerNameView.getText());
+                    editName.setVisibility(View.VISIBLE);
+
+                    editName.setFocusable(true);
+
+                    editFlag = false;
+                }
+                else if (!editFlag) {
+                    //todo if name not appropriate -> already given or such (make alertdialog)
+
+                    try {
+                        editName.setVisibility(View.GONE);
+                        changeName.setImageResource(R.drawable.ic_baseline_create_24);
+                        playerNameView.setVisibility(View.VISIBLE);
+
+                        pManager.renamePlayer(currentPlayer.getPlayerName(), editName.getText().toString());
+
+                        playerNameView.setText(editName.getText().toString());
+                    } catch (Exception e){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle("Error");
+                        builder.setMessage(e.getMessage());
+                        builder.setPositiveButton("Okay", (dialog, id) -> {
+                        });
+                        builder.show();
+                    }
+
+                    editFlag = true;
+                }
+
+            }
+        });
     }
 
 

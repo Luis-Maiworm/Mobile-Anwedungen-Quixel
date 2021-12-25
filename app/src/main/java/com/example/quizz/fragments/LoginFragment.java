@@ -42,9 +42,9 @@ public class LoginFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_chooseuser, container, false);
 
-       init();
-       initButton();
-       finish();
+        init();
+        initButton();
+        finish();
 
         return view;
     }
@@ -72,7 +72,7 @@ public class LoginFragment extends Fragment {
 
         recyclerViewLogin = view.findViewById(R.id.recyclerViewProfiles);
 
-        rvAdapter = new ProfileRVAdapter(getActivity(), profileNames, icons, pManager, this);
+        rvAdapter = new ProfileRVAdapter(getActivity(), profileNames, icons, pManager, this, childFrag);
         childFrag.setRvAdapter(rvAdapter);
 
         gridLayoutManager = new GridLayoutManager(getActivity(), 2, gridLayoutManager.VERTICAL, false);

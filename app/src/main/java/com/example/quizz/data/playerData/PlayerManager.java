@@ -155,11 +155,20 @@ public class PlayerManager implements Parcelable {
      * @param oldPlayerName Is the {@code Player} which will be renamed.
      * @param newPlayerName Is the new name for the player.
      */
-    public void renamePlayer(String oldPlayerName, String newPlayerName){
+    public void renamePlayer(String oldPlayerName, String newPlayerName) throws Exception {
+        if(profiles.nameExists(newPlayerName) && !oldPlayerName.equals(newPlayerName)){
+            throw new Exception("Name already exists!");
+        }
         this.profiles.getPlayerWithName(oldPlayerName).setPlayerName(newPlayerName);
     }
 
-    public void deletePlayer(String playerName){
+    public void deletePlayer(String playerName) throws Exception {
+        if(currentPlayer.getPlayerName().equals(playerName)){
+            throw new Exception("Chosen profile is currently logged in. Change Profile to delete it.");
+        }
+        if(this.profiles.getPlayerListSize() == 1) {
+            throw new Exception("One Profile needs to exist.");
+        }
         this.profiles.removePlayerFromList(playerName);
     }
 

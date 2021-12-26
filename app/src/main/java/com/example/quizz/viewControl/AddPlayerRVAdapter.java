@@ -1,7 +1,6 @@
 package com.example.quizz.viewControl;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,7 @@ public class AddPlayerRVAdapter extends RecyclerView.Adapter<AddPlayerRVAdapter.
     @NonNull
     @Override
     public AddPlayerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.rv_category_grid_layout, parent, false);
+        View view = inflater.inflate(R.layout.rv_addplayer_grid_layout, parent, false);
         return new AddPlayerViewHolder(view);
     }
 
@@ -55,7 +54,7 @@ public class AddPlayerRVAdapter extends RecyclerView.Adapter<AddPlayerRVAdapter.
      */
     @Override
     public void onBindViewHolder(@NonNull AddPlayerViewHolder holder, int position) {
-        holder.icons.setImageResource(icons[position]);
+        holder.iconView.setImageResource(icons[position]);
 
         holder.itemView.clearFocus();
         holder.itemView.setSelected(selectedItemIndex == position);
@@ -85,14 +84,14 @@ public class AddPlayerRVAdapter extends RecyclerView.Adapter<AddPlayerRVAdapter.
 
     public class AddPlayerViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView icons;
+        ImageView iconView;
         ConstraintLayout mainLayout;
 
         public AddPlayerViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            icons = itemView.findViewById(R.id.profileIcon);
-            mainLayout = itemView.findViewById(R.id.mainCategoryLayout);
+            iconView = itemView.findViewById(R.id.fixProfileIcon);
+            mainLayout = itemView.findViewById(R.id.mainPlayerLayout);
         }
     }
 

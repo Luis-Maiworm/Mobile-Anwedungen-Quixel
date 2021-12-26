@@ -53,20 +53,6 @@ public class PlayerManager implements Parcelable {
     };
 
     /**
-     * Method sets the {@code currentPlayer} with a given ID.
-     * This method checks also, if a profile is in use already,
-     * or if the profile gets chosen for the first time in this session.
-     * @param newId The ID will be the chosen {@link Player}.
-     */
-    @Deprecated
-    public void chooseCurrentPlayer(int newId){
-        if (currentPlayer != null) {
-            profiles.replacePlayerWithId(profiles.getPlayerWithId(newId), this.currentPlayer.getPlayerID());
-        }
-        this.currentPlayer = profiles.getPlayerWithId(newId);
-    }
-
-    /**
      * Sets the current Player.
      * @param playerName should deliver an existing name within the {@code playerList}.
      * The corresponding player will be set as the "currentPlayer".
@@ -93,7 +79,7 @@ public class PlayerManager implements Parcelable {
      * initial entry in the {@code playerList}. This method should be called, when the currentPlayer
      * needs to be changed or the program closes.
      * <p>If the Player changes -> It should first save the Player already in use, using this method, and then it can
-     * use the {@link #chooseCurrentPlayer(int)} method, to choose the "new currentPlayer": </p>
+     * use the {@link #chooseCurrentPlayer(String)} method, to choose the "new currentPlayer": </p>
      * Due to the fact, that the
      * {@code currentPlayer} and the original {@code Player} have the same ID it
      * is easy to put it in the right place again.

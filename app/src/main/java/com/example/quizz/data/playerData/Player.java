@@ -37,7 +37,7 @@ public class Player implements Serializable {
         this.settings = settings;
     }
 
-     */
+    */
 
     public int getPlayerIcon() {
         return playerIcon;

@@ -285,9 +285,12 @@ public class BluetoothConnection {
                     bytes = mmInStream.read(buffer);
                     incomingMessage = new String(buffer, 0, bytes);
 
-                    System.out.println(incomingMessage);
 
-                    /*
+
+                   // System.out.println(incomingMessage);
+
+
+
                     Player player = null;
                     try {
                         Object o = ois.readObject();
@@ -297,7 +300,7 @@ public class BluetoothConnection {
                         e.printStackTrace();
                     }
 
-                     */
+
 
 
 

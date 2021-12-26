@@ -69,7 +69,7 @@ public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.Ca
             super(itemView);
 
             names = itemView.findViewById(R.id.categoryNameTextView);
-            icons = itemView.findViewById(R.id.profileIcon);
+            icons = itemView.findViewById(R.id.categoryIcon);
             mainLayout = itemView.findViewById(R.id.mainCategoryLayout);
         }
     }

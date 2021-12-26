@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.quizz"
-        minSdk 22
+        minSdk 23
         targetSdk 31
         versionCode 1
         versionName "1.0"
@@ -53,12 +53,9 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.3.5'
     implementation 'androidx.navigation:navigation-ui:2.3.5'
 
-
-
+    implementation 'com.github.pires:obd-java-api:1.0'
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
-
-
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

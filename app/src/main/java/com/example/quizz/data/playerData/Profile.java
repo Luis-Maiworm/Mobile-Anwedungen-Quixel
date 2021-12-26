@@ -17,8 +17,6 @@ public class Profile {
     public List<Player> playerList = new ArrayList<Player>();
 
 
-
-
     public String getCurrentPlayer() {
         return currentPlayer;
     }
@@ -48,7 +46,6 @@ public class Profile {
     public void setPlayerList(List<Player> playerList) {
         this.playerList = playerList;
     }
-
 
 
     /**

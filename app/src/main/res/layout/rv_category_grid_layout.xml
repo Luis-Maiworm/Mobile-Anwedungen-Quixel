@@ -23,7 +23,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/profileIcon"
+                android:id="@+id/categoryIcon"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
                 android:layout_marginStart="8dp"

@@ -33,7 +33,7 @@ public class ShowPlayerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
-        view = inflater.inflate(R.layout.fragment_player, container, false);
+        view = inflater.inflate(R.layout.fragment_show_player, container, false);
 
         init();
         initVariables();

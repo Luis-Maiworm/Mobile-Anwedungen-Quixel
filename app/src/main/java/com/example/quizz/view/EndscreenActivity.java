@@ -65,7 +65,10 @@ public class EndscreenActivity extends AppCompatActivity implements View.OnClick
         switch(v.getId()) {
             case R.id.goToHomeBtn:
                 goToHome = new Intent(this, MainMenuActivity.class);
-                startActivity(goToHome);
+                goToHome.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivityIfNeeded(goToHome, 0);
+                // goToHome.putExtra("Player", player);
+
                 break;
             case R.id.goToCategoryBtn:
                 break;

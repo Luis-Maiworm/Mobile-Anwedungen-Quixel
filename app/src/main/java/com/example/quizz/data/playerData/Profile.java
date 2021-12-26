@@ -1,19 +1,13 @@
 package com.example.quizz.data.playerData;
 
-import com.example.quizz.gameLogic.PlayerManager;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The {@code Profiles} class includes the {@code playerList} with every {@link Player} created.
  * Every operation which needs to operate on the {@code playerList} will be declared in this
- * class. Only one original {@link Profile} instance should exist in the {@link PlayerManager}
+ * class. Only one original {@link Profile} instance should exist in the {@link com.example.quizz.gameLogic.PlayerManager}
  */
-
-
-
-
 public class Profile {
 
 
@@ -21,6 +15,23 @@ public class Profile {
      * Includes every {@link Player}.
      */
     public List<Player> playerList = new ArrayList<Player>();
+
+
+
+
+    public String getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(String currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    /**
+     *
+     */
+    public String currentPlayer = ""; //todo needs to refer to an existing player -> store id maybe?
+
 
     /**
      * Getter method for the {@code playerList}
@@ -39,7 +50,6 @@ public class Profile {
     }
 
 
-
     /**
      * Method replaces a player with given ID with a new Player.
      * @param newPlayer Is the object which is replacing the old one.
@@ -53,6 +63,14 @@ public class Profile {
         }
     }
 
+    public void replacePlayerWithName(Player newPlayer, String playerName){
+        for (int i = 0; i < playerList.size(); i++){
+            if (playerList.get(i).getPlayerName().equals(playerName)){
+                playerList.set(i, newPlayer);
+            }
+        }
+    }
+
     /**
      * Returns the player with the give ID.
      * @param id Key value, which will give the right {@link Player}
@@ -61,6 +79,15 @@ public class Profile {
     public Player getPlayerWithId(int id) {
         for (Player player : playerList) {
             if (player.getPlayerID() == id) {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    public Player getPlayerWithName(String playerName){
+        for(Player player : playerList) {
+            if(player.getPlayerName().equals(playerName)){
                 return player;
             }
         }
@@ -102,7 +129,7 @@ public class Profile {
 
     /**
      * Removes a {@link Player} from the {@code playerList}.
-     * Iterates through to check if the {@code player} exists already. Use {@link #removePlayerFromList(int playerID)} if you have the Player ID.
+     * Iterates through to check if the {@code player} exists already. Use {@link #removePlayerFromList(String playerName)} if you have the Player ID.
      * @param player Will be removed.
      */
     public void removePlayerFromList(Player player){
@@ -112,14 +139,44 @@ public class Profile {
             }
         }
     }
-
+/*
     /**
      * Removes a {@link Player} from the {@code playerList}.
      * Iterates through to check if the {@code id} exists already. Use {@link #removePlayerFromList(Player player)} if you have a Player Object.
      * @param id Corresponding {@code Player} Will be removed.
      */
+    /*
     public void removePlayerFromList(int id){
         playerList.removeIf(player -> player.getPlayerID() == id);
+    }*/
+
+
+    public void removePlayerFromList(String playerName){
+        for(Player player : playerList){
+            if(player.getPlayerName().equals(playerName)){
+                playerList.remove(player);
+            }
+        }
+    }
+
+
+    public String[] getPlayerNames(){
+
+        String [] temp = new String[playerList.size()];
+        for(int i = 0; i <  playerList.size(); i++){
+            temp[i] = playerList.get(i).getPlayerName();
+        }
+        return temp;
+    }
+
+    public int[] getPlayerIcons(){
+
+        int [] temp = new int[playerList.size()];
+        for(int i = 0; i <  playerList.size(); i++){
+            temp[i] = playerList.get(i).getPlayerIcon();
+
+        }
+        return temp;
     }
 
 

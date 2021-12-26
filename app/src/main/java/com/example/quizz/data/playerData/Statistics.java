@@ -1,10 +1,10 @@
 package com.example.quizz.data.playerData;
 
-
-import com.example.quizz.data.gameData.Types;
 import com.example.quizz.data.gameData.Categories;
 import com.example.quizz.data.gameData.Difficulties;
-
+import com.example.quizz.data.gameData.Types;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -17,7 +17,7 @@ import java.util.*;
  * or take "rightQuestions" and "wrongQuestions" and make a general balance.
  */
 
-public class Statistics {
+public class Statistics implements Serializable {
 
 
     /*  public HashMap<String, Integer> getRightQuestionsPerCat() {
@@ -47,8 +47,9 @@ public class Statistics {
     private HashMap<Types, List<Integer>> answersPerType = new HashMap<>();
 
 
-
-
+    /**
+     *
+     */
     public Statistics(){
         //todo fill hashmap
         for(Categories c : Categories.values()){

@@ -6,6 +6,9 @@ import android.os.Bundle;
 
 import com.example.quizz.R;
 
+/**
+ * WIP | Settings Screen to configure basic game settings
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     @Override

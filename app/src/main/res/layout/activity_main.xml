@@ -7,18 +7,18 @@
     android:background="@drawable/main_menu_bg_demo"
     tools:context=".view.MainMenuActivity">
 
+
+
     <TextView
         android:id="@+id/gameTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/aldrich"
         android:text="@string/gameTitle"
         android:textColor="#2C7B83"
-        android:textSize="90sp"
+        android:textSize="110sp"
         app:layout_constraintBottom_toTopOf="@+id/singleplayerBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,27 +28,26 @@
         android:id="@+id/singleplayerBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="100dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="32dp"
         android:backgroundTint="#2C7B83"
+
+        android:layoutAnimation="@anim/layout_animation"
+
         android:text="@string/SinglePlayerBtnText"
-        app:layout_constraintBottom_toTopOf="@+id/multiplayerBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gameTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/gameTitle"
+
+        />
 
     <Button
         android:id="@+id/multiplayerBtn"
         android:layout_width="wrap_content"
 
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-
-        android:layout_marginEnd="16dp"
         android:backgroundTint="#2C7B83"
+
         android:text="@string/MultiPlayerBtnText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,10 +56,9 @@
     <Button
         android:id="@+id/statsBtn"
         android:layout_width="wrap_content"
+
+
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
         android:backgroundTint="#2C7B83"
         android:text="@string/StatsBtnText"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -68,28 +66,87 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/multiplayerBtn"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.297" />
 
-    <ImageButton
-        android:id="@+id/settingsBtn"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@android:drawable/stat_notify_error"
-        android:text="SETTINGS"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/FrameLayout"
+
+
+
+        android:layout_width="331dp"
+        android:layout_height="533dp"
+        android:layoutAnimation="@anim/layout_animation"
+        android:translationZ="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.483"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.486" />
 
     <ImageButton
-        android:id="@+id/achievementsBtn"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:id="@+id/fragmentBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@android:drawable/star_big_off"
-        android:text="ACHIEVEMENTS"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.935"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.976"
+        app:srcCompat="@drawable/ic_baseline_check_circle_24" />
+
+    <ImageButton
+        android:id="@+id/mainProfileIcon"
+        android:layout_width="101dp"
+        android:layout_height="100dp"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.048"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.969"
+        tools:srcCompat="@drawable/cat_icon01_generalknowledge" />
+
+    <TextView
+        android:id="@+id/mainProfileLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/mainProfileIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.096"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/saveStats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="save"
+        app:layout_constraintBottom_toTopOf="@+id/singleplayerBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.613"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gameTitle"
+        app:layout_constraintVertical_bias="0.178" />
+
+    <Button
+        android:id="@+id/resetStats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reset saved"
+        app:layout_constraintBottom_toTopOf="@+id/singleplayerBtn"
+        app:layout_constraintEnd_toStartOf="@+id/saveStats"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gameTitle" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

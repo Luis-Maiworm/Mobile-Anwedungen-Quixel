@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.quizz.R;
+import com.example.quizz.data.Constants;
 import com.example.quizz.data.TransferUtility;
 import com.example.quizz.data.playerData.Player;
 
@@ -59,7 +60,7 @@ public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.Ca
             holder.mainLayout.setOnClickListener(view -> {
                 Intent startGameIntent = new Intent(context, com.example.quizz.gameLogic.gamemodes.Gamemode_standard.class);
                 startGameIntent.putExtra("category", names[holder.getAdapterPosition()]);
-                startGameIntent.putExtra("Player", activePlayer);
+                startGameIntent.putExtra(Constants.playerConstant, activePlayer);
                 context.startActivity(startGameIntent);
             });
         }
@@ -67,7 +68,7 @@ public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.Ca
                 holder.mainLayout.setOnClickListener(view -> {
                 Intent startGameIntent = new Intent(context, com.example.quizz.gameLogic.gamemodes.Gamemode_endless.class);
                 startGameIntent.putExtra("category", names[holder.getAdapterPosition()]);
-                startGameIntent.putExtra("Player", activePlayer);
+                startGameIntent.putExtra(Constants.playerConstant, activePlayer);
                 context.startActivity(startGameIntent);
                         });
             }
@@ -76,7 +77,7 @@ public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.Ca
                     Intent startGameIntent = new Intent(context, com.example.quizz.view.ConfigureGamemodeActivity.class);
                     startGameIntent.putExtra("category", names[holder.getAdapterPosition()]);
                     startGameIntent.putExtra("categoryIcon", icons[holder.getAdapterPosition()]);
-                    startGameIntent.putExtra("Player", activePlayer);
+                    startGameIntent.putExtra(Constants.playerConstant, activePlayer);
                     context.startActivity(startGameIntent);
                 });
             }
@@ -88,7 +89,7 @@ public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.Ca
                 System.out.println("RV GAMEMODE: " + activePlayer.getPlayerName());
                 Intent goToChooseCategory = new Intent(context, com.example.quizz.view.ChooseCategoryActivity.class);
                 goToChooseCategory.putExtra("gamemode", names[holder.getAdapterPosition()]);
-                goToChooseCategory.putExtra("Player", activePlayer);
+                goToChooseCategory.putExtra(Constants.playerConstant, activePlayer);
                 context.startActivity(goToChooseCategory);
         });
         }
@@ -108,9 +109,10 @@ public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.Ca
         public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            mainLayout = itemView.findViewById(R.id.mainCategoryLayout);
             names = itemView.findViewById(R.id.categoryNameTextView);
             icons = itemView.findViewById(R.id.categoryIcon);
-            mainLayout = itemView.findViewById(R.id.mainCategoryLayout);
+
         }
     }
 }

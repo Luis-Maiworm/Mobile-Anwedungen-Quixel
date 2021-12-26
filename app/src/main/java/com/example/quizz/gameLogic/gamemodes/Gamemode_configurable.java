@@ -13,7 +13,6 @@ public class Gamemode_configurable extends GamemodeActivity implements IGameSett
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gamemode);
 
-
         setup();
         begin();
 

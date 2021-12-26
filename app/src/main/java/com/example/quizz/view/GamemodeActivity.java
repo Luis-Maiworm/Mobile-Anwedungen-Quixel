@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.quizz.R;
+import com.example.quizz.data.Constants;
 import com.example.quizz.data.gameData.Categories;
 import com.example.quizz.data.gameData.Types;
 import com.example.quizz.data.playerData.Player;
@@ -58,6 +59,10 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
         setContentView(R.layout.activity_gamemode);
     }
 
+    /**
+     * First master and setup method that configures all relevant UI items, buttons, managers and
+     * the active player instance
+     */
     @Override
     public void setup() {
         // Setup View
@@ -86,10 +91,13 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
         // Creates the Question Manager
         qManager = new QuestionManager();
         // Gets the active Player instance
-        activePlayer = (Player) getIntent().getSerializableExtra("Player");
+        activePlayer = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
 
     }
 
+    /**
+     * Second master method that starts the game loop after the setup is finished
+     */
     @Override
     public void begin() {
         //********************************************************************************//
@@ -244,6 +252,11 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
             Toast.makeText(this, "An Error occurred", Toast.LENGTH_SHORT).show();
         }
     }
+
+    /**
+     * A simple method the shuffle the answers so that the player cant predict the correct
+     * answer based on its position
+     */
     private void randomOrder() {
 
         Random random = new Random();
@@ -276,8 +289,6 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
         }
     }
 
-
-
     /**
      * Receives the Category String from the Recycler View and saves it to a global variable
      * In case there is no Text, it return the String "No Date Found"
@@ -309,7 +320,7 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
      * Makes the API Call for the specific Category and saves the Question(s)
      *
      * @param ID category ID
-     * @throws IOException
+     * @throws IOException when there is something wrong with the API call
      * @throws QueryException if input is invalid (e.g. questionNumber=0)
      * @see QuestionManager#getApiData(int, int, String, String)
      */
@@ -360,6 +371,7 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
     public void endGame() {
         Intent toEndScreen = new Intent(this, EndscreenActivity.class);
         toEndScreen.putExtra("score", points);
+        finish();
         startActivity(toEndScreen);
     }
 
@@ -396,6 +408,11 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
     }
 
 
+    /**
+     * Method that provides the gamemode description
+     * @param desc gamemode description
+     * @return gamemode description
+     */
     @Override
     public String description(String desc) {
         return "Mode Description: " + desc;
@@ -407,7 +424,7 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
     }
 
     /**
-     *
+     * onDestroy
      */
     @Override
     protected void onDestroy() {

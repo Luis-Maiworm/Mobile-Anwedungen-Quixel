@@ -21,7 +21,15 @@ public class Question implements Serializable {
     private String correct_answer;
     private List<String> incorrect_answers;
 
-    public transient boolean isCorrect; //todo getter and setter FALLS wirklich so geplant
+    public transient boolean isCorrect; //todo getter and setter FALLS wirklich so geplant !!! einsetzen im GameLoop!
+
+    public boolean getIsCorrect(){
+        return this.isCorrect;
+    }
+    public void setIsCorrect(boolean isCorrect){
+        this.isCorrect = isCorrect;
+    }
+
 
     public String getCategoryString(){
         return this.category;

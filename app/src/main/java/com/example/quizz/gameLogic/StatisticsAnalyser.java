@@ -147,20 +147,31 @@ public class StatisticsAnalyser {
      * Time Gamemode: Should include the possibility to set time with constructor
      */
 
-    /*
-    public Player afterRound(List<Question> qList, GameSettings mode){
 
-        switch(mode){
+    public Player afterRound(List<Question> qList, String identifier){
 
+        switch(identifier){
+
+
+            case "Gamemode_standard":
+                for(Question q : qList){
+                    afterQuestion(q, q.getIsCorrect());
+                }
+                break;
+            case "Gamemode_configurable": break;
+            case "Gamemode_endless": break;
+
+
+            /*
             for(Question q : qList){
                 s.afterQuestion(c, booleanIsCorrect)
             }
-        }
 
+             */
+        }
 
     return this.p;
     }
-    */
 
 
     //todo übernimmt zusätzlich den GameMode, damit hier auch bestimmte Statistiken abgerufen werden können

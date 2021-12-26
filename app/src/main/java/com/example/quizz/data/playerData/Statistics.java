@@ -36,6 +36,7 @@ public class Statistics implements Serializable {
 
     private int highScore = 0;
     private HashMap<Integer, List<Integer>> gamesMultiplayer = new HashMap<>();
+
     public List<Integer> timeLeft = new ArrayList<>(); //index 0: wie viel Zeit verfügbar war, index 1: wie viel Zeit am ende übrig war.
 
 

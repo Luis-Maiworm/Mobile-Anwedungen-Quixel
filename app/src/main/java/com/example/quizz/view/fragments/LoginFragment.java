@@ -111,21 +111,7 @@ public class LoginFragment extends Fragment {
         super.onDestroyView();
 
         if(view.findViewById(R.id.child_fragment_addPlayer).getVisibility() != View.GONE){
-            FragmentTransaction fT;
-            fT = getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
-            //todo check ob jedes mal aufs neue nötig (oder ob z.B. EINE transaction für alles verwendet werden kann usw
-            fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
-            fT.remove(childFrag);
-            fT.commit();
-
-
-            View b = view.findViewById(R.id.child_fragment_addPlayer);
-            view.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    b.setVisibility(View.GONE);
-                }
-            }, 300);
+            closeAddPlayerFrag();
         }
 
 
@@ -135,6 +121,8 @@ public class LoginFragment extends Fragment {
     public void addAddPlayerFrag(){
         View b = view.findViewById(R.id.child_fragment_addPlayer);
         b.setVisibility(View.VISIBLE);
+
+
 
         //todo add a NEW fragment each time its called? (atm it remembers the position if the menü and basically just reopens one all the time
         FragmentTransaction fT;

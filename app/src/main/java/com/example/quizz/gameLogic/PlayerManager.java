@@ -21,7 +21,7 @@ import java.util.List;
 public class PlayerManager implements Parcelable {
 
     private final String DEFAULTPATH = "data/stats.json";
-    File json = new File(DEFAULTPATH);
+ //   File json = new File(DEFAULTPATH);
     Gson gson = new Gson();
 
     public Profile profiles = new Profile();
@@ -29,15 +29,13 @@ public class PlayerManager implements Parcelable {
 
     Player currentPlayer;
 
-    private String stuff;   //todo -> parcelable konstruktor .. - was das
-
     public PlayerManager(){
         playerList = profiles.getPlayerList();
     }
 
     protected PlayerManager(Parcel in) {
-        stuff = in.readString();
-    }
+        String stuff = in.readString();
+    } // todo...
 
     public static final Creator<PlayerManager> CREATOR = new Creator<PlayerManager>() {
         @Override
@@ -169,7 +167,6 @@ public class PlayerManager implements Parcelable {
 
     }
 
-
     public String saveToJson() {
         return this.gson.toJson(profiles);
     }
@@ -177,8 +174,6 @@ public class PlayerManager implements Parcelable {
     public void setNewProfile(){
         this.profiles = new Profile();
     }
-
-
 
 
     /*

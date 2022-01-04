@@ -18,6 +18,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.quizz.R;
+import com.example.quizz.data.Constants;
 import com.example.quizz.gameLogic.PlayerManager;
 import com.example.quizz.view.fragments.AddPlayerFragment;
 import com.example.quizz.view.fragments.LoginFragment;
@@ -141,7 +142,6 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
             ImageButton openProfileChooser = ((Activity) context).findViewById(R.id.fragmentBtn);
             ImageViewAnimatedChangeOut(context, openProfileChooser, R.drawable.ic_baseline_check_circle_24);
 
-
             //close fragment, when a profile is chosen
             fT = loginFragment.getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
             fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
@@ -187,6 +187,9 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
 
         changePlayer.setOnClickListener(v -> {
             //todo playerFragment
+            childFrag = new AddPlayerFragment(pManager.getProfiles().getPlayerWithName(profileNames[holder.getAdapterPosition()]));
+            System.out.println("NAME BEIM ADAPTER ÜBERGEBEN" + pManager.getProfiles().getPlayerWithName((profileNames[holder.getAdapterPosition()])).getPlayerName());
+            //todo send currentPlayer to Fragment.
 
             FragmentTransaction fT;
 

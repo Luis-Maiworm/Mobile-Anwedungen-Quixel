@@ -30,7 +30,6 @@ public class AddPlayerRVAdapter extends RecyclerView.Adapter<AddPlayerRVAdapter.
 
     private int selectedItemIndex = RecyclerView.NO_POSITION;
 
-
     public AddPlayerRVAdapter(Context context, Player playerToCreate) {
         // this.names = names;
         // this.icons = icons;
@@ -61,7 +60,6 @@ public class AddPlayerRVAdapter extends RecyclerView.Adapter<AddPlayerRVAdapter.
 
         holder.mainLayout.setOnClickListener(view -> {
             int index = holder.getAdapterPosition();
-
 
             notifyItemChanged(selectedItemIndex);
             selectedItemIndex = holder.getLayoutPosition();

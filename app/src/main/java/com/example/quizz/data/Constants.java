@@ -12,4 +12,6 @@ public interface Constants {
 
     String categoryConstant = "CATEGORY";
 
+    String renameConstant = "RENAMEPLAYER";
+    String createConstant = "CREATEPLAYER";
 }

@@ -61,6 +61,18 @@ public class StatisticsActivity extends AppCompatActivity {
     YAxis rightAxis;
     XAxis xAxis;
 
+    //text formats
+    NumberFormat formatter = new DecimalFormat("#0.00");
+    String percentEnd = "%";
+    String secEnd = " seconds";
+    String answerRatio = "Correct Questions Percentage: ";
+    String totalRight = "Total correct answers: ";
+    String totalWrong = "Total wrong answers: ";
+    String totalQuestions = "Total answered questions: ";
+    String highscoreEndless = "Endless-Mode: Highscore: ";
+
+    String remainingTime = "Time-Mode: Avg. time/Question: ";
+
     boolean flag = true;
 
     ArrayList<String> statsArray = new ArrayList<>();
@@ -85,7 +97,6 @@ public class StatisticsActivity extends AppCompatActivity {
     }
 
 
-
     private void initVariables(){
         currentPlayer = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
         analyser = new StatisticsAnalyser(currentPlayer);
@@ -95,7 +106,6 @@ public class StatisticsActivity extends AppCompatActivity {
 
         sortButton = (ImageView) findViewById(R.id.sortButton);
     }
-
     private void setVariables(){
 
         sortButton.setOnClickListener(new View.OnClickListener() {
@@ -129,19 +139,7 @@ public class StatisticsActivity extends AppCompatActivity {
         });
 
     }
-
-    NumberFormat formatter = new DecimalFormat("#0.00");
-    String percentEnd = "%";
-    String secEnd = " seconds";
-    String answerRatio = "Correct Questions Percentage: ";
-    String totalRight = "Total correct answers: ";
-    String totalWrong = "Total wrong answers: ";
-    String totalQuestions = "Total answered questions: ";
-    String highscoreEndless = "Endless-Mode: Highscore: ";
-
-    String remainingTime = "Time-Mode: Avg. time/Question: ";
-
-    private void setListViewArray(){
+    private void setListView(){
 
         statsArray.add(totalQuestions.concat(String.valueOf(stats.getTotalAnswers())));
 
@@ -154,59 +152,11 @@ public class StatisticsActivity extends AppCompatActivity {
 
         statsArray.add(remainingTime.concat(String.valueOf(2)).concat(secEnd));
 
-    }
-
-    private void setListView(){
-
-        setListViewArray();
-
         ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, statsArray);
 
         listView.setAdapter(arrayAdapter);
     }
 
-
-
-    private void initChartVariables(){
-        barChart = (HorizontalBarChart) findViewById(R.id.barChartCats);
-
-        leftAxis = barChart.getAxisLeft();
-        rightAxis = barChart.getAxisRight();
-        xAxis = barChart.getXAxis();
-
-
-        leftAxis.setDrawGridLines(false);
-        rightAxis.setDrawGridLines(false);
-        xAxis.setDrawGridLines(false);
-
-        //  leftAxis.setDrawLabels(false);
-        //  rightAxis.setDrawLabels(false);
-        //  xAxis.setDrawLabels(false);
-
-        //  leftAxis.setEnabled(false);
-        //  rightAxis.setEnabled(false);
-        //  xAxis.setEnabled(false);
-
-        barChart.setDrawBorders(false);
-        barChart.setDrawGridBackground(false);
-
-        barChart.getLegend().setEnabled(false);
-        barChart.getDescription().setEnabled(false);
-
-        barChart.setTouchEnabled(false);
-
-        barChart.setDragEnabled(false);
-        barChart.setScaleEnabled(false);
-
-        barChart.setPinchZoom(false);
-        barChart.setAutoScaleMinMaxEnabled(true);
-
-        // rightAxis.setAxisMinimum(0);
-        // rightAxis.setAxisMaximum(100);
-
-        leftAxis.setAxisMinimum(0);         //set min and maximum value of the graph (Percentages = 0-100)
-        leftAxis.setAxisMaximum(100);
-    }
 
     /**
      *
@@ -261,7 +211,49 @@ public class StatisticsActivity extends AppCompatActivity {
         barChart.invalidate();
     }
 
+    /**
+     * Sets the formal parameters for the chart.
+     */
+    private void initChartVariables(){
+        barChart = (HorizontalBarChart) findViewById(R.id.barChartCats);
 
+        leftAxis = barChart.getAxisLeft();
+        rightAxis = barChart.getAxisRight();
+        xAxis = barChart.getXAxis();
+
+
+        leftAxis.setDrawGridLines(false);
+        rightAxis.setDrawGridLines(false);
+        xAxis.setDrawGridLines(false);
+
+        //  leftAxis.setDrawLabels(false);
+        //  rightAxis.setDrawLabels(false);
+        //  xAxis.setDrawLabels(false);
+
+        //  leftAxis.setEnabled(false);
+        //  rightAxis.setEnabled(false);
+        //  xAxis.setEnabled(false);
+
+        barChart.setDrawBorders(false);
+        barChart.setDrawGridBackground(false);
+
+        barChart.getLegend().setEnabled(false);
+        barChart.getDescription().setEnabled(false);
+
+        barChart.setTouchEnabled(false);
+
+        barChart.setDragEnabled(false);
+        barChart.setScaleEnabled(false);
+
+        barChart.setPinchZoom(false);
+        barChart.setAutoScaleMinMaxEnabled(true);
+
+        // rightAxis.setAxisMinimum(0);
+        // rightAxis.setAxisMaximum(100);
+
+        leftAxis.setAxisMinimum(0);         //set min and maximum value of the graph (Percentages = 0-100)
+        leftAxis.setAxisMaximum(100);
+    }
 
     @Override
     public void onBackPressed() {

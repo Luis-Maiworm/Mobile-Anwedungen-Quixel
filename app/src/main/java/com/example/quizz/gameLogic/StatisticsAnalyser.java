@@ -26,31 +26,17 @@ import java.util.Map;
 public class StatisticsAnalyser {
 
     Statistics s;
-    Question q;
-    Player p;
-    QuestionManager qManager = new QuestionManager();
 
     public final boolean ASC = true;
     public final boolean DESC = false;
 
-
-    /**
-     * Ablauf:
-     * Übergebener Spieler (currentPlayer) wird auf einen temporären Übertragen. Diese Instanz hier "p"
-     * wird so verändert wie sie es soll. Also entweder am Ende einer Runde, oder einer Frage.
-     *
-     * Bei Frage: eine der "takeQuestion" Methoden.
-     * Bei Runde: eine der "takeQuestions" Methoden.
-     */
-
-
+    HashMap<Categories, Double> categoriesPercentageList = new HashMap<>();
 
     /**
      *
      * @param currentPlayer to set the Statistics to this player.
      */
     public StatisticsAnalyser(Player currentPlayer){
-        this.p = currentPlayer;
         this.s = currentPlayer.getStats();
     }
 
@@ -58,23 +44,32 @@ public class StatisticsAnalyser {
      * Updates the Player which have been given as parameter into the {@code StatisticsAnalyser's Constructor}.
      * @return the player, which statistics have been changed by the {@code StatisticsAnalyser}.
      */
-
-
     public void afterQuestion(Question q, boolean qCorrect){
         s.incrementTotal(qCorrect);
         s.incrementAnswerPerCategory(q.getCategory(), qCorrect);
         s.incrementAnswerPerDifficulty(q.getDifficulty(), qCorrect);
         s.incrementAnswerPerType(q.getType(), qCorrect);
     }
-
     public void afterQuestion(Question q, boolean qCorrect, int remainingTimer){
         s.incrementTotal(qCorrect);
         s.incrementAnswerPerCategory(q.getCategory(), qCorrect);
         s.incrementAnswerPerDifficulty(q.getDifficulty(), qCorrect);
         s.incrementAnswerPerType(q.getType(), qCorrect);
+        //todo add Timer to stats somehow
     }
 
-
+    public void afterRound(List<Question> qList, String identifier){
+        switch(identifier){
+            case "Gamemode_standard":
+            case "Gamemode_configurable":
+                for(Question q : qList){
+                    afterQuestion(q, q.getIsCorrect());
+                }
+                break;
+            case "Gamemode_endless":
+                break;
+        }
+    }
 
 
     /**
@@ -86,15 +81,12 @@ public class StatisticsAnalyser {
         double totalAnswers = s.getTotalAnswers();
         return (totalRightAnswers / totalAnswers) * 100;
     }
-
-
     public double answerRatioPerCategory(Categories category){
         double rightAnswers = s.getAnswerPerCategory(category, true);
         double wrongAnswers = s.getAnswerPerCategory(category, false);
         return (rightAnswers / (rightAnswers + wrongAnswers)) * 100;
     }
 
-    HashMap<Categories, Double> categoriesPercentageList = new HashMap<>();
 
     //liste mit allen answerRatios. -> am besten sortiert, sodass eine auflistung der besten kategorien möglich ist
     public HashMap<Categories, Double> percentageList(boolean includingEmpty, boolean order){        //todo variante: noch nie gespielte kategorien -> werden gar nicht erst ausgegeben
@@ -104,16 +96,13 @@ public class StatisticsAnalyser {
                 categoriesPercentageList.put(c, ratio);
             }
             else {
-                if (!Double.isNaN(ratio)) categoriesPercentageList.put(c, ratio);           // if the ratio is NOT A NUMBER, put the value+category in the map -> gives us a list with every category used
+                if (!Double.isNaN(ratio)) categoriesPercentageList.put(c, ratio);           // if the ratio is NOT A NUMBER, put the value+category in the map -> gives us a list with every category  used
             }
-
         }
-
         return returnSortedList(categoriesPercentageList, order);
     }
 
-
-    public static HashMap<Categories, Double> returnSortedList(HashMap<Categories, Double> unsortedMap, boolean order){
+    private static HashMap<Categories, Double> returnSortedList(HashMap<Categories, Double> unsortedMap, boolean order){
         List<Map.Entry<Categories, Double>> list = new LinkedList<Map.Entry<Categories, Double>>(unsortedMap.entrySet());
 
         Collections.sort(list, new Comparator<Map.Entry<Categories, Double>>() {
@@ -131,51 +120,7 @@ public class StatisticsAnalyser {
         for(Map.Entry<Categories, Double> entry : list) {
             sortedMap.put(entry.getKey(), entry.getValue());
         }
-
         return sortedMap;
-
     }
-
-
-
-
-
-    /**
-     * Switch case to determine the gamemode. Then iterate through all answered Questions and evaluate with "afterQuestion" method
-     * -> also determines which "afterQuestion" method should be used.
-     * -> only when gamemode includes additional or less parameters (like timemode needs -> an integer parameter showing how much time was left when question answered)
-     * Time Gamemode: Should include the possibility to set time with constructor
-     */
-
-
-    public Player afterRound(List<Question> qList, String identifier){
-
-        switch(identifier){
-
-
-            case "Gamemode_standard":
-                for(Question q : qList){
-                    afterQuestion(q, q.getIsCorrect());
-                }
-                break;
-            case "Gamemode_configurable": break;
-            case "Gamemode_endless": break;
-
-
-            /*
-            for(Question q : qList){
-                s.afterQuestion(c, booleanIsCorrect)
-            }
-
-             */
-        }
-
-    return this.p;
-    }
-
-
-    //todo übernimmt zusätzlich den GameMode, damit hier auch bestimmte Statistiken abgerufen werden können
-    //todo switch case und nach GameSettings switchen
-
 
 }

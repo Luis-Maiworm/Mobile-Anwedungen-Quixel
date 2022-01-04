@@ -152,6 +152,13 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 if(choosePlayerFragment.getView() != null){
                     deleteOpenChooseProfileFrag();
                 } else if (playerFragment.getView() != null){
+                    //todo...
+                    /*
+                    if(playerNichtGesetzt) {
+                        AlertDialog
+                        -> "Need to select a profile to play"
+                    }
+                     */
                     deleteCurrentPlayerFrag();
                 }
                 else{

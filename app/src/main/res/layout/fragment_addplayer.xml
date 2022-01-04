@@ -39,7 +39,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
+
+        android:hint="Profile Name"
 
         app:layout_constraintBottom_toTopOf="@+id/recyclerViewIcons"
         app:layout_constraintEnd_toEndOf="parent"

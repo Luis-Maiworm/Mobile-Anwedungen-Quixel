@@ -35,9 +35,21 @@ public class AddPlayerFragment extends Fragment {
     private EditText editText;
     private ProfileRVAdapter profAdapter;
 
+    private String identifier;
+
     public void setRvAdapter(ProfileRVAdapter profAdapter){
         this.profAdapter = profAdapter;
     }
+
+    public AddPlayerFragment(Player toRename){
+        this.identifier = Constants.renameConstant;
+        this.playerToCreate = toRename;
+    }
+
+    public AddPlayerFragment(){
+        this.identifier = Constants.createConstant;
+    }
+
 
 
     @Override
@@ -58,10 +70,13 @@ public class AddPlayerFragment extends Fragment {
         if(bundle != null) {
             pManager = bundle.getParcelable(Constants.playerManagerConstant);       //todo null pointer evtl?
         }
-
-        playerToCreate = new Player(); //todo remove player id from constructor
-
         //todo check if bundle contains a specific key
+
+        playerToCreate = new Player();      //todo : overwrite the playerToCreate with the playerToRename
+
+        //todo setText of editText WHEN player wants to RENAME it. (work with identifier or sth)
+        editText = view.findViewById(R.id.editTextTextPersonName2);
+
 
         recyclerViewIcons = view.findViewById(R.id.recyclerViewIcons);
 
@@ -80,7 +95,7 @@ public class AddPlayerFragment extends Fragment {
             public void onClick(View v) {
 
                 try{
-                    editText = view.findViewById(R.id.editTextTextPersonName2);
+
                     String name = editText.getText().toString();
                     playerToCreate.setPlayerName(name);         // problem: immer der gleiche player auf dem operiert wird!
 

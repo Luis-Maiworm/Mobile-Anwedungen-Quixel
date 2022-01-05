@@ -9,7 +9,6 @@ public class Timer {
     /**
      * NOT IN USE ANYMORE
      *
-     *
      */
 
     private Status status = STOPPED;

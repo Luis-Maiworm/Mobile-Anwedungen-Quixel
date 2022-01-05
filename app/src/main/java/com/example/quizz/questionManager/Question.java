@@ -20,9 +20,7 @@ public class Question implements Serializable {
     private String question;
     private String correct_answer;
     private List<String> incorrect_answers;
-
-    public transient boolean isCorrect; //todo getter and setter FALLS wirklich so geplant
-
+    public transient boolean isCorrect;
     public String getCategoryString(){
         return this.category;
     }
@@ -59,7 +57,7 @@ public class Question implements Serializable {
 
     public Difficulties getDifficulty() {
         for(Difficulties d : Difficulties.values()){
-            if(d.getName().equals(this.difficulty)){
+            if(d.getName().equalsIgnoreCase(this.difficulty)){
                 return d;
             }
         }
@@ -98,5 +96,11 @@ public class Question implements Serializable {
         this.incorrect_answers = incorrect_answers;
     }
 
+    public boolean isCorrect() {
+        return isCorrect;
+    }
 
+    public void setCorrect(boolean correct) {
+        isCorrect = correct;
+    }
 }

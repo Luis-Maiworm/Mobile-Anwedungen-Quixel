@@ -14,6 +14,7 @@ import com.example.quizz.R;
 import com.example.quizz.data.Constants;
 import com.example.quizz.data.TransferUtility;
 import com.example.quizz.data.playerData.Player;
+import com.example.quizz.gameLogic.PlayerManager;
 
 public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.CategoryViewHolder> {
 
@@ -54,13 +55,13 @@ public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.Ca
         if(identifier.equals("category")) {
             holder.names.setText(names[position]);
             holder.icons.setImageResource(icons[position]);
-            System.out.println("RV CATEGORY: " + activePlayer.getPlayerName());
+           System.out.println("RV CATEGORY: " + activePlayer.getPlayerName());
 
             if(currentGamemode.equals("Quickplay Mode")) {
             holder.mainLayout.setOnClickListener(view -> {
                 Intent startGameIntent = new Intent(context, com.example.quizz.gameLogic.gamemodes.Gamemode_standard.class);
                 startGameIntent.putExtra("category", names[holder.getAdapterPosition()]);
-                startGameIntent.putExtra(Constants.playerConstant, activePlayer);
+               startGameIntent.putExtra(Constants.playerConstant, activePlayer);
                 context.startActivity(startGameIntent);
             });
         }
@@ -68,7 +69,7 @@ public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.Ca
                 holder.mainLayout.setOnClickListener(view -> {
                 Intent startGameIntent = new Intent(context, com.example.quizz.gameLogic.gamemodes.Gamemode_endless.class);
                 startGameIntent.putExtra("category", names[holder.getAdapterPosition()]);
-                startGameIntent.putExtra(Constants.playerConstant, activePlayer);
+               startGameIntent.putExtra(Constants.playerConstant, activePlayer);
                 context.startActivity(startGameIntent);
                         });
             }
@@ -86,11 +87,11 @@ public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.Ca
             holder.names.setText(names[position]);
             holder.icons.setImageResource(icons[position]);
             holder.mainLayout.setOnClickListener(view -> {
-                System.out.println("RV GAMEMODE: " + activePlayer.getPlayerName());
-                Intent goToChooseCategory = new Intent(context, com.example.quizz.view.ChooseCategoryActivity.class);
-                goToChooseCategory.putExtra("gamemode", names[holder.getAdapterPosition()]);
-                goToChooseCategory.putExtra(Constants.playerConstant, activePlayer);
-                context.startActivity(goToChooseCategory);
+               System.out.println("RV GAMEMODE: " + activePlayer.getPlayerName());
+               Intent goToChooseCategory = new Intent(context, com.example.quizz.view.ChooseCategoryActivity.class);
+               goToChooseCategory.putExtra("gamemode", names[holder.getAdapterPosition()]);
+               goToChooseCategory.putExtra(Constants.playerConstant, activePlayer);
+               context.startActivity(goToChooseCategory);
         });
         }
     }

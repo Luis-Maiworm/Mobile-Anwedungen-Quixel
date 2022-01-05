@@ -11,7 +11,7 @@
     <string name="new_question_btn">New Question</string>
     <string name="true_btn_text">True</string>
     <string name="roundOverText">ROUND OVER!</string>
-    <string name="homeBtnText">HOME</string>
+    <string name="homeBtnText">SAVE AND BACK TO HOME</string>
     <string name="back_to_categoriesBtn_text">BACK TO CATEGORIES</string>
     <string name="againBtn_text">AGAIN</string>
     <string name="question_x_out_of_y_label">Question %1$d / %2$d</string>

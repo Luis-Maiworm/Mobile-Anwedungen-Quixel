@@ -19,6 +19,7 @@ import com.example.quizz.data.gameData.Categories;
 import com.example.quizz.data.gameData.Types;
 import com.example.quizz.data.playerData.Player;
 import com.example.quizz.exceptions.QueryException;
+import com.example.quizz.gameLogic.PlayerManager;
 import com.example.quizz.gameLogic.gamemodes.IGameSettings;
 import com.example.quizz.gameLogic.gamemodes.IGamemode;
 import com.example.quizz.questionManager.Question;
@@ -26,6 +27,8 @@ import com.example.quizz.questionManager.QuestionManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -43,14 +46,16 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
     // Timer Setup
     private CountDownTimer gameTimer;
     // Data Setup
-    private String categoryIdentifier, questionType;
+    private String categoryIdentifier, questionType, questionDifficulty;
     private Question activeQuestion;
     private ArrayList<Question> activeQuestions;
     private ArrayList<String> activeAnswers;
     private int points, correct, incorrect, questionCounter = 0;
     private int time, questionValue;
     // Player
-    private Player activePlayer;
+    private Player currentPlayer;
+
+
 
 
     @Override
@@ -90,8 +95,9 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
 
         // Creates the Question Manager
         qManager = new QuestionManager();
-        // Gets the active Player instance
-        activePlayer = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
+        // Gets the active PlayerManager instance
+        currentPlayer = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
+
 
     }
 
@@ -99,7 +105,7 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
      * Second master method that starts the game loop after the setup is finished
      */
     @Override
-    public void begin() {
+    public void begin(String type, String difficulty, int value) {
         //********************************************************************************//
         //                                 IGNORES THREAD ERRORS                          //
         //********************************************************************************//
@@ -110,12 +116,21 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
         //********************************************************************************//
 
         // Receives Data and calls the API
-        receiveCategory("", 10);
+        receiveCategory(type, "", value);
         receiveQuestion();
         // Init the Category Label
         categoryLabel.setText(Categories.valueOf(categoryIdentifier).getName());
-        System.out.println("GAMEMODE: " + activePlayer.getPlayerName());
+        // Debug
+
     }
+
+    public void begin(ArrayList<Question> questionList) {
+        activeQuestions = questionList;
+        receiveQuestion();
+
+    }
+
+
 
     /**
      * Listener for all 4 answers-buttons
@@ -128,33 +143,40 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
             case R.id.answerBtn1:
                 System.out.println("BTN-1 PRESSED");
                 if (activeQuestion.getCorrect_answer().equalsIgnoreCase(answerBtn1.getText().toString())) {
+                    activeQuestion.setCorrect(true);
                     updateGUI("true");
-
                 } else {
+                    activeQuestion.setCorrect(false);
                     updateGUI("false");
                 }
                 break;
             case R.id.answerBtn2:
                 System.out.println("BTN-2 PRESSED");
                 if (activeQuestion.getCorrect_answer().equalsIgnoreCase(answerBtn2.getText().toString())) {
+                    activeQuestion.setCorrect(true);
                     updateGUI("true");
                 } else {
+                    activeQuestion.setCorrect(false);
                     updateGUI("false");
                 }
                 break;
             case R.id.answerBtn3:
                 System.out.println("BTN-3 PRESSED");
                 if (activeQuestion.getCorrect_answer().equalsIgnoreCase(answerBtn3.getText().toString())) {
+                    activeQuestion.setCorrect(true);
                     updateGUI("true");
                 } else {
+                    activeQuestion.setCorrect(false);
                     updateGUI("false");
                 }
                 break;
             case R.id.answerBtn4:
                 System.out.println("BTN-4 PRESSED");
                 if (activeQuestion.getCorrect_answer().equalsIgnoreCase(answerBtn4.getText().toString())) {
+                    activeQuestion.setCorrect(true);
                     updateGUI("true");
                 } else {
+                    activeQuestion.setCorrect(false);
                     updateGUI("false");
                 }
                 break;
@@ -192,8 +214,12 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
                 gameTimer.cancel();
                 break;
             case "question":
-                questionTextLabel.setText(activeQuestion.getQuestion() + "\n" + activeQuestion.getCorrect_answer());
+                questionTextLabel.setText(activeQuestion.getQuestion() + activeQuestion.getDifficulty());
                 questionNumberLabel.setText(getString(R.string.question_x_out_of_y_label, questionCounter, activeQuestions.size()));
+                // Identify random category in multiplayer mode, since there is no category selection
+                if(categoryIdentifier.equals("") || categoryIdentifier == null) {
+                    categoryLabel.setText(activeQuestion.getCategoryString().toUpperCase());
+                }
                 scatterAnswers();
                 startTimer();
                 break;
@@ -293,11 +319,12 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
      * Receives the Category String from the Recycler View and saves it to a global variable
      * In case there is no Text, it return the String "No Date Found"
      */
-    public void receiveCategory(String type, int value) {
+    public void receiveCategory(String type, String difficulty, int value) {
         if (getIntent().hasExtra("category")) {
             categoryIdentifier = getIntent().getStringExtra("category").toUpperCase();
             questionType = type;
             questionValue = value;
+            questionDifficulty = difficulty;
         } else {
             Toast.makeText(this, "No Data Found", Toast.LENGTH_SHORT).show();
         }
@@ -324,9 +351,9 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
      * @throws QueryException if input is invalid (e.g. questionNumber=0)
      * @see QuestionManager#getApiData(int, int, String, String)
      */
-    public void callAPI(int ID, int value, String type) throws IOException, QueryException {
+    public void callAPI(int ID, int value, String type, String difficulty) throws IOException, QueryException {
 
-        activeQuestions = (ArrayList<Question>) qManager.getApiData(value, ID, "", type);
+        activeQuestions = (ArrayList<Question>) qManager.getApiData(value, ID, difficulty, type);
         updateButtons();
     }
 
@@ -345,7 +372,7 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
         if (activeQuestions == null)
             try {
                 System.out.println("API CALL: " + questionType + " " + questionValue);
-                callAPI(interpretIncomingData(), questionValue, questionType);
+                callAPI(interpretIncomingData(), questionValue, questionType, questionDifficulty);
             } catch (IOException | QueryException e) {
                 e.printStackTrace();
             }
@@ -360,6 +387,7 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
         }
         // If the limit is reached, the end screen will appear
         else {
+            System.out.println("ENDED GAME WITH:" + activeQuestions);
             endGame();
         }
     }
@@ -371,6 +399,8 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
     public void endGame() {
         Intent toEndScreen = new Intent(this, EndscreenActivity.class);
         toEndScreen.putExtra("score", points);
+        toEndScreen.putExtra(Constants.playerConstant, currentPlayer);
+        toEndScreen.putExtra("q", activeQuestions);
         finish();
         startActivity(toEndScreen);
     }
@@ -392,6 +422,8 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
                 updateGUI("time");
                 time = 0;
                 timerBar.setProgress(time);
+
+
             }
         }.start();
     }

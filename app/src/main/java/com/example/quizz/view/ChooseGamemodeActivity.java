@@ -9,6 +9,7 @@ import com.example.quizz.R;
 import com.example.quizz.data.Constants;
 import com.example.quizz.data.TransferUtility;
 import com.example.quizz.data.playerData.Player;
+import com.example.quizz.gameLogic.PlayerManager;
 import com.example.quizz.viewControl.CategoryRVAdapter;
 
 /**
@@ -37,9 +38,10 @@ public class ChooseGamemodeActivity extends AppCompatActivity {
         utility = new TransferUtility();
 
         // Getting Playerdata
-        activePlayer = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
-        utility.setSavedPlayer(activePlayer);
-        System.out.println("CHOOSE GAMEMODE ACTIVITY: " + utility.getSavedPlayer().getPlayerName());
+       activePlayer = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
+
+       utility.setSavedPlayer(activePlayer);
+
 
         // Gamemode Screen RV Setup
         recyclerViewCategory = findViewById(R.id.recyclerViewGamemode);

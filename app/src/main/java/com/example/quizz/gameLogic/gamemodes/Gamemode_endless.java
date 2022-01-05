@@ -1,12 +1,13 @@
 package com.example.quizz.gameLogic.gamemodes;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-
 import com.example.quizz.R;
 import com.example.quizz.view.GamemodeActivity;
 
+/**
+ * WORK IN PROGRESS |
+ */
 public class Gamemode_endless extends GamemodeActivity implements IGameSettings, IGamemode{
 
     @Override
@@ -25,8 +26,9 @@ public class Gamemode_endless extends GamemodeActivity implements IGameSettings,
         System.out.println("ENDLESS MODE");
     }
 
-    @Override
+
     public void begin() {
+        super.begin("","", 10);
 
     }
 

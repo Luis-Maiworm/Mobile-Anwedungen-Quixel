@@ -1,5 +1,8 @@
 package com.example.quizz.data.playerData;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
 /**
@@ -9,7 +12,7 @@ import java.io.Serializable;
  */
 
 
- public class Player implements Serializable {
+ public class Player implements Serializable  {
 
  public Player(String playerName, int playerID){
  this.playerName = playerName;
@@ -39,7 +42,8 @@ import java.io.Serializable;
  }
  */
 
-public int getPlayerIcon() {
+
+    public int getPlayerIcon() {
         return playerIcon;
         }
 public void setPlayerIcon(int playerIcon) {
@@ -68,4 +72,4 @@ public void setStats(Statistics stats) {
         }
 
 
-        }
+}

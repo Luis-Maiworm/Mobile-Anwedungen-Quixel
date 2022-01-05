@@ -17,7 +17,7 @@ public interface IGameSettings {
      * start the game and makes the first
      * API call / receives relevant information
      */
-    public void begin();
+    public void begin(String type, String difficulty,  int value);
 
     /**
      * Returns the description of the active

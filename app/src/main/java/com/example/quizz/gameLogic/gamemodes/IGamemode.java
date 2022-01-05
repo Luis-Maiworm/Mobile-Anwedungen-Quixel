@@ -32,7 +32,7 @@ public interface IGamemode {
      * In case there is no Text, it return
      * the String "No Date Found"
      */
-    public void receiveCategory(String type, int value);
+    public void receiveCategory(String type, String difficulty,  int value);
 
     /**
      * Interprets the incoming intent String and returns
@@ -50,7 +50,7 @@ public interface IGamemode {
      * @throws QueryException if input is invalid
      *                     (e.g. questionNumber=0)
      */
-    public void callAPI(int ID, int value, String type)
+    public void callAPI(int ID, int value, String type, String difficulty)
                     throws IOException, QueryException;
 
     /**

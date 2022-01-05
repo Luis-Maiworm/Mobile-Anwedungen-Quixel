@@ -15,6 +15,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.quizz.R;
 import com.example.quizz.data.Constants;
 import com.example.quizz.data.gameData.Categories;
@@ -41,6 +43,21 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     private Player currentPlayer = new Player();
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        initVariables();
+        loadData();
+        passManagerToFragments();
+        setUpOnClicks();
+
+
+        System.out.println("CURRENT PLAYER MAIN:" + pManager.getCurrentPlayer().getStats());
+
+    }
 
 
     //fix variables und view variables werden gesetzt
@@ -120,17 +137,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         resetStats.setOnClickListener(this);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        initVariables();
-        loadData();
-        passManagerToFragments();
-        setUpOnClicks();
-    }
-
 
     // Menu
     @SuppressLint("NonConstantResourceId")
@@ -179,13 +185,13 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     public void startSingleplayer() {
         Intent toSingleplayer = new Intent(MainMenuActivity.this, ChooseGamemodeActivity.class);
-        toSingleplayer.putExtra(Constants.playerConstant, currentPlayer);
+        toSingleplayer.putExtra(Constants.playerConstant, pManager.getCurrentPlayer());
         startActivity(toSingleplayer);
     }
 
     public void startMultiplayer() {        //todo aktuell noch stats speichern
         Intent toMultiplayer = new Intent(MainMenuActivity.this, MultiplayerActivity.class);
-        toMultiplayer.putExtra(Constants.playerConstant, currentPlayer);
+        toMultiplayer.putExtra(Constants.playerConstant, pManager.getCurrentPlayer());
         startActivity(toMultiplayer);
 
     }
@@ -205,15 +211,17 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     public void startStats() {
         Intent toStats = new Intent(MainMenuActivity.this, StatisticsActivity.class);
-
-        statisticsSimulation(); //test zwecke, simuliert zufällige statistiken
-
-        toStats.putExtra(Constants.playerConstant, currentPlayer);
+        // statisticsSimulation(); //test zwecke, simuliert zufällige statistiken
+        currentPlayer = pManager.getCurrentPlayer();
+        toStats.putExtra(Constants.playerConstant, pManager.getCurrentPlayer());
         startActivity(toStats);
 
     }
 
-    //set custom stats
+    /**
+     * INTEGRATIONSTEST-METHODE für StatisticsAnalyser
+     *
+     */
     public void statisticsSimulation(){
         Statistics stats = currentPlayer.getStats();
         for(int i = 0; i < 1000; i++) {
@@ -341,6 +349,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         builder.setMessage("Do you really want to quit?");
         builder.setPositiveButton(R.string.quitYes, (dialog, id) -> {
             finish();
+
         });
         builder.setNegativeButton(R.string.QuitCancel, (dialog, id) -> {
         });
@@ -348,28 +357,42 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    /*
+
     @Override
     protected void onResume() {
         super.onResume();
         System.out.println("RESUMED");
+        saveStats();
 
-        if (getIntent().hasExtra("Player")) {
+
+        if (getIntent().hasExtra(Constants.playerConstant)) {
             System.out.println("HAT EXTRA");
-            p1 = (Player) getIntent().getSerializableExtra("Player");
-            System.out.println("RESUME " + p1 + "RESUME: " + p1.getPlayerID());
-        } else {
+            currentPlayer = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
+            pManager.setCurrentPlayer(currentPlayer);
+            System.out.println("RESUMED PLAYER" + currentPlayer);
+            saveStats();
+        }
+        else {
             Toast.makeText(this, "No Data Found", Toast.LENGTH_SHORT).show();
         }
 
     }
 
-     */
+
 
     @Override
     protected void onPause() {
         super.onPause();
         System.out.println("PAUSED");
+        saveStats();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+
     }
 }
 

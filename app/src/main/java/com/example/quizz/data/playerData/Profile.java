@@ -1,5 +1,6 @@
 package com.example.quizz.data.playerData;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,14 +9,15 @@ import java.util.List;
  * Every operation which needs to operate on the {@code playerList} will be declared in this
  * class. Only one original {@link Profile} instance should exist in the {@link com.example.quizz.gameLogic.PlayerManager}
  */
-public class Profile {
+public class Profile implements Serializable {
 
+
+    public String currentPlayer = ""; //todo needs to refer to an existing player -> store id maybe?
 
     /**
      * Includes every {@link Player}.
      */
-    public List<Player> playerList = new ArrayList<Player>();
-
+    public ArrayList<Player> playerList = new ArrayList<Player>();
 
 
 
@@ -27,17 +29,15 @@ public class Profile {
         this.currentPlayer = currentPlayer;
     }
 
-    /**
-     *
-     */
-    public String currentPlayer = ""; //todo needs to refer to an existing player -> store id maybe?
+
+
 
 
     /**
      * Getter method for the {@code playerList}
      * @return {@code List<Player> playerList}
      */
-    public List<Player> getPlayerList() {
+    public ArrayList<Player> getPlayerList() {
         return playerList;
     }
 
@@ -45,7 +45,7 @@ public class Profile {
      * Setter method for the {@code playerList}
      * @param playerList Will be set into the playerList
      */
-    public void setPlayerList(List<Player> playerList) {
+    public void setPlayerList(ArrayList<Player> playerList) {
         this.playerList = playerList;
     }
 

@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.example.quizz.data.playerData.Profile;
 import com.example.quizz.data.playerData.Statistics;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,13 +22,13 @@ import java.util.List;
 public class PlayerManager implements Parcelable {
 
     private final String DEFAULTPATH = "data/stats.json";
-    File json = new File(DEFAULTPATH);
-    Gson gson = new Gson();
+    private File json = new File(DEFAULTPATH);
+    private Gson gson = new Gson();
 
     public Profile profiles = new Profile();
-    List<Player> playerList;
+    private ArrayList<Player> playerList;
 
-    Player currentPlayer;
+    private Player currentPlayer;
 
     private String stuff;   //todo -> parcelable konstruktor .. - was das
 

@@ -30,9 +30,9 @@ public class Gamemode_standard extends GamemodeActivity implements IGameSettings
         super.setup();
     }
 
-    @Override
+
     public void begin() {
-        super.begin();
+        super.begin("", "", 10);
     }
 
 

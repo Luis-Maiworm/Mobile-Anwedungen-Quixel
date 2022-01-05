@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.quizz.R;
 import com.example.quizz.data.Constants;
 import com.example.quizz.data.gameData.Categories;
@@ -41,7 +40,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     SharedPreferences pref;
     SharedPreferences.Editor ed;
 
-    private Player currentPlayer = new Player();
+
+    private Player currentPlayer = new Player("WURDE NEU ERZEUGT");
+
 
 
     @Override
@@ -49,13 +50,27 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        System.out.println(currentPlayer.getPlayerName());
         initVariables();
         loadData();
         passManagerToFragments();
         setUpOnClicks();
 
+        if (getIntent().hasExtra(Constants.playerConstant)) {
+            currentPlayer = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
+            pManager.setCurrentPlayer(currentPlayer);
+
+            System.out.println("RESUMED PLAYER" + currentPlayer + currentPlayer.getPlayerName());
+            saveStats();
+        }
+        else {
+            Toast.makeText(this, "No Data Found", Toast.LENGTH_SHORT).show();
+        }
 
         System.out.println("CURRENT PLAYER MAIN:" + pManager.getCurrentPlayer().getStats());
+        System.out.println("CURRENT PLAYER MAIN:" + pManager.getCurrentPlayer().getPlayerName());
+
 
     }
 
@@ -240,13 +255,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
 
 
-    public void startSettings() {
-        //todo main settings als activity -> "quickSettings" als Fragment
-
-    }
 
     public void openFragment(Fragment frag, int ... anim){
-
         FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);     //reordering? true or false
         if(anim.length != 0){
             fT.setCustomAnimations(anim[0], anim[1]);
@@ -260,7 +270,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void closeFragment(Fragment frag, int ... anim){
-
         FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);     //reordering? true or false
         if(anim.length > 1){
             fT.setCustomAnimations(anim[0], anim[1]);
@@ -363,36 +372,18 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         super.onResume();
         System.out.println("RESUMED");
         saveStats();
-
-
-        if (getIntent().hasExtra(Constants.playerConstant)) {
-            System.out.println("HAT EXTRA");
-            currentPlayer = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
-            pManager.setCurrentPlayer(currentPlayer);
-            System.out.println("RESUMED PLAYER" + currentPlayer);
-            saveStats();
-        }
-        else {
-            Toast.makeText(this, "No Data Found", Toast.LENGTH_SHORT).show();
-        }
-
     }
-
-
-
     @Override
     protected void onPause() {
         super.onPause();
         System.out.println("PAUSED");
-        saveStats();
+
 
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-
+        saveStats();
     }
 }
 

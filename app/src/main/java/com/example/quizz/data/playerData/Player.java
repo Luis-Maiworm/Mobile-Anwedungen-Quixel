@@ -31,6 +31,9 @@ import java.io.Serializable;
  public Statistics stats;
  public int playerIcon;
 
+    public Player(String test) {
+    }
+
  /*
  private Settings settings;
 

@@ -2,6 +2,7 @@ package com.example.quizz.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -14,6 +15,7 @@ import com.example.quizz.R;
 import com.example.quizz.data.Constants;
 import com.example.quizz.data.playerData.Player;
 import com.example.quizz.data.playerData.Statistics;
+import com.example.quizz.gameLogic.PlayerManager;
 import com.example.quizz.gameLogic.StatisticsAnalyser;
 import com.example.quizz.data.gameData.Categories;
 import java.text.DecimalFormat;
@@ -63,6 +65,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
     boolean flag = true;
 
+
     ArrayList<String> statsArray = new ArrayList<>();
 
 
@@ -70,6 +73,9 @@ public class StatisticsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
+
+
+
 
         //todo maybe checken ob überhaupt schon genug gespielt wurde -> dementsprechend statistiken zeigen
         // an sich: smarte View -> weiß was gespielt wurde was nicht (wurden gamemodes noch nicht gespielt -> wird nicht angezeigt)
@@ -90,6 +96,7 @@ public class StatisticsActivity extends AppCompatActivity {
         currentPlayer = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
         analyser = new StatisticsAnalyser(currentPlayer);
         stats = currentPlayer.getStats();
+
 
         listView = findViewById(R.id.statisticList);
 

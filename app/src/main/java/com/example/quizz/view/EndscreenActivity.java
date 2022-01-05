@@ -67,8 +67,9 @@ public class EndscreenActivity extends AppCompatActivity implements View.OnClick
         player = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
         System.out.println("PLAYER END" + player.getPlayerName());
         answeredQuestions = (ArrayList<Question>) getIntent().getSerializableExtra("q");
-        System.out.println("QUESTION: " + answeredQuestions.get(0).getQuestion() + "   ISCORRECT:" + answeredQuestions.get(0).isCorrect() +
-                answeredQuestions.get(0).getType() +  answeredQuestions.get(0).getDifficulty() +  answeredQuestions.get(0).getCategory());
+        for(Question q: answeredQuestions) {
+            System.out.println("QUESTION: " + q.getQuestion() + "ISCORRECT: " + q.isCorrect());
+        }
 
 
        statisticsAnalyser = new StatisticsAnalyser(player);
@@ -88,8 +89,8 @@ public class EndscreenActivity extends AppCompatActivity implements View.OnClick
                 // Intent
                 goToHome = new Intent(this, MainMenuActivity.class);
                 goToHome.putExtra(Constants.playerConstant, player);
-                //goToHome.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-               // startActivityIfNeeded(goToHome, 0);
+                // goToHome.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                //startActivityIfNeeded(goToHome, 0);
                 startActivity(goToHome);
                 finish();
                 break;

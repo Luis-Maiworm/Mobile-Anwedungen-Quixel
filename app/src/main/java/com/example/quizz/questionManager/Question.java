@@ -20,7 +20,7 @@ public class Question implements Serializable {
     private String question;
     private String correct_answer;
     private List<String> incorrect_answers;
-    public transient boolean isCorrect;
+    public boolean isCorrect;
     public String getCategoryString(){
         return this.category;
     }

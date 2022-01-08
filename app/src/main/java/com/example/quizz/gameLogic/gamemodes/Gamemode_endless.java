@@ -6,7 +6,7 @@ import com.example.quizz.R;
 import com.example.quizz.view.GamemodeActivity;
 
 /**
- * WORK IN PROGRESS |
+ * WORK IN PROGRESS | ENDLESS MODE
  */
 public class Gamemode_endless extends GamemodeActivity implements IGameSettings, IGamemode{
 

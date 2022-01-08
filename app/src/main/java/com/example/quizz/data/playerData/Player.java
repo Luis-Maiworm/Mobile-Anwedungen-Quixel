@@ -1,8 +1,5 @@
 package com.example.quizz.data.playerData;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.io.Serializable;
 
 /**
@@ -12,67 +9,62 @@ import java.io.Serializable;
  */
 
 
- public class Player implements Serializable  {
+public class Player implements Serializable {
 
- public Player(String playerName, int playerID){
- this.playerName = playerName;
- this.playerID = playerID;                    //todo playerID
- }
+    public String playerName;
+    public int playerID = 0;
+    public Statistics stats;
+    public int playerIcon;
+   // private boolean flag;
 
 
- //todo create empty constructor? just for one time reference use in loading the app for the first time
-
- public Player(){
-
- }
-
- public String playerName;
- public int playerID = 0;
- public Statistics stats;
- public int playerIcon;
-
-    public Player(String test) {
+    public Player(String playerName, int playerID) {
+        this.playerName = playerName;
+        this.playerID = playerID;                    //todo playerID
     }
 
- /*
- private Settings settings;
-
- public Settings getSettings(){
- return this.settings;
- }
- public void setSettings(Settings settings){
- this.settings = settings;
- }
- */
-
+    // empty constructor just for one time reference use in loading the app for the first time
+    public Player() {
+    }
 
     public int getPlayerIcon() {
         return playerIcon;
-        }
-public void setPlayerIcon(int playerIcon) {
+    }
+
+    public void setPlayerIcon(int playerIcon) {
         this.playerIcon = playerIcon;
-        }
+    }
 
-public String getPlayerName() {
+    public String getPlayerName() {
         return playerName;
-        }
-public void setPlayerName(String playerName) {
+    }
+
+    public void setPlayerName(String playerName) {
         this.playerName = playerName;
-        }
+    }
 
-public int getPlayerID() {
+    public int getPlayerID() {
         return playerID;
-        }
-public void setPlayerID(int playerID) {
+    }
+
+    public void setPlayerID(int playerID) {
         this.playerID = playerID;
-        }
+    }
 
-public Statistics getStats() {
+    public Statistics getStats() {
         return stats;
-        }
-public void setStats(Statistics stats) {
+    }
+
+    public void setStats(Statistics stats) {
         this.stats = stats;
-        }
+    }
 
+    public boolean isFlag() {
+       // return flag;
+        return false;
+    }
 
+    public void setFlag(boolean flag) {
+       // this.flag = flag;
+    }
 }

@@ -19,7 +19,6 @@ import com.example.quizz.data.gameData.Categories;
 import com.example.quizz.data.gameData.Types;
 import com.example.quizz.data.playerData.Player;
 import com.example.quizz.exceptions.QueryException;
-import com.example.quizz.gameLogic.PlayerManager;
 import com.example.quizz.gameLogic.gamemodes.IGameSettings;
 import com.example.quizz.gameLogic.gamemodes.IGamemode;
 import com.example.quizz.questionManager.Question;
@@ -27,8 +26,6 @@ import com.example.quizz.questionManager.QuestionManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -46,7 +43,7 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
     // Timer Setup
     private CountDownTimer gameTimer;
     // Data Setup
-    private String categoryIdentifier, questionType, questionDifficulty;
+    private String categoryIdentifier, questionType, questionDifficulty, FLAG;
     private Question activeQuestion;
     private ArrayList<Question> activeQuestions;
     private ArrayList<String> activeAnswers;
@@ -54,8 +51,6 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
     private int time, questionValue;
     // Player
     private Player currentPlayer;
-
-
 
 
     @Override
@@ -96,7 +91,9 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
         // Creates the Question Manager
         qManager = new QuestionManager();
         // Gets the active PlayerManager instance
-        currentPlayer = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
+        if (getIntent().hasExtra(Constants.playerConstant)) {
+            currentPlayer = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
+        }
 
 
     }
@@ -115,6 +112,8 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
         //                                 IGNORES THREAD ERRORS                          //
         //********************************************************************************//
 
+        // sets the FLAG (SP = Singleplayer | MP = Multiplayer)
+        FLAG = "sp";
         // Receives Data and calls the API
         receiveCategory(type, "", value);
         receiveQuestion();
@@ -125,15 +124,16 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
     }
 
     public void begin(ArrayList<Question> questionList) {
+        FLAG = "mp";
         activeQuestions = questionList;
         receiveQuestion();
 
     }
 
 
-
     /**
      * Listener for all 4 answers-buttons
+     *
      * @param v current view
      */
     @SuppressLint("NonConstantResourceId")
@@ -214,10 +214,10 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
                 gameTimer.cancel();
                 break;
             case "question":
-                questionTextLabel.setText(activeQuestion.getQuestion() + activeQuestion.getDifficulty());
+                questionTextLabel.setText(activeQuestion.getQuestion());
                 questionNumberLabel.setText(getString(R.string.question_x_out_of_y_label, questionCounter, activeQuestions.size()));
                 // Identify random category in multiplayer mode, since there is no category selection
-                if(categoryIdentifier.equals("") || categoryIdentifier == null) {
+                if (categoryIdentifier == null) {
                     categoryLabel.setText(activeQuestion.getCategoryString().toUpperCase());
                 }
                 scatterAnswers();
@@ -249,8 +249,7 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
             answerBtn3.setVisibility(View.GONE);
             answerBtn4.setVisibility(View.GONE);
             System.out.println("UPDATE BUTTONS: BOOLEAN");
-        }
-        else if(questionType.equalsIgnoreCase(Types.MULTIPLECHOICE.getName())) {
+        } else if (questionType.equalsIgnoreCase(Types.MULTIPLECHOICE.getName())) {
             answerBtn3.setVisibility(View.VISIBLE);
             answerBtn4.setVisibility(View.VISIBLE);
             System.out.println("UPDATE BUTTONS: MULTIPLE");
@@ -263,18 +262,16 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
      * Adds all 4 possible answers if the question is a multiple choice question.
      */
     private void scatterAnswers() {
-        if(questionType.equalsIgnoreCase(Types.MULTIPLECHOICE.getName())) {
+        if (questionType.equalsIgnoreCase(Types.MULTIPLECHOICE.getName())) {
             activeAnswers = activeQuestion.getAllAnswers();
             randomOrder();
             System.out.println("SCATTERING FOR MULTIPLE CHOICE");
-        }
-        else if(questionType.equalsIgnoreCase(Types.TRUEFALSE.getName())) {
+        } else if (questionType.equalsIgnoreCase(Types.TRUEFALSE.getName())) {
             activeAnswers = new ArrayList<>(Arrays.asList("TRUE", "FALSE"));
             answerBtn1.setText(activeAnswers.get(0));
             answerBtn2.setText(activeAnswers.get(1));
             System.out.println("SCATTERING FOR MULTIPLE BOOLEAN");
-        }
-        else {
+        } else {
             Toast.makeText(this, "An Error occurred", Toast.LENGTH_SHORT).show();
         }
     }
@@ -347,7 +344,7 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
      * Makes the API Call for the specific Category and saves the Question(s)
      *
      * @param ID category ID
-     * @throws IOException when there is something wrong with the API call
+     * @throws IOException    when there is something wrong with the API call
      * @throws QueryException if input is invalid (e.g. questionNumber=0)
      * @see QuestionManager#getApiData(int, int, String, String)
      */
@@ -387,7 +384,6 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
         }
         // If the limit is reached, the end screen will appear
         else {
-            System.out.println("ENDED GAME WITH:" + activeQuestions);
             endGame();
         }
     }
@@ -397,12 +393,28 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
      * Starts the end screen activity and passes all relevant data
      */
     public void endGame() {
-        Intent toEndScreen = new Intent(this, EndscreenActivity.class);
-        toEndScreen.putExtra("score", points);
-        toEndScreen.putExtra(Constants.playerConstant, currentPlayer);
-        toEndScreen.putExtra("q", activeQuestions);
-        finish();
-        startActivity(toEndScreen);
+        // After Singleplayer Round
+        if (FLAG.equalsIgnoreCase("sp")) {
+            Intent toEndScreen = new Intent(this, EndscreenActivity.class);
+            toEndScreen.putExtra("score", points);
+            toEndScreen.putExtra(Constants.playerConstant, currentPlayer);
+            toEndScreen.putExtra("correct", correct);
+            toEndScreen.putExtra("incorrect", incorrect);
+            toEndScreen.putExtra("q", activeQuestions);
+            finish();
+            startActivity(toEndScreen);
+        }
+        // After Multiplayer Round
+        if (FLAG.equalsIgnoreCase("mp")) {
+            Intent toEndScreenMP = new Intent(this, EndscreenMPActivity.class);
+            // if flag = host putExtra flag1, score1, p1
+            // if flat = server putExtra flag2
+            // toEndScreenMP.putExtra("flag", currentPlayerflag);
+            toEndScreenMP.putExtra("score", points);
+            toEndScreenMP.putExtra(Constants.playerConstant, currentPlayer);
+            finish();
+            startActivity(toEndScreenMP);
+        }
     }
 
     /**
@@ -442,6 +454,7 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
 
     /**
      * Method that provides the gamemode description
+     *
      * @param desc gamemode description
      * @return gamemode description
      */

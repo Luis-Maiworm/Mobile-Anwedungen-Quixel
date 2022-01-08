@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/main_menu_bg_demo"
     android:id="@+id/swipeLayout">
 
 
@@ -12,87 +12,22 @@
         android:layout_height="match_parent">
 
         <Button
-            android:id="@+id/enable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="enable"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/disable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="disable"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/enable" />
-
-        <Button
-            android:id="@+id/discover"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="158dp"
-            android:layout_marginEnd="159dp"
-            android:text="discover"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.333"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/disable"
-            app:layout_constraintVertical_bias="0.048" />
-
-        <EditText
-            android:id="@+id/editSend"
-            android:layout_width="155dp"
-            android:layout_height="49dp"
-            app:layout_constraintEnd_toStartOf="@+id/refresh"
-            app:layout_constraintStart_toEndOf="@+id/send"
-            app:layout_constraintTop_toBottomOf="@+id/discover" />
-
-        <Button
-            android:id="@+id/send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="136dp"
-            android:text="send"
-
-            app:layout_constraintBottom_toTopOf="@+id/recyclerViewBluetooth"
-            app:layout_constraintEnd_toStartOf="@+id/discover"
-            app:layout_constraintHorizontal_bias="0.242"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
             android:id="@+id/connect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="112dp"
+            android:layout_marginEnd="80dp"
+            android:backgroundTint="#2C7B83"
             android:text="connect"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.947"
-            app:layout_constraintStart_toEndOf="@+id/disable"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.092" />
-
-        <Button
-            android:id="@+id/visible"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="visible"
-            app:layout_constraintBottom_toTopOf="@+id/send"
-            app:layout_constraintEnd_toStartOf="@+id/discover"
-            app:layout_constraintHorizontal_bias="0.253"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.457" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewBluetooth"
             android:layout_width="351dp"
             android:layout_height="455dp"
+            android:layout_marginTop="300dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -100,14 +35,57 @@
             app:layout_constraintVertical_bias="0.894" />
 
         <Button
-            android:id="@+id/refresh"
+            android:id="@+id/discover"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="reset"
-            app:layout_constraintBottom_toTopOf="@+id/recyclerViewBluetooth"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="112dp"
+            android:layout_marginEnd="72dp"
+            android:backgroundTint="#2C7B83"
+            android:text="discover"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@+id/connect"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="play"
+            app:layout_constraintEnd_toStartOf="@+id/Player2"
+            app:layout_constraintStart_toEndOf="@+id/Player1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/Player1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Player1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/Player2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Player2"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/discover"
-            app:layout_constraintTop_toBottomOf="@+id/connect" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="1. Discover Devices 2. Select device 3. One Player Connects 4. Each Player selects a different Player \n5. Player 1 can press Play"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/play" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

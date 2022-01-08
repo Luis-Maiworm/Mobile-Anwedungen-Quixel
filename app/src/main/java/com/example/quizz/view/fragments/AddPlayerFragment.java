@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -35,8 +34,20 @@ public class AddPlayerFragment extends Fragment {
     private EditText editText;
     private ProfileRVAdapter profAdapter;
 
+    private String identifier;
+
     public void setRvAdapter(ProfileRVAdapter profAdapter){
         this.profAdapter = profAdapter;
+    }
+
+
+    public AddPlayerFragment(Player toRename){
+        this.identifier = Constants.renameConstant;
+        this.playerToCreate = toRename;
+    }
+
+    public AddPlayerFragment(){
+        this.identifier = Constants.createConstant;
     }
 
 
@@ -50,18 +61,24 @@ public class AddPlayerFragment extends Fragment {
         return view;
     }
 
-
-
     private void init(){
         Bundle bundle = this.getArguments();
 
         if(bundle != null) {
             pManager = bundle.getParcelable(Constants.playerManagerConstant);       //todo null pointer evtl?
         }
-
-        playerToCreate = new Player(); //todo remove player id from constructor
-
         //todo check if bundle contains a specific key
+
+        addPlayerBtn = view.findViewById(R.id.submitPlayerBtn);
+        editText = view.findViewById(R.id.editTextTextPersonName2);
+
+        if(identifier.equals(Constants.createConstant)) {
+            playerToCreate = new Player();      //todo : overwrite the playerToCreate with the playerToRename
+            addPlayerBtn.setText("Add");
+        } else {
+            editText.setText(playerToCreate.playerName);
+            addPlayerBtn.setText("Save changes");
+        }
 
         recyclerViewIcons = view.findViewById(R.id.recyclerViewIcons);
 
@@ -73,14 +90,13 @@ public class AddPlayerFragment extends Fragment {
     }
 
     private void initButton(){
-        addPlayerBtn = view.findViewById(R.id.submitPlayerBtn);
+
 
         addPlayerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 try{
-                    editText = view.findViewById(R.id.editTextTextPersonName2);
                     String name = editText.getText().toString();
                     playerToCreate.setPlayerName(name);         // problem: immer der gleiche player auf dem operiert wird!
 
@@ -88,7 +104,9 @@ public class AddPlayerFragment extends Fragment {
                         throw new Exception("Select Icon");
                     }
 
-                    pManager.createNewPlayer(playerToCreate);
+                    if(identifier.equals(Constants.createConstant)) {
+                        pManager.createNewPlayer(playerToCreate);
+                    }
 
                     profAdapter.setData(pManager.getProfiles().getPlayerIcons(), pManager.getProfiles().getPlayerNames());
                     // profAdapter.notifyItemChanged(pManager.getProfiles().getPlayerListSize());      //todo
@@ -102,15 +120,14 @@ public class AddPlayerFragment extends Fragment {
                     builder.setPositiveButton("Okay", (dialog, id) -> {
                     });
                     builder.show();
+                    e.printStackTrace();
                 }
             }
-
         });
     }
 
 
     private void closeFragment(){
-
         FragmentTransaction fT = getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
         fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
         fT.remove(this);

@@ -1,5 +1,5 @@
 package com.example.quizz.network;
-import android.app.AlertDialog;
+
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -7,14 +7,13 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.util.Log;
-import com.example.quizz.data.playerData.Player;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.UUID;
 
@@ -32,7 +31,7 @@ public class BluetoothConnection {
     private BluetoothDevice mmDevice;
     private UUID deviceUUID;
     ProgressDialog mProgressDialog;
-
+    Wrapper wrap;
     private ConnectedThread mConnectedThread;
 
     public String getIncomingMessage() {
@@ -49,6 +48,10 @@ public class BluetoothConnection {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         start();
 
+    }
+
+    public Wrapper getWrapper(){
+        return this.wrap;
     }
 
     private class AcceptThread extends Thread {
@@ -284,22 +287,24 @@ public class BluetoothConnection {
 
 
 
-                    // System.out.println(incomingMessage);
+                    System.out.println("Nachricht"+incomingMessage);
 
-
-                    Player player = null;
+/*
+                    List<Question> questionList = new ArrayList<>();
+                    Wrapper wrap = new Wrapper();
                     try {
-                        Object o = ois.readObject();
-                        player = (Player) o;
-                        System.out.println("player" + player.getPlayerName());
+                        wrap = (Wrapper) ois.readObject();
+                        System.out.println("liste" + wrap.getqList().get(0).getQuestion());
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }
-
-
-
-
-
+*/
+                    try{
+                        wrap = (Wrapper) deserialize(buffer);
+                        System.out.println("question reading:::::::: " + wrap.getqList().get(0).getQuestion());
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
 
                     Log.d(TAG, "InputStream: " + incomingMessage);
                 } catch (IOException e){
@@ -326,11 +331,24 @@ public class BluetoothConnection {
             Log.d(TAG, "writing Object to outputstream");
 
             try{
-                oos.writeObject(object);
-
+                //oos.writeObject(object);
+                mmOutStream.write(serialize(object));
             } catch (IOException e){
                 Log.e(TAG, "write: error writing object to output stream. " + e.getMessage());
             }
+        }
+        public byte[] serialize(Object obj) throws IOException {
+            ByteArrayOutputStream b = new ByteArrayOutputStream();
+            ObjectOutputStream o = new ObjectOutputStream(b);
+            o.writeObject(obj);
+            return b.toByteArray();
+
+        }
+
+        public Object deserialize(byte [] bytes) throws IOException, ClassNotFoundException {
+            ByteArrayInputStream b = new ByteArrayInputStream(bytes);
+            ObjectInputStream o = new ObjectInputStream(b);
+            return (Object) o.readObject();
         }
 
         public void cancel(){

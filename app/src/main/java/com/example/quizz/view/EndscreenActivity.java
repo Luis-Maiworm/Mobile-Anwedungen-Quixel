@@ -3,7 +3,6 @@ package com.example.quizz.view;
 import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,8 +10,6 @@ import android.widget.TextView;
 import com.example.quizz.R;
 import com.example.quizz.data.Constants;
 import com.example.quizz.data.playerData.Player;
-import com.example.quizz.data.playerData.Statistics;
-import com.example.quizz.gameLogic.PlayerManager;
 import com.example.quizz.gameLogic.StatisticsAnalyser;
 import com.example.quizz.questionManager.Question;
 import java.util.ArrayList;
@@ -27,30 +24,40 @@ public class EndscreenActivity extends AppCompatActivity implements View.OnClick
 
     // View
     private Button goHome, goToCategoryScreen, playAgain;
-    private TextView scoreLabel, congratsMessage;
+    private TextView correctLabel, incorrectLabel, congratsMessage;
     // Data
-    private int score;
+    private int score, correct, incorrect;
     private Player player;
-    private String testName;
     private ArrayList<Question> answeredQuestions;
     // Intents
     private Intent goToHome, goToCategory;
     private StatisticsAnalyser statisticsAnalyser;
-    // SharedPreferences
-    private SharedPreferences pref;
-    private  SharedPreferences.Editor ed;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_endscreen);
 
+        getData();
+        setup();
+        analyseGamePerformance();
 
+
+
+    }
+
+    /**
+     * Sets up the View and Listeners
+     */
+    private void setup() {
         // Setup View
         congratsMessage = findViewById(R.id.congratsMessageLabel);
-        goHome = findViewById(R.id.goToHomeBtn);
+        goHome = findViewById(R.id.goToHomeBtnMP);
         goToCategoryScreen = findViewById(R.id.goToCategoryBtn);
         playAgain = findViewById(R.id.AgainBtn);
+        correctLabel = findViewById(R.id.finalScoreLabel1);
+        incorrectLabel = findViewById(R.id.finalScoreLabel2);
 
         goToCategoryScreen.setVisibility(View.INVISIBLE);
         playAgain.setVisibility(View.INVISIBLE);
@@ -58,26 +65,37 @@ public class EndscreenActivity extends AppCompatActivity implements View.OnClick
         goHome.setOnClickListener(this);
         goToCategoryScreen.setOnClickListener(this);
         playAgain.setOnClickListener(this);
-
         // Init View
         score = getIntent().getIntExtra("score", 0);
-        congratsMessage.setText(getString(R.string.conMessageLabel, testName, score));
+        correctLabel.setText(getString(R.string.finalScoreCorrect, correct));
+        incorrectLabel.setText(getString(R.string.finalScroreIncorrect, incorrect));
+        congratsMessage.setText(getString(R.string.conMessageLabel, player.getPlayerName(), score));
+    }
 
+    /**
+     * Gets the data from the game loop
+     */
+    private void getData() {
         // Get Data
+
+        correct = getIntent().getIntExtra("correct", 0);
+        incorrect = getIntent().getIntExtra("incorrect", 0);
+
         player = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
-        System.out.println("PLAYER END" + player.getPlayerName());
+        System.out.println("PLAYER END" + player.getPlayerName() + player.getStats().getTotalAnswers());
         answeredQuestions = (ArrayList<Question>) getIntent().getSerializableExtra("q");
-        for(Question q: answeredQuestions) {
-            System.out.println("QUESTION: " + q.getQuestion() + "ISCORRECT: " + q.isCorrect());
-        }
-
-
-       statisticsAnalyser = new StatisticsAnalyser(player);
-       statisticsAnalyser.afterRound(answeredQuestions);
 
     }
 
-
+    /**
+     * Starts the StatisticsAnalyser and processes the answered Questions so that the data can be
+     * saved
+     */
+    private void analyseGamePerformance() {
+        statisticsAnalyser = new StatisticsAnalyser(player);
+        statisticsAnalyser.afterRound(answeredQuestions);
+        System.out.println("PLAYER END" + player.getPlayerName() + player.getStats().getTotalAnswers());
+    }
 
 
 
@@ -85,12 +103,10 @@ public class EndscreenActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
-            case R.id.goToHomeBtn:
+            case R.id.goToHomeBtnMP:
                 // Intent
                 goToHome = new Intent(this, MainMenuActivity.class);
                 goToHome.putExtra(Constants.playerConstant, player);
-                // goToHome.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                //startActivityIfNeeded(goToHome, 0);
                 startActivity(goToHome);
                 finish();
                 break;
@@ -118,7 +134,6 @@ public class EndscreenActivity extends AppCompatActivity implements View.OnClick
         super.onPause();
         finish();
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

@@ -22,22 +22,16 @@ import java.util.List;
 public class PlayerManager implements Parcelable {
 
     private final String DEFAULTPATH = "data/stats.json";
-    private File json = new File(DEFAULTPATH);
-    private Gson gson = new Gson();
-
+    private final Gson gson = new Gson();
     public Profile profiles = new Profile();
     private ArrayList<Player> playerList;
-
     private Player currentPlayer;
-
-    private String stuff;   //todo -> parcelable konstruktor .. - was das
 
     public PlayerManager(){
         playerList = profiles.getPlayerList();
     }
-
     protected PlayerManager(Parcel in) {
-        stuff = in.readString();
+        in.readString();
     }
 
     public static final Creator<PlayerManager> CREATOR = new Creator<PlayerManager>() {
@@ -62,7 +56,6 @@ public class PlayerManager implements Parcelable {
 
         this.currentPlayer = profiles.getPlayerWithName(playerName);        //setzt den currentPlayer, damit das Player Objekt wiederverwertet werden kann
         this.profiles.setCurrentPlayer(currentPlayer.getPlayerName());      //setzt den String für den currentPlayer (name) -> später id, damit dieser in einer json gespeichert werden kann
-
     }
 
     /**
@@ -83,10 +76,10 @@ public class PlayerManager implements Parcelable {
      * Due to the fact, that the
      * {@code currentPlayer} and the original {@code Player} have the same ID it
      * is easy to put it in the right place again.
-     * @param id put the {@code currentPlayer} and use the {@link Player#getPlayerID()} method to get the right ID.
+     * @param name put the {@code currentPlayer} and use the {@link Player#getPlayerName()} ()} method to get the right name.
      */
-    public void saveCurrentPlayer(Player currentPlayer, int id){
-        profiles.replacePlayerWithId(currentPlayer, id);
+    public void saveCurrentPlayer(Player currentPlayer, String name){
+        profiles.replacePlayerWithName(currentPlayer, name);
     }
 
     /**
@@ -98,43 +91,26 @@ public class PlayerManager implements Parcelable {
     }
 
 
-
-    public Profile getProfiles(){                  //todo notwendig oder nicht? -> wird profile benötigt um darauf operieren zu können oder macht das eh der sManager
-        // -> falls unnötig -> saveToJson(Profiles profiles) parameter entfernen
+    public Profile getProfiles(){
         return this.profiles;
     }
 
-    //playerOperationen
-
-    /**
-     * Declares and initializes a new Player. Also checks if the given name already exists.
-     * @param playerName name of the {@link Player} to create.
-     */
-    public void createNewPlayer(String playerName) throws Exception {
-        Player player;
-
-        if (!this.profiles.nameExists(playerName)) {
-            player = new Player(playerName, this.profiles.getPlayerListSize() + 1);           // ID ist immer die größe der SpielerList + 1
-            player.setStats(new Statistics());
-        } else {
-            throw new Exception("Name already used");       //todo exception ändern
-        }
-        this.profiles.addPlayer(player);
-    }
 
     /**
      *
      */
     public void createNewPlayer(Player player) throws Exception {
-        if(!this.profiles.nameExists(player.getPlayerName())){
+        int code = this.profiles.nameIsValid(player.getPlayerName());
+        if (code == 1) {
             player.setPlayerID(this.profiles.getPlayerListSize() + 1);
             player.setStats(new Statistics());
-        } else {
+        } else if (code == -1) {
             throw new Exception("Name already used. Please try again"); //todo create different exception?
+        } else if (code == -2) {
+            throw new Exception("Name needs to have at least 2, and a maximum of 10 letters");
         }
         this.profiles.addPlayer(player);
     }
-
 
     /**
      * Renames a player.
@@ -142,22 +118,21 @@ public class PlayerManager implements Parcelable {
      * @param newPlayerName Is the new name for the player.
      */
     public void renamePlayer(String oldPlayerName, String newPlayerName) throws Exception {
-        if(profiles.nameExists(newPlayerName) && !oldPlayerName.equals(newPlayerName)){
+        if(this.profiles.nameIsValid(newPlayerName) == -1 && !oldPlayerName.equals(newPlayerName)){
             throw new Exception("Name already exists!");
         }
         this.profiles.getPlayerWithName(oldPlayerName).setPlayerName(newPlayerName);
     }
 
     public void deletePlayer(String playerName) throws Exception {
-        if(currentPlayer.getPlayerName().equals(playerName)){
-            throw new Exception("Chosen profile is currently logged in. Change Profile to delete it.");
-        }
         if(this.profiles.getPlayerListSize() == 1) {
             throw new Exception("One Profile needs to exist.");
         }
+        if(currentPlayer.getPlayerName().equals(playerName)){
+            throw new Exception("Chosen profile is currently logged in. Change Profile to delete it.");
+        }
         this.profiles.removePlayerFromList(playerName);
     }
-
 
     /**
      * If the jsonString is == "", profiles will be set to null, so the main activity knows, that the User needs to create a player/profile.
@@ -165,7 +140,7 @@ public class PlayerManager implements Parcelable {
      *                   Passes an empty String "", if the App is being opened for the first time and therefore doesn't have any profiles/stored data.
      */
     public void loadFromJson(String jsonString) {
-        if(jsonString=="") this.profiles = null;
+        if(jsonString.equals("")) this.profiles = null;
         this.profiles = this.gson.fromJson(jsonString, Profile.class);
 
     }
@@ -179,29 +154,10 @@ public class PlayerManager implements Parcelable {
         this.profiles = new Profile();
     }
 
-
-
-
-    /*
-    public void loadFromJson() throws FileNotFoundException {
-        this.profiles = this.gson.fromJson(new FileReader(this.json), Profile.class);
-    }
-
-    @Deprecated
-    public void saveToJson(Profile profiles) throws IOException {
-         try(FileWriter writer = new FileWriter(this.json)){                     //todo this. ja nein?
-            this.gson.toJson(profiles, writer);
-         }
-    }*/
-
-
-
-
     @Override
     public int describeContents() {
         return 0;
     }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(DEFAULTPATH);

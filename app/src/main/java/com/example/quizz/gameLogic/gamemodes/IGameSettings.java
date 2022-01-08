@@ -12,22 +12,25 @@ public interface IGameSettings {
      * on the selected Game Mode
      */
     public void setup();
+
     /**
      * Gives a signal to the game logic to
      * start the game and makes the first
      * API call / receives relevant information
      */
-    public void begin(String type, String difficulty,  int value);
+    public void begin(String type, String difficulty, int value);
 
     /**
      * Returns the description of the active
      * Game Mode
+     *
      * @return description
      */
     public String description(String desc);
 
     /**
      * Returns the gamemode Name
+     *
      * @return gamemode name
      */
     public String getGamemodeName();

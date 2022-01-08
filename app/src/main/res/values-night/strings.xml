@@ -19,7 +19,7 @@
     <string name="correctQuestionCounterLabel">Correct: %1$d</string>
     <string name="incorrectQuestionCounterLabel">Incorrect: %1$d</string>
     <string name="scoreLabel">Score: %1$d</string>
-    <string name="conMessageLabel">Congratulations, %1$s! Your Score is: %2$d</string>
+    <string name="conMessageLabel">Congratulations, %1$s! \n\nYour Score is: %2$d</string>
     <string name="selectedGamemodeLabel">Gamemode: %1$s</string>
     <string name="quitYes">Yes</string>
     <string name="QuitCancel">Cancel</string>
@@ -27,6 +27,11 @@
     <string name="quit_message">Do you really want to quit? Progress won\'t be saved!</string>
     <string name="quit_title">Exit Game</string>
     <string name="selected_category_config">Selected Category: %1$s</string>
+    <string name="finalScoreCorrect">Correct Answers: \n%1$d</string>
+    <string name="finalScroreIncorrect">Incorrect Answers: \n%1$d</string>
+    <string name="mpEndScreenPlayerVS">"%1$s VS. %1$s "</string>
+    <string name="scorePlayer1">Score: %1$d</string>
+    <string name="scoreMP2">Score: %1$d</string>
 
     <string-array name="category_names">
         <item>Generalknowledge</item>

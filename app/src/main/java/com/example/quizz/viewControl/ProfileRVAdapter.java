@@ -3,6 +3,7 @@ package com.example.quizz.viewControl;
 import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,12 +33,13 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
     PlayerManager pManager;
     LoginFragment loginFragment;
     AddPlayerFragment childFrag;
+    Bundle pBundle;
 
     // ArrayList contextMenuList;
     Context contextMenuContext;
 
 
-    public ProfileRVAdapter(Context context , String[] profileNames, int[] profilePictures, @NonNull PlayerManager pManager, LoginFragment frag, AddPlayerFragment childFrag) {
+    public ProfileRVAdapter(Context context , String[] profileNames, int[] profilePictures, @NonNull PlayerManager pManager, LoginFragment frag, AddPlayerFragment childFrag, Bundle pBundle) {
         this.profileNames = profileNames;
         this.profilePictures = profilePictures;
         this.context = context;
@@ -45,6 +47,7 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
         this.pManager = pManager;
         this.loginFragment = frag;
         this.childFrag = childFrag;
+        this.pBundle = pBundle;
     }
 
     public void setData(int [] icons, String [] profileNames){
@@ -109,10 +112,6 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
 
         holder.mainLayout.setOnLongClickListener(v -> {
 
-            System.out.println("lol");
-            //todo let a button appear "changePlayer" ->
-            // also: make it wiggle? AND let a button appear "deletePlayer"
-            // also: make it visible that the player is selected
             animateButtons(deletePlayer, 0f, 1f);
             animateButtons(changePlayer, 0f, 1f);
 
@@ -141,7 +140,6 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
             ImageButton openProfileChooser = ((Activity) context).findViewById(R.id.fragmentBtn);
             ImageViewAnimatedChangeOut(context, openProfileChooser, R.drawable.ic_baseline_check_circle_24);
 
-
             //close fragment, when a profile is chosen
             fT = loginFragment.getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
             fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
@@ -151,16 +149,15 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
 
         deletePlayer.setOnClickListener(v -> {
 
-            //todo asks if the user is sure to delete -> doesn't work properly
+            //todo asks if the user is sure to delete -> doesn't work properly!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
             AlertDialog.Builder permissionBuilder = new AlertDialog.Builder(context);
-            permissionBuilder.setTitle("Error");
+            permissionBuilder.setTitle("Careful, Sir/Madame!");
             permissionBuilder.setMessage("You sure you wanna delete this? ;)");
-            permissionBuilder.setPositiveButton("Okay", (dialog, id) -> {
-
+            permissionBuilder.setPositiveButton("I have no choice, so yes!", (dialog, id) -> {
             });
-            permissionBuilder.setNegativeButton("Nevermind.", (dialog, id) -> {
 
-            });
             permissionBuilder.show();
 
 
@@ -170,9 +167,8 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
 
                 setData(pManager.getProfiles().getPlayerIcons(), pManager.getProfiles().getPlayerNames());
 
-                //todo delete Player + updates recyclerView (arrays)
-                notifyItemChanged(holder.getAdapterPosition());
-                // notifyDataSetChanged();
+                //notifyItemChanged(holder.getAdapterPosition());
+                notifyDataSetChanged();
             } catch(Exception e){
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Error");
@@ -180,13 +176,18 @@ public class ProfileRVAdapter extends RecyclerView.Adapter<ProfileRVAdapter.Prof
                 builder.setPositiveButton("Okay", (dialog, id) -> {
                 });
                 builder.show();
+                e.printStackTrace();
             }
 
 
         });
 
         changePlayer.setOnClickListener(v -> {
-            //todo playerFragment
+
+            childFrag = new AddPlayerFragment(pManager.getProfiles().getPlayerWithName(profileNames[holder.getAdapterPosition()]));
+            childFrag.setRvAdapter(this);
+            childFrag.setArguments(pBundle);
+
 
             FragmentTransaction fT;
 

@@ -4,6 +4,7 @@ import com.example.quizz.data.gameData.Categories;
 import com.example.quizz.data.playerData.Player;
 import com.example.quizz.data.playerData.Statistics;
 import com.example.quizz.questionManager.Question;
+import com.example.quizz.questionManager.QuestionManager;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -43,18 +44,11 @@ public class StatisticsAnalyser {
      * Updates the Player which have been given as parameter into the {@code StatisticsAnalyser's Constructor}.
      * @return the player, which statistics have been changed by the {@code StatisticsAnalyser}.
      */
-    public void afterQuestion(Question q, boolean qCorrect){
-        s.incrementTotal(qCorrect);
-        s.incrementAnswerPerCategory(q.getCategory(), qCorrect);
-        s.incrementAnswerPerDifficulty(q.getDifficulty(), qCorrect);
-        s.incrementAnswerPerType(q.getType(), qCorrect);
-    }
-    public void afterQuestion(Question q, boolean qCorrect, int remainingTimer){
-        s.incrementTotal(qCorrect);
-        s.incrementAnswerPerCategory(q.getCategory(), qCorrect);
-        s.incrementAnswerPerDifficulty(q.getDifficulty(), qCorrect);
-        s.incrementAnswerPerType(q.getType(), qCorrect);
-        //todo add Timer to stats somehow
+    public void afterQuestion(Question q){
+        s.incrementTotal(q.isCorrect());
+        s.incrementAnswerPerCategory(q.getCategory(), q.isCorrect());
+        s.incrementAnswerPerDifficulty(q.getDifficulty(), q.isCorrect());
+        s.incrementAnswerPerType(q.getType(), q.isCorrect());
     }
 
     public void afterRound(List<Question> qList, String identifier){
@@ -62,7 +56,7 @@ public class StatisticsAnalyser {
             case "Gamemode_standard":
             case "Gamemode_configurable":
                 for(Question q : qList){
-                    afterQuestion(q, q.isCorrect());
+                    afterQuestion(q);
                 }
                 break;
             case "Gamemode_endless":
@@ -70,8 +64,8 @@ public class StatisticsAnalyser {
         }
     }
     public void afterRound(List<Question> qList){
-        for(Question q : qList){
-            afterQuestion(q, q.isCorrect());
+                for(Question q : qList){
+                    afterQuestion(q);
                 }
         }
 
@@ -93,8 +87,8 @@ public class StatisticsAnalyser {
     }
 
 
-    //liste mit allen answerRatios. -> am besten sortiert, sodass eine auflistung der besten kategorien möglich ist
-    public HashMap<Categories, Double> percentageList(boolean includingEmpty, boolean order){        //todo variante: noch nie gespielte kategorien -> werden gar nicht erst ausgegeben
+
+    public HashMap<Categories, Double> percentageList(boolean includingEmpty, boolean order){
         for(Categories c : Categories.values()){
             double ratio = answerRatioPerCategory(c);
             if(includingEmpty) {

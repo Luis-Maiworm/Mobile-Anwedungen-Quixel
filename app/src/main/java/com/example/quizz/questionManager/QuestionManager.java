@@ -30,8 +30,6 @@ public class QuestionManager implements IQuestionManager {
     }
 
 
-
-
     /**
      * @param number checks if the number is valid.
      * @return returns true if valid, false if not.

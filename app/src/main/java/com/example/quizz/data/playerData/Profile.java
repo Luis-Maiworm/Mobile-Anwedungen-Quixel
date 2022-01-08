@@ -2,7 +2,7 @@ package com.example.quizz.data.playerData;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
+
 
 /**
  * The {@code Profiles} class includes the {@code playerList} with every {@link Player} created.
@@ -11,14 +11,11 @@ import java.util.List;
  */
 public class Profile implements Serializable {
 
-
-    public String currentPlayer = ""; //todo needs to refer to an existing player -> store id maybe?
-
     /**
      * Includes every {@link Player}.
      */
-    public ArrayList<Player> playerList = new ArrayList<Player>();
-
+    public ArrayList<Player> playerList = new ArrayList<>();
+    public String currentPlayer = ""; //todo needs to refer to an existing player -> store id maybe?
 
 
     public String getCurrentPlayer() {
@@ -29,12 +26,9 @@ public class Profile implements Serializable {
         this.currentPlayer = currentPlayer;
     }
 
-
-
-
-
     /**
      * Getter method for the {@code playerList}
+     *
      * @return {@code List<Player> playerList}
      */
     public ArrayList<Player> getPlayerList() {
@@ -43,29 +37,36 @@ public class Profile implements Serializable {
 
     /**
      * Setter method for the {@code playerList}
+     *
      * @param playerList Will be set into the playerList
      */
     public void setPlayerList(ArrayList<Player> playerList) {
         this.playerList = playerList;
     }
 
-
     /**
      * Method replaces a player with given ID with a new Player.
-     * @param newPlayer Is the object which is replacing the old one.
+     *
+     * @param newPlayer   Is the object which is replacing the old one.
      * @param oldPlayerId Is the ID of the old player, which will be replaced.
      */
-    public void replacePlayerWithId(Player newPlayer, int oldPlayerId){
-        for (int i = 0; i < playerList.size(); i++){
-            if (playerList.get(i).getPlayerID() == oldPlayerId){
+    public void replacePlayerWithId(Player newPlayer, int oldPlayerId) {
+        for (int i = 0; i < playerList.size(); i++) {
+            if (playerList.get(i).getPlayerID() == oldPlayerId) {
                 playerList.set(i, newPlayer);
             }
         }
     }
 
-    public void replacePlayerWithName(Player newPlayer, String playerName){
-        for (int i = 0; i < playerList.size(); i++){
-            if (playerList.get(i).getPlayerName().equals(playerName)){
+    /**
+     * Method replaces a player with given name with a new Player.
+     *
+     * @param newPlayer  new name
+     * @param playerName old player
+     */
+    public void replacePlayerWithName(Player newPlayer, String playerName) {
+        for (int i = 0; i < playerList.size(); i++) {
+            if (playerList.get(i).getPlayerName().equals(playerName)) {
                 playerList.set(i, newPlayer);
             }
         }
@@ -73,6 +74,7 @@ public class Profile implements Serializable {
 
     /**
      * Returns the player with the give ID.
+     *
      * @param id Key value, which will give the right {@link Player}
      * @return Returns the requested {@code Player}
      */
@@ -85,9 +87,15 @@ public class Profile implements Serializable {
         return null;
     }
 
-    public Player getPlayerWithName(String playerName){
-        for(Player player : playerList) {
-            if(player.getPlayerName().equals(playerName)){
+    /**
+     * Finds a player by name
+     *
+     * @param playerName name
+     * @return player with the submitted name
+     */
+    public Player getPlayerWithName(String playerName) {
+        for (Player player : playerList) {
+            if (player.getPlayerName().equals(playerName)) {
                 return player;
             }
         }
@@ -97,9 +105,10 @@ public class Profile implements Serializable {
 
     /**
      * Simply adds a player to the {@code playerList}
+     *
      * @param player The {@link Player} Object which will be added to the list.
      */
-    public void addPlayer(Player player){
+    public void addPlayer(Player player) {
         this.playerList.add(player);
     }
 
@@ -107,78 +116,80 @@ public class Profile implements Serializable {
     /**
      * Checks if a {@link Player} name already exists or not.
      * @param name String which will be checked.
-     * @return True if it exists, false if not.
+     * @return -1 if name already exists, -2 if length is not between 2 and 10, 1 if it is valid
      */
-    public boolean nameExists(String name){
+    public int nameIsValid(String name){
         for (int i = 0; i < this.playerList.size(); i++){
             if(name.equals(this.playerList.get(i).getPlayerName())){
-                System.out.println(playerList.get(i).getPlayerName());
-                return true;
+                return -1;
             }
         }
-        return false;
+        if(2 > name.length() || name.length() > 10){
+            return -2;
+        }
+        return 1;
     }
 
 
     /**
      * @return The size of the {@code playerList}
      */
-    public int getPlayerListSize(){
+    public int getPlayerListSize() {
         return this.playerList.size();
     }
 
     /**
      * Removes a {@link Player} from the {@code playerList}.
      * Iterates through to check if the {@code player} exists already. Use {@link #removePlayerFromList(String playerName)} if you have the Player ID.
+     *
      * @param player Will be removed.
      */
-    public void removePlayerFromList(Player player){
-        for (int i = 0; i < playerList.size(); i++){
-            if(playerList.get(i).equals(player)){
+    public void removePlayerFromList(Player player) {
+        for (int i = 0; i < playerList.size(); i++) {
+            if (playerList.get(i).equals(player)) {
                 playerList.remove(playerList.get(i));
             }
         }
     }
-/*
-    /**
-     * Removes a {@link Player} from the {@code playerList}.
-     * Iterates through to check if the {@code id} exists already. Use {@link #removePlayerFromList(Player player)} if you have a Player Object.
-     * @param id Corresponding {@code Player} Will be removed.
-     */
+
+    /*
+        /**
+         * Removes a {@link Player} from the {@code playerList}.
+         * Iterates through to check if the {@code id} exists already. Use {@link #removePlayerFromList(Player player)} if you have a Player Object.
+         * @param id Corresponding {@code Player} Will be removed.
+         */
     /*
     public void removePlayerFromList(int id){
         playerList.removeIf(player -> player.getPlayerID() == id);
     }*/
-
-
-    public void removePlayerFromList(String playerName){
-        for(Player player : playerList){
-            if(player.getPlayerName().equals(playerName)){
+    public void removePlayerFromList(String playerName) {
+        for (Player player : playerList) {
+            if (player.getPlayerName().equals(playerName)) {
                 playerList.remove(player);
+                break;
             }
         }
     }
 
 
-    public String[] getPlayerNames(){
+    public String[] getPlayerNames() {
 
-        String [] temp = new String[playerList.size()];
-        for(int i = 0; i <  playerList.size(); i++){
+        String[] temp = new String[playerList.size()];
+        for (int i = 0; i < playerList.size(); i++) {
             temp[i] = playerList.get(i).getPlayerName();
         }
         return temp;
     }
 
-    public int[] getPlayerIcons(){
+    public int[] getPlayerIcons() {
 
-        int [] temp = new int[playerList.size()];
-        for(int i = 0; i <  playerList.size(); i++){
+        int[] temp = new int[playerList.size()];
+        for (int i = 0; i < playerList.size(); i++) {
             temp[i] = playerList.get(i).getPlayerIcon();
 
         }
         return temp;
     }
-
 
 
 }

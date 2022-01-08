@@ -44,29 +44,24 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 public class StatisticsActivity extends AppCompatActivity {
 
     //model
-    Player currentPlayer;
-    StatisticsAnalyser analyser;
-    Statistics stats;
-
+    private Player currentPlayer;
+    private StatisticsAnalyser analyser;
+    private Statistics stats;
     //views
-    ListView listView;
-    ImageView sortButton;
-
+    private ListView listView;
+    private ImageView sortButton;
     //chart
-    HorizontalBarChart barChart;
-    ArrayList<BarEntry> values;
-    BarDataSet barDataSet;
-    ArrayList<IBarDataSet> iBarDataSets;
-    BarData barData;
-
-    YAxis leftAxis;
-    YAxis rightAxis;
-    XAxis xAxis;
-
-    boolean flag = true;
-
-
-    ArrayList<String> statsArray = new ArrayList<>();
+    private HorizontalBarChart barChart;
+    private ArrayList<BarEntry> values;
+    private BarDataSet barDataSet;
+    private ArrayList<IBarDataSet> iBarDataSets;
+    private BarData barData;
+    private YAxis leftAxis;
+    private YAxis rightAxis;
+    private XAxis xAxis;
+    private boolean flag = true;
+    // data
+    private ArrayList<String> statsArray = new ArrayList<>();
 
 
     @Override
@@ -75,17 +70,13 @@ public class StatisticsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_statistics);
 
 
-
-
         //todo maybe checken ob überhaupt schon genug gespielt wurde -> dementsprechend statistiken zeigen
         // an sich: smarte View -> weiß was gespielt wurde was nicht (wurden gamemodes noch nicht gespielt -> wird nicht angezeigt)
         // kategorien, schwierigkeiten, types nicht gespielt -> nicht anzeigen (immer nur die, die schon gezockt wurden)
 
-
         initVariables();
         setVariables();
         setListView();
-
         categoryChart(analyser.percentageList(false, analyser.ASC));    //due to the fact how the graph is being filled, "ASC"
         // is visually equal to the actual Descending view of the graph
     }
@@ -269,16 +260,10 @@ public class StatisticsActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     public void onBackPressed() {
-       // Intent openMainActivity = new Intent(this, MainMenuActivity.class);
-       // openMainActivity.putExtra("Player", player);
-       // startActivity(openMainActivity);
-
         Intent openMainActivity = new Intent(this, MainMenuActivity.class);
         openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        // openMainActivity.putExtra("Player", player);
         startActivityIfNeeded(openMainActivity, 0);
         finish();
     }

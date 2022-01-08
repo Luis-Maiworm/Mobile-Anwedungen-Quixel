@@ -1,44 +1,56 @@
 package com.example.quizz.view;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.quizz.R;
-import com.example.quizz.network.BluetoothManager;
+import com.example.quizz.data.Constants;
 import com.example.quizz.data.playerData.Player;
+import com.example.quizz.exceptions.QueryException;
+import com.example.quizz.gameLogic.gamemodes.Gamemode_mp;
+import com.example.quizz.network.BluetoothConnection;
+import com.example.quizz.network.BluetoothManager;
 import com.example.quizz.exceptions.BluetoothException;
+import com.example.quizz.network.Wrapper;
+import com.example.quizz.questionManager.Question;
+import com.example.quizz.questionManager.QuestionManager;
 import com.example.quizz.viewControl.BluetoothDevicesRVAdapter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MultiplayerActivity extends AppCompatActivity implements View.OnClickListener{
 
     BluetoothManager bManager;
-    Button enable, disable, discover, send, connect, visible, refresh;
-    EditText textEdit;
-
+    Button connect, refresh, write, Player1, Player2;
+    private CountDownTimer timer;
+    boolean flag;
     SwipeRefreshLayout swipeLayout;
-
+    private Player player;
     RecyclerView recyclerView;
     BluetoothDevicesRVAdapter rvAdapter;
-    //   GridLayoutManager gridLayoutManager;
-    //   List<BluetoothDevice> mDevices;
     LinearLayoutManager linearLayoutManager;
 
-    //todo observer einbauen -> resettet automatisch mDevices und notifyItemChanged() wenn devices sich verändert
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiplayer);
-
+        player = (Player)getIntent().getSerializableExtra(Constants.playerConstant);
         bManager = new BluetoothManager(this);
 
         initVariables();
@@ -59,29 +71,34 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
         } catch (BluetoothException e) {
             e.printStackTrace();
         }
+        bManager.enableBt();
+        bManager.visible();
+        //********************************************************************************//
+        //                                 IGNORES THREAD ERRORS                          //
+        //********************************************************************************//
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        //********************************************************************************//
+        //                                 IGNORES THREAD ERRORS                          //
+        //********************************************************************************//
+
+
 
     }
 
-
-
     public void initVariables(){
         swipeLayout = findViewById(R.id.swipeLayout);
-        enable = findViewById(R.id.enable);
-        disable = findViewById(R.id.disable);
-        discover = findViewById(R.id.discover);
-        send = findViewById(R.id.send);
         connect = findViewById(R.id.connect);
-        visible = findViewById(R.id.visible);
-        refresh = findViewById(R.id.refresh);
+        refresh = findViewById(R.id.discover);
+        Player1 = findViewById(R.id.Player1);
+        Player2 = findViewById(R.id.Player2);
+        write = findViewById(R.id.play);
+        write.setVisibility(View.INVISIBLE);
 
-        textEdit = findViewById(R.id.editSend);
-
-        enable.setOnClickListener(this);
-        disable.setOnClickListener(this);
-        discover.setOnClickListener(this);
-        send.setOnClickListener(this);
+        Player1.setOnClickListener(this);
+        Player2.setOnClickListener(this);
+        write.setOnClickListener(this);
         connect.setOnClickListener(this);
-        visible.setOnClickListener(this);
         refresh.setOnClickListener(this);
 
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -101,8 +118,6 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
         });
     }
 
-
-
     @Override
     protected void onDestroy(){
         super.onDestroy();
@@ -117,7 +132,6 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
     }
 
 
-
     List<BluetoothDevice> prevState = new ArrayList<>();
     // sollte eigentlich an allen neu hinzugekommenen positionen updaten / notifien...
     public void notifyAlgo(){
@@ -130,37 +144,124 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
         prevState = temp;
     }
 
+
+    @SuppressLint("NonConstantResourceId")
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.enable:
-                bManager.enableBt();
-                break;
-            case R.id.disable:
-                bManager.disableBt();
-                break;
-            case R.id.discover:
-                bManager.discover();
-                break;
+        switch(v.getId()) {
             case R.id.connect:
                 bManager.connect();
                 break;
-            case R.id.visible:
-                bManager.visible();
+            case R.id.Player1:
+                flag = true;
+                write.setVisibility(View.VISIBLE);
                 break;
-            case R.id.refresh:                        //todo nicht über button, sonder nach unten swipen
-                refresh();
+            case R.id.Player2:
+                new AsyncCaller().execute();
                 break;
-            case R.id.send:
-                //  bManager.write(textEdit.getText().toString());
-                bManager.write(new Player(textEdit.getText().toString(), 0));
+            case R.id.discover:
+                bManager.discover();
+                timer = new CountDownTimer(3000, 1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                    }
+                    @Override
+                    public void onFinish() {
+                        refresh();
+                    }
+                }.start();
                 break;
+            case R.id.play:
+                if (flag) {
+                    try {
+                        // Tries to start the game.
+                        start();
+                        // Starts the Gameloop
+                        player.setFlag(flag);
+                        Wrapper wrap = new Wrapper();
+                        wrap.setqList(qList);
+                        wrap.setPlayer(player);
+                        Intent intent = new Intent(this, Gamemode_mp.class);
+                        intent.putExtra("flag", wrap);
+                        startActivity(intent);
+                    } catch (IOException | QueryException | NullPointerException e) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setTitle("Error");
+                        builder.setMessage("");
+                        builder.setPositiveButton("Okay", (dialog, id) -> {
+                        });
+                        builder.show();
+                        e.printStackTrace();
+                    }
+                }
         }
     }
+    ArrayList<Question> qList = new ArrayList<>();
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void start() throws IOException, QueryException {
+        QuestionManager qm = new QuestionManager();
 
+        qList = (ArrayList<Question>) qm.getApiData(3, -1, "", "boolean");
+        //qList.stream();
+        System.out.println("liste vorher" + qList.get(0).getQuestion());
+        Wrapper wrap = new Wrapper();
+        wrap.setqList(qList);
+        bManager.write(wrap);
+    }
+    private class AsyncCaller extends AsyncTask<Void, Void, Wrapper>
+    {
+        //ProgressDialog pdLoading = new ProgressDialog(MultiplayerActivity.this);
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
 
+            //this method will be running on UI thread
+            //pdLoading.setMessage("\tLoading...");
+            //pdLoading.show();
+        }
+        @Override
+        protected Wrapper doInBackground(Void... params) {
+            Wrapper wrap = new Wrapper();
+            //this method will be running on background thread so don't update UI frome here
+            //do your long running http tasks here,you dont want to pass argument and u can access the parent class' variable url over here
+            while(!flag){
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
+                try {
+                    wrap = bManager.readQuestions();
+                    if (wrap.getqList()!= null){return wrap;}
+                }
+                catch(NullPointerException e){ e.printStackTrace();
+                }
+
+            }
+
+            return wrap;
+        }
+
+        @Override
+        protected void onPostExecute(Wrapper wrap) {
+            super.onPostExecute(wrap);
+
+            //this method will be running on UI thread
+            if(wrap != null){
+                flag = false;
+                player.setFlag(flag);
+                wrap.setPlayer(player);
+                Intent intent = new Intent(MultiplayerActivity.this, Gamemode_mp.class);
+                intent.putExtra("flag", wrap);
+                startActivity(intent);
+            }
+            //pdLoading.dismiss();
+        }
+
+    }
 
 }

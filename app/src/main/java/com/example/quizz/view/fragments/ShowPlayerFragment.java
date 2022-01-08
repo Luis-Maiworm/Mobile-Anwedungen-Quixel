@@ -10,7 +10,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import com.example.quizz.R;
 import com.example.quizz.data.Constants;
 import com.example.quizz.data.playerData.Player;
@@ -77,14 +76,13 @@ public class ShowPlayerFragment extends Fragment {
                     editFlag = false;
                 }
                 else if (!editFlag) {
-                    //todo if name not appropriate -> already given or such (make alertdialog)
 
                     try {
                         editName.setVisibility(View.GONE);
                         changeName.setImageResource(R.drawable.ic_baseline_create_24);
                         playerNameView.setVisibility(View.VISIBLE);
 
-                        pManager.renamePlayer(currentPlayer.getPlayerName(), editName.getText().toString());
+                        pManager.renamePlayer(currentPlayer.getPlayerName(), editName.getText().toString() );
 
                         playerNameView.setText(editName.getText().toString());
                     } catch (Exception e){
@@ -102,19 +100,5 @@ public class ShowPlayerFragment extends Fragment {
             }
         });
     }
-
-
-    private void closeFragment(){
-
-        FragmentTransaction fT = getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
-        fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
-        fT.remove(this);
-        fT.commit();
-
-        //todo delay? -> nach "add" geht ein klick ins leere
-
-    }
-
-
 
 }

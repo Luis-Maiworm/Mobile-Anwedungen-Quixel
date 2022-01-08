@@ -57,32 +57,7 @@ public class ConfigureGamemodeActivity extends AppCompatActivity implements Adap
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configure_gamemode);
 
-        // View
-        titleLabel = findViewById(R.id.configureTitleLabel);
-        selectDifficulty = findViewById(R.id.selectDifficultyLabel);
-        selectType = findViewById(R.id.selectQuestionTypeLabel);
-        selectedCategory = findViewById(R.id.categoryConfigLabel);
-        selectedCategory.setText(getResources().getString(R.string.selected_category_config, getIntent().getStringExtra("category")));
-        startBtn = findViewById(R.id.configStartBtn);
-        startBtn.setOnClickListener(this);
-        difficultySpinner = findViewById(R.id.difficultySpinner);
-        typeSpinner = findViewById(R.id.qTypeSpinner);
-        icon = findViewById(R.id.categoryIconConfig);
-        icon.setImageResource(getIntent().getIntExtra("categoryIcon", -1));
-
-        // Spinner Menu and Adapter Setup
-        difficultyAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, difficulties);
-        difficultyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        difficultySpinner.setAdapter(difficultyAdapter);
-        difficultySpinner.setOnItemSelectedListener(this);
-        typeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, questionTypes);
-        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        typeSpinner.setAdapter(typeAdapter);
-        typeSpinner.setOnItemSelectedListener(this);
-
-        questionManager = new QuestionManager();
-
-
+        setup();
 
         //********************************************************************************//
         //                                 IGNORES THREAD ERRORS                          //
@@ -95,12 +70,43 @@ public class ConfigureGamemodeActivity extends AppCompatActivity implements Adap
 
     }
 
+    /**
+     * Sets up the View / creates the spinner and the Spinner Adapters
+     */
+    private void setup() {
+        // View
+        titleLabel = findViewById(R.id.configureTitleLabel);
+        selectDifficulty = findViewById(R.id.selectDifficultyLabel);
+        selectType = findViewById(R.id.selectQuestionTypeLabel);
+        selectedCategory = findViewById(R.id.categoryConfigLabel);
+        selectedCategory.setText(getResources().getString(R.string.selected_category_config, getIntent().getStringExtra("category")));
+        startBtn = findViewById(R.id.configStartBtn);
+        startBtn.setOnClickListener(this);
+        difficultySpinner = findViewById(R.id.difficultySpinner);
+        typeSpinner = findViewById(R.id.qTypeSpinner);
+        icon = findViewById(R.id.categoryIconConfig);
+        icon.setImageResource(getIntent().getIntExtra("categoryIcon", -1));
+        // Spinner Menu and Adapter Setup
+        difficultyAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, difficulties);
+        difficultyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        difficultySpinner.setAdapter(difficultyAdapter);
+        difficultySpinner.setOnItemSelectedListener(this);
+        typeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, questionTypes);
+        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        typeSpinner.setAdapter(typeAdapter);
+        typeSpinner.setOnItemSelectedListener(this);
+        // Init QuestionManager
+        questionManager = new QuestionManager();
+    }
+
+
     // Spinner Listener
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String debug = parent.getItemAtPosition(position).toString();
 
     }
+    // Spinner Listener
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
     }
@@ -150,14 +156,26 @@ public class ConfigureGamemodeActivity extends AppCompatActivity implements Adap
         builder.show();
     }
 
+    /**
+     * Checks how many questions are available based on the users configuration before starting the
+     * game to ensure, that there are enough questions
+     * @return number of questions available (max 50)
+     * @throws IOException when the QuestionData is not in a valid JSON format
+     * @throws QueryException when the API-Call Query is not valid / API is not responding
+     */
     private int checkQuestionValue() throws IOException, QueryException {
         List<Question> questionList;
-        questionList = questionManager.getApiData(50, Categories.valueOf(getIntent().getStringExtra("category").toUpperCase()).getId(), getDifficultyEnumByString(difficulty).toUpperCase(), getTypeEnumByString(type).toUpperCase());
-        // System.out.println(Categories.valueOf(Categories.valueOf(getIntent().getStringExtra("category").toUpperCase()).getId() + "DIFFI: " +  getDifficultyEnumByString(difficulty) + "TYPE " + getTypeEnumByString(type)));
-        System.out.println(difficulty);
-        System.out.println(type);
+        System.out.println(Categories.valueOf(getIntent().getStringExtra("category").toUpperCase()).getId());
+        System.out.println(getDifficultyEnumByString(difficulty).toUpperCase());
+        System.out.println(getTypeEnumByString(type).toUpperCase());
+        questionList = questionManager.getApiData(50, Categories.valueOf(getIntent().getStringExtra("category").toUpperCase()).getId(), getDifficultyEnumByString(difficulty).toLowerCase(), getTypeEnumByString(type).toLowerCase());
         return questionList.size();
     }
+
+    /**
+     * Starts the Game loop
+     * @param value number of questions
+     */
     private void startGame(int value) {
         Intent startGame = new Intent(ConfigureGamemodeActivity.this, Gamemode_configurable.class);
         startGame.putExtra("difficulty", difficulty);
@@ -168,9 +186,14 @@ public class ConfigureGamemodeActivity extends AppCompatActivity implements Adap
         startActivity(startGame);
     }
 
+    /**
+     * Compares the Option selected in the spinner to find the fitting ENUM for the API call
+     * @param string name of the type string
+     * @return name of the ENUM / "" for the random option / null if something went wrong
+     */
     private String getTypeEnumByString(String string) {
         for(Types t : Types.values() ) {
-            if((string.equals(t.getRealName()))) {
+            if((string.equalsIgnoreCase(t.getRealName()))) {
                 return t.getName();
             }
             else if(string.equalsIgnoreCase("Random")) {
@@ -179,9 +202,14 @@ public class ConfigureGamemodeActivity extends AppCompatActivity implements Adap
         }
         return null;
     }
+    /**
+     * Compares the Option selected in the spinner to find the fitting ENUM for the API call
+     * @param string name of the difficulty string
+     * @return name of the ENUM / "" for the random option / null if something went wrong
+     */
     private String getDifficultyEnumByString(String string) {
         for(Difficulties d : Difficulties.values() ) {
-            if((string.equals(d.getName()))) {
+            if((string.equalsIgnoreCase(d.getName()))) {
                 return d.getName();
             }
             else if(string.equalsIgnoreCase("Random")) {

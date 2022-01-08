@@ -8,13 +8,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 import androidx.activity.result.ActivityResultCallback;
-import androidx.core.content.ContextCompat;
 import com.example.quizz.exceptions.BluetoothException;
-import com.example.quizz.view.MainMenuActivity;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -161,6 +158,11 @@ public class BluetoothManager implements IBluetoothManager{
     }
 
     @Override
+    public Wrapper readQuestions() {
+        return btConnection.getWrapper();
+    }
+
+    @Override
     public void terminate() {
         unregisterBroadcastReceiver(mBroadcastReceiver1);
         unregisterBroadcastReceiver(mBroadcastReceiver2);
@@ -212,10 +214,6 @@ public class BluetoothManager implements IBluetoothManager{
         }
 
     }
-
-
-
-
 
 
     // add broadcast receiver to send and read methods?
@@ -334,15 +332,7 @@ public class BluetoothManager implements IBluetoothManager{
         }
     };
 
-
-
-
-
-
-
-
-
-
-
-
+    public BluetoothConnection getBtConnection() {
+        return btConnection;
+    }
 }

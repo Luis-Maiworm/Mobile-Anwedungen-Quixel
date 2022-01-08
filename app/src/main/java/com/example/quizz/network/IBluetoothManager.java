@@ -1,7 +1,6 @@
 package com.example.quizz.network;
 
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import com.example.quizz.exceptions.BluetoothException;
 import java.util.ArrayList;
 
@@ -12,6 +11,7 @@ public interface IBluetoothManager {
 
     /**
      * Sets up the BluetoothAdapter and some permissions.
+     *
      * @throws BluetoothException if the device doesn't support Bluetooth.
      */
     void init() throws BluetoothException;
@@ -38,6 +38,7 @@ public interface IBluetoothManager {
 
     /**
      * Pairs with another bluetooth device. Also cancels the discovery, if running (saves resources).
+     *
      * @param mDevice the device to pair with.
      * @throws BluetoothException if no device is selected or the {@code mDevice} is null.
      */
@@ -51,26 +52,29 @@ public interface IBluetoothManager {
 
     /**
      * Writes a String to the OutputStream, which can be accessed by the connected device.
+     *
      * @param input
      */
     void write(String input);
 
     /**
      * Writes an object to the OutputStream, which can be accessed by the connected device.
+     *
      * @param o
      */
     void write(Object o);
 
     /**
      * Reads the InputStream, which delivers the information from the OutputStream of connected devices.
+     *
      * @return
      */
     String read();
+
+    Wrapper readQuestions();
 
     /**
      * Unregisters all BroadCastReceiver.
      */
     void terminate();
-
-
 }

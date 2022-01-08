@@ -3,6 +3,8 @@ package com.example.quizz.data.playerData;
 import com.example.quizz.data.gameData.Categories;
 import com.example.quizz.data.gameData.Difficulties;
 import com.example.quizz.data.gameData.Types;
+import com.example.quizz.view.ConfigureGamemodeActivity;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
@@ -26,7 +28,6 @@ public class Statistics implements Serializable {
     public void setRightQuestionsPerCat(HashMap<String, Integer> rightQuestionsPerCat) {
         this.rightQuestionsPerCat = rightQuestionsPerCat;
     }
-
     */
 
     /**
@@ -37,19 +38,12 @@ public class Statistics implements Serializable {
     private int highScore = 0;
     private HashMap<Integer, List<Integer>> gamesMultiplayer = new HashMap<>();
     public List<Integer> timeLeft = new ArrayList<>(); //index 0: wie viel Zeit verfügbar war, index 1: wie viel Zeit am ende übrig war.
-
-
-    private List<Integer> answersTotal = new ArrayList<>(
-            Arrays.asList(0, 0)
-    );
+    private List<Integer> answersTotal = new ArrayList<>(Arrays.asList(0, 0));
     private HashMap<Categories, List<Integer>> answersPerCategory = new HashMap<>();
     private HashMap<Difficulties, List<Integer>> answersPerDifficulty = new HashMap<>();
     private HashMap<Types, List<Integer>> answersPerType = new HashMap<>();
 
 
-    /**
-     *
-     */
     public Statistics(){
         //todo fill hashmap
         for(Categories c : Categories.values()){
@@ -72,7 +66,6 @@ public class Statistics implements Serializable {
     }
 
     /**
-     * Liste
      * List<Integer> total
      * -> total berechenbar durch alle 3 Listen -> eine Frage muss immer aus mindestens einem der Argumente
      * bestehen -> man am besten nimmt man die List<Type> da diese nur 2 Möglichkeiten hat
@@ -89,69 +82,54 @@ public class Statistics implements Serializable {
     public void setHighScore(int highScore){
         this.highScore = highScore;
     }
-    public int getHighScore(){
-        return this.highScore;
-    }
-
-
-
 
     //getter
-
-
     public int getTotalAnswers(){
         return this.answersTotal.get(0) + this.answersTotal.get(1);
     }
-
+    public int getHighScore(){
+        return this.highScore;
+    }
     public int getTotalWrongAnswers(){
         return this.answersTotal.get(1);
     }
     public int getTotalRightAnswers(){
         return this.answersTotal.get(0);
     }
-
     public int getAnswerPerCategory(Categories c, boolean isCorrect){
         if(isCorrect) return this.answersPerCategory.get(c).get(0);
         return this.answersPerCategory.get(c).get(1);
     }
-
     public int getAnswerPerDifficulty(Difficulties d, boolean isCorrect) {
         if(isCorrect) return this.answersPerDifficulty.get(d).get(0);
         return this.answersPerDifficulty.get(d).get(1);
     }
-
     public int getAnswerPerType(Types t, boolean isCorrect) {
         if(isCorrect) return this.answersPerType.get(t).get(0);
         return this.answersPerType.get(t).get(1);
     }
 
     //Incrementers
-
     public void incrementTotal(boolean isCorrect){
         if(isCorrect) this.answersTotal.set(0, this.answersTotal.get(0) + 1);
         if(!isCorrect) this.answersTotal.set(1, this.answersTotal.get(1) + 1);
     }
-
-
     public void incrementAnswerPerCategory(Categories c, boolean isCorrect){
         this.answersPerCategory.put(c, incrementList(this.answersPerCategory.get(c), isCorrect));
     }
-
     public void incrementAnswerPerDifficulty(Difficulties d, boolean isCorrect){
         this.answersPerDifficulty.put(d, incrementList(this.answersPerDifficulty.get(d), isCorrect));
     }
-
     public void incrementAnswerPerType(Types t, boolean isCorrect){
         this.answersPerType.put(t, incrementList(this.answersPerType.get(t), isCorrect));
     }
-
-
-
     private List<Integer> incrementList(List<Integer> value, boolean isCorrect){
         if(isCorrect) value.set(0, value.get(0) + 1);
         if(!isCorrect) value.set(1, value.get(1) + 1);
         return value;
     }
+
+
 
 
 

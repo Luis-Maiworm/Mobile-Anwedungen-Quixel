@@ -21,18 +21,17 @@ public class LoginFragment extends Fragment {
     private String[] profileNames;
     private int [] icons;
 
-    public static String TAG = "Login";
-
     private RecyclerView recyclerViewLogin;
     private ProfileRVAdapter rvAdapter;
     private GridLayoutManager gridLayoutManager;
     private View view;
-    private ImageButton closeFragment, addProfileBtn;
+    private ImageButton addProfileBtn;
 
     private AddPlayerFragment childFrag = new AddPlayerFragment();
 
     private PlayerManager pManager;
 
+    private Bundle pBundle;
 
 
     @Nullable
@@ -59,18 +58,17 @@ public class LoginFragment extends Fragment {
 
         try {
             //send to child
-            Bundle bundle2 = new Bundle();
-            bundle2.putParcelable(Constants.playerManagerConstant, pManager);
-            childFrag.setArguments(bundle2);
+            pBundle = new Bundle();
+            pBundle.putParcelable(Constants.playerManagerConstant, pManager);
+            childFrag.setArguments(pBundle);
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("funktnet");
         }
 
         recyclerViewLogin = view.findViewById(R.id.recyclerViewProfiles);
 
-        rvAdapter = new ProfileRVAdapter(getActivity(), profileNames, icons, pManager, this, childFrag);
+        rvAdapter = new ProfileRVAdapter(getActivity(), profileNames, icons, pManager, this, childFrag, pBundle);
         childFrag.setRvAdapter(rvAdapter);
 
         gridLayoutManager = new GridLayoutManager(getActivity(), 2, gridLayoutManager.VERTICAL, false);
@@ -101,7 +99,7 @@ public class LoginFragment extends Fragment {
                 addAddPlayerFrag();
             }
         } catch (NullPointerException e){
-
+            e.printStackTrace();
         }
     }
 
@@ -109,26 +107,9 @@ public class LoginFragment extends Fragment {
     @Override
     public void onDestroyView(){
         super.onDestroyView();
-
         if(view.findViewById(R.id.child_fragment_addPlayer).getVisibility() != View.GONE){
-            FragmentTransaction fT;
-            fT = getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
-            //todo check ob jedes mal aufs neue nötig (oder ob z.B. EINE transaction für alles verwendet werden kann usw
-            fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
-            fT.remove(childFrag);
-            fT.commit();
-
-
-            View b = view.findViewById(R.id.child_fragment_addPlayer);
-            view.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    b.setVisibility(View.GONE);
-                }
-            }, 300);
+            closeAddPlayerFrag();
         }
-
-
     }
 
 
@@ -136,13 +117,11 @@ public class LoginFragment extends Fragment {
         View b = view.findViewById(R.id.child_fragment_addPlayer);
         b.setVisibility(View.VISIBLE);
 
-        //todo add a NEW fragment each time its called? (atm it remembers the position if the menü and basically just reopens one all the time
         FragmentTransaction fT;
         fT = getActivity().getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
         fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
         fT.replace(R.id.child_fragment_addPlayer, childFrag);
         fT.commit();
-
     }
 
     public void closeAddPlayerFrag(){

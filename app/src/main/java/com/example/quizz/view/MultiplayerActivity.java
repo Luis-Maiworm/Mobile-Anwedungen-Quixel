@@ -104,9 +104,7 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 refresh();
-
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -175,25 +173,17 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
             case R.id.play:
                 if (flag) {
                     try {
-                        // Tries to start the game.
                         start();
-                        // Starts the Gameloop
-                        player.setFlag(flag);
-                        Wrapper wrap = new Wrapper();
-                        wrap.setqList(qList);
-                        wrap.setPlayer(player);
-                        Intent intent = new Intent(this, Gamemode_mp.class);
-                        intent.putExtra("flag", wrap);
-                        startActivity(intent);
-                    } catch (IOException | QueryException | NullPointerException e) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setTitle("Error");
-                        builder.setMessage("");
-                        builder.setPositiveButton("Okay", (dialog, id) -> {
-                        });
-                        builder.show();
+                    } catch (IOException | QueryException e) {
                         e.printStackTrace();
                     }
+                    player.setFlag(flag);
+                    Wrapper wrap = new Wrapper();
+                    wrap.setqList(qList);
+                    wrap.setPlayer(player);
+                    Intent intent = new Intent(this, Gamemode_mp.class);
+                    intent.putExtra("flag", wrap);
+                    startActivity(intent);
                 }
         }
     }

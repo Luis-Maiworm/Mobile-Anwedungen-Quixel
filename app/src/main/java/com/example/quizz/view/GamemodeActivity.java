@@ -21,6 +21,7 @@ import com.example.quizz.data.playerData.Player;
 import com.example.quizz.exceptions.QueryException;
 import com.example.quizz.gameLogic.gamemodes.IGameSettings;
 import com.example.quizz.gameLogic.gamemodes.IGamemode;
+import com.example.quizz.network.Wrapper;
 import com.example.quizz.questionManager.Question;
 import com.example.quizz.questionManager.QuestionManager;
 import java.io.IOException;
@@ -93,6 +94,10 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
         // Gets the active PlayerManager instance
         if (getIntent().hasExtra(Constants.playerConstant)) {
             currentPlayer = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
+        }
+        else if(getIntent().hasExtra("flag")) {
+            Wrapper wrap = (Wrapper) getIntent().getSerializableExtra("flag");
+            currentPlayer = wrap.getPlayer();
         }
 
 
@@ -406,12 +411,15 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
         }
         // After Multiplayer Round
         if (FLAG.equalsIgnoreCase("mp")) {
-            Intent toEndScreenMP = new Intent(this, EndscreenMPActivity.class);
+            Intent toEndScreenMP = new Intent(this, EndscreenActivity.class);
             // if flag = host putExtra flag1, score1, p1
             // if flat = server putExtra flag2
             // toEndScreenMP.putExtra("flag", currentPlayerflag);
+            toEndScreenMP.putExtra("correct", correct);
+            toEndScreenMP.putExtra("incorrect", incorrect);
             toEndScreenMP.putExtra("score", points);
             toEndScreenMP.putExtra(Constants.playerConstant, currentPlayer);
+            toEndScreenMP.putExtra("q", activeQuestions);
             finish();
             startActivity(toEndScreenMP);
         }

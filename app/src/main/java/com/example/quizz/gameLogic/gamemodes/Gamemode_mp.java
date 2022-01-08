@@ -3,6 +3,7 @@ package com.example.quizz.gameLogic.gamemodes;
 import android.os.Bundle;
 import com.example.quizz.R;
 import com.example.quizz.exceptions.QueryException;
+import com.example.quizz.network.Wrapper;
 import com.example.quizz.questionManager.Question;
 import com.example.quizz.view.GamemodeActivity;
 import java.io.IOException;
@@ -32,10 +33,8 @@ public class Gamemode_mp extends GamemodeActivity implements IGameSettings, IGam
     }
 
     public void begin() throws IOException, QueryException {
-        ArrayList<Question> questionList;
-        // QuestionManager questionManager = new QuestionManager();
-        // questionList = (ArrayList<Question>) questionManager.getApiData(10, -1, "", "");
-        // super.begin(questionList);
+        Wrapper wrap = (Wrapper) getIntent().getSerializableExtra("flag");
+        super.begin(wrap.getqList());
     }
 
     public String description() {

@@ -19,9 +19,7 @@ import java.util.UUID;
 public class BluetoothManager implements IBluetoothManager{
 
     private static final UUID MY_UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
-
     private static final String TAG = "BluetoothManager";
-
     private ArrayList<BluetoothDevice> mDevices = new ArrayList<>();
     private BluetoothDevice mDevice;
     private BluetoothConnection btConnection;
@@ -75,7 +73,7 @@ public class BluetoothManager implements IBluetoothManager{
     }
 
     @Override
-    public void visible() {            //context?
+    public void visible() {
         Log.d(TAG, ": tries to become visible for other devics");
 
         Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
@@ -124,18 +122,17 @@ public class BluetoothManager implements IBluetoothManager{
         mDevice = device;
 
         if(mDevice == null){
-            throw new BluetoothException("No device selected"); //todo richtige message?
+            throw new BluetoothException("No device selected");
         }
 
         mDevice.createBond();
         btConnection = new BluetoothConnection(c);
 
-        //todo intentfilter + receiver 4?
+
     }
 
     @Override
     public void connect() {
-        //todo add log
         //works if paired
         Log.d(TAG, ": connects to paired device");
         btConnection.startClient(mDevice, MY_UUID);
@@ -216,9 +213,6 @@ public class BluetoothManager implements IBluetoothManager{
     }
 
 
-    // add broadcast receiver to send and read methods?
-
-
     private final BroadcastReceiver mBroadcastReceiver1 = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -288,20 +282,11 @@ public class BluetoothManager implements IBluetoothManager{
                 BluetoothDevice mmDevice = intent.getParcelableExtra (BluetoothDevice.EXTRA_DEVICE);
                 if(mmDevice.getName() != null && !mDevices.contains(mmDevice)){         // checks if the name of the found bluetooth device is == null and if the list already contains the found device (avoids duplicates)
                     mDevices.add(mmDevice);
-
-                    /*
-                    if(mmDevice.getName == null){
-                        mmDevice.getName() = "";
-                    }
-                     */
-                    //todo should null names be added to the list?
                 }
 
                 Log.d(TAG, "onReceive: " + mmDevice.getName() + ": " + mmDevice.getAddress());
                 Log.d(TAG, "size of list " + mDevices.size());
 
-                //    mDeviceListAdapter = new DeviceListAdapter(context, R.layout.device_adapter_view, mBTDevices);
-                //    lvNewDevices.setAdapter(mDeviceListAdapter);
             }
         }
     };

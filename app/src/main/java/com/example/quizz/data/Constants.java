@@ -8,7 +8,7 @@ public interface Constants {
     String playerManagerConstant = "PLAYERMANAGER";
     String playerConstant = "PLAYER";
     String categoryConstant = "CATEGORY";
-    //
+    // Fragments
     String createConstant = "CREATEPLAYER";
     String renameConstant = "RENAMEPLAYER";
 

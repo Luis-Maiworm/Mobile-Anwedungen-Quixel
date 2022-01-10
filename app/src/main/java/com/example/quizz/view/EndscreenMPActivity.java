@@ -7,6 +7,12 @@ import android.widget.TextView;
 
 import com.example.quizz.R;
 
+
+/**
+ * NOT IMPLEMENTED | This Screen would replace the current Endscreen with a better
+ * Endscreen. This screen would display the Score of the other player and
+ * the Winner of the round.
+ */
 public class EndscreenMPActivity extends AppCompatActivity {
 
     private TextView finalText, scorePlayer1, scorePlayer2, winner;
@@ -19,35 +25,19 @@ public class EndscreenMPActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_endscreen_mpactivity);
-
-
-
-
     }
-
 
     private void setup() {
         finalText.findViewById(R.id.roundOverLabelMP);
         scorePlayer1.findViewById(R.id.finalScoreLabel1);
         scorePlayer2.findViewById(R.id.finalScoreLabel2);
         goBackHome.findViewById(R.id.goToHomeBtnMP);
-
-
-
     }
 
     private void receiveData() {
-
     }
-
-
-
-
-
-
 
     @Override
     public void onBackPressed() {
-
     }
 }

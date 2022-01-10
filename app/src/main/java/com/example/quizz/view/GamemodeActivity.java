@@ -30,7 +30,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 /**
- * GamemodeActivity upper class. Contains implementation of all relevant
+ * GamemodeActivity master class. Contains implementations of all relevant
  * methods and GUI Elements used in a game loop by every game mode.
  */
 public class GamemodeActivity extends AppCompatActivity implements IGameSettings, IGamemode, View.OnClickListener {
@@ -124,21 +124,21 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
         receiveQuestion();
         // Init the Category Label
         categoryLabel.setText(Categories.valueOf(categoryIdentifier).getName());
-        // Debug
-
     }
 
+    /**
+     * Alternative Begin Method for the Multiplayer Mode
+     * @param questionList already generated questions
+     */
     public void begin(ArrayList<Question> questionList) {
         FLAG = "mp";
         activeQuestions = questionList;
         receiveQuestion();
-
     }
 
 
     /**
      * Listener for all 4 answers-buttons
-     *
      * @param v current view
      */
     @SuppressLint("NonConstantResourceId")
@@ -146,7 +146,6 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.answerBtn1:
-                System.out.println("BTN-1 PRESSED");
                 if (activeQuestion.getCorrect_answer().equalsIgnoreCase(answerBtn1.getText().toString())) {
                     activeQuestion.setCorrect(true);
                     updateGUI("true");
@@ -156,7 +155,6 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
                 }
                 break;
             case R.id.answerBtn2:
-                System.out.println("BTN-2 PRESSED");
                 if (activeQuestion.getCorrect_answer().equalsIgnoreCase(answerBtn2.getText().toString())) {
                     activeQuestion.setCorrect(true);
                     updateGUI("true");
@@ -166,7 +164,6 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
                 }
                 break;
             case R.id.answerBtn3:
-                System.out.println("BTN-3 PRESSED");
                 if (activeQuestion.getCorrect_answer().equalsIgnoreCase(answerBtn3.getText().toString())) {
                     activeQuestion.setCorrect(true);
                     updateGUI("true");
@@ -176,7 +173,6 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
                 }
                 break;
             case R.id.answerBtn4:
-                System.out.println("BTN-4 PRESSED");
                 if (activeQuestion.getCorrect_answer().equalsIgnoreCase(answerBtn4.getText().toString())) {
                     activeQuestion.setCorrect(true);
                     updateGUI("true");
@@ -253,11 +249,9 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
         if (questionType.equalsIgnoreCase(Types.TRUEFALSE.getName())) {
             answerBtn3.setVisibility(View.GONE);
             answerBtn4.setVisibility(View.GONE);
-            System.out.println("UPDATE BUTTONS: BOOLEAN");
         } else if (questionType.equalsIgnoreCase(Types.MULTIPLECHOICE.getName())) {
             answerBtn3.setVisibility(View.VISIBLE);
             answerBtn4.setVisibility(View.VISIBLE);
-            System.out.println("UPDATE BUTTONS: MULTIPLE");
         }
     }
 
@@ -270,13 +264,13 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
         if (questionType.equalsIgnoreCase(Types.MULTIPLECHOICE.getName())) {
             activeAnswers = activeQuestion.getAllAnswers();
             randomOrder();
-            System.out.println("SCATTERING FOR MULTIPLE CHOICE");
-        } else if (questionType.equalsIgnoreCase(Types.TRUEFALSE.getName())) {
+        }
+        else if (questionType.equalsIgnoreCase(Types.TRUEFALSE.getName())) {
             activeAnswers = new ArrayList<>(Arrays.asList("TRUE", "FALSE"));
             answerBtn1.setText(activeAnswers.get(0));
             answerBtn2.setText(activeAnswers.get(1));
-            System.out.println("SCATTERING FOR MULTIPLE BOOLEAN");
-        } else {
+        }
+        else {
             Toast.makeText(this, "An Error occurred", Toast.LENGTH_SHORT).show();
         }
     }
@@ -339,7 +333,6 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
      */
     public int interpretIncomingData() {
         if (!this.categoryIdentifier.equals("No Data Found")) {
-            System.out.println(Categories.valueOf(categoryIdentifier).getId());
             return Categories.valueOf(categoryIdentifier).getId();
         }
         return -2;
@@ -373,7 +366,6 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
         // Only calls the API if there are no stored questions
         if (activeQuestions == null)
             try {
-                System.out.println("API CALL: " + questionType + " " + questionValue);
                 callAPI(interpretIncomingData(), questionValue, questionType, questionDifficulty);
             } catch (IOException | QueryException e) {
                 e.printStackTrace();
@@ -383,7 +375,6 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
             activeQuestion = activeQuestions.get(questionCounter);
             questionCounter++;
             questionType = activeQuestion.getTypeString();
-            System.out.println("Updated Questiontype to: " + questionType);
             updateButtons();
             updateGUI("question");
         }
@@ -412,9 +403,6 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
         // After Multiplayer Round
         if (FLAG.equalsIgnoreCase("mp")) {
             Intent toEndScreenMP = new Intent(this, EndscreenActivity.class);
-            // if flag = host putExtra flag1, score1, p1
-            // if flat = server putExtra flag2
-            // toEndScreenMP.putExtra("flag", currentPlayerflag);
             toEndScreenMP.putExtra("correct", correct);
             toEndScreenMP.putExtra("incorrect", incorrect);
             toEndScreenMP.putExtra("score", points);
@@ -431,7 +419,7 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
     public void startTimer() {
         time = 0;
         timerBar.setProgress(time);
-        gameTimer = new CountDownTimer(10000, 1000) {
+        gameTimer = new CountDownTimer(20000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 updateProgressbar();
@@ -455,7 +443,7 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
      * @see CountDownTimer#onTick(long)
      */
     private void updateProgressbar() {
-        time = time + 10;
+        time = time + 5;
         timerBar.setProgress(time);
     }
 
@@ -484,7 +472,6 @@ public class GamemodeActivity extends AppCompatActivity implements IGameSettings
         super.onDestroy();
         if (gameTimer != null) {
             gameTimer.cancel();
-            System.out.println("DESTROYED");
         }
     }
 

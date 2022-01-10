@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Quixels</string>
-    <string name="gameTitle">Quixels</string>
+    <string name="app_name">Quixel</string>
+    <string name="gameTitle">Quixel</string>
     <string name="SinglePlayerBtnText">SINGLEPLAYER</string>
     <string name="MultiPlayerBtnText">MULTIPLAYER</string>
     <string name="StatsBtnText">STATISTICS</string>
@@ -66,7 +66,6 @@
 
     <string-array name="gamemode_names">
         <item>Quickplay Mode</item>
-        <item>Endless Mode</item>
         <item>Custom Mode</item>
     </string-array>
 

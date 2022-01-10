@@ -5,7 +5,7 @@ public enum TriviaURL {
     /**
      * First part of the Question call URL.
      */
-    BASICURL("https://opentdb.com/api.php?amount="),            //todo evtl als konstante in questionmanager
+    BASICURL("https://opentdb.com/api.php?amount="),
     /**
      * Get a new Token.
      */                                           //todo -||-

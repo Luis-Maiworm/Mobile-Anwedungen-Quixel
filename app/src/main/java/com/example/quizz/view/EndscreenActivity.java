@@ -42,9 +42,6 @@ public class EndscreenActivity extends AppCompatActivity implements View.OnClick
         getData();
         setup();
         analyseGamePerformance();
-
-
-
     }
 
     /**
@@ -77,14 +74,10 @@ public class EndscreenActivity extends AppCompatActivity implements View.OnClick
      */
     private void getData() {
         // Get Data
-
         correct = getIntent().getIntExtra("correct", 0);
         incorrect = getIntent().getIntExtra("incorrect", 0);
-
         player = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
-        System.out.println("PLAYER END" + player.getPlayerName() + player.getStats().getTotalAnswers());
         answeredQuestions = (ArrayList<Question>) getIntent().getSerializableExtra("q");
-
     }
 
     /**
@@ -94,10 +87,7 @@ public class EndscreenActivity extends AppCompatActivity implements View.OnClick
     private void analyseGamePerformance() {
         statisticsAnalyser = new StatisticsAnalyser(player);
         statisticsAnalyser.afterRound(answeredQuestions);
-        System.out.println("PLAYER END" + player.getPlayerName() + player.getStats().getTotalAnswers());
     }
-
-
 
     @SuppressLint("NonConstantResourceId")
     @Override

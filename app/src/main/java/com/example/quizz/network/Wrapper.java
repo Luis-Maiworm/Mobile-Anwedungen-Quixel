@@ -7,6 +7,9 @@ import java.util.ArrayList;
 
 public class Wrapper implements Serializable {
 
+    private Player player;
+    private ArrayList<Question> qList = new ArrayList<>();
+
     public Player getPlayer() {
         return player;
     }
@@ -14,8 +17,6 @@ public class Wrapper implements Serializable {
     public void setPlayer(Player player) {
         this.player = player;
     }
-
-    Player player;
 
     public ArrayList<Question> getqList() {
         return qList;
@@ -25,5 +26,5 @@ public class Wrapper implements Serializable {
         this.qList = qList;
     }
 
-    ArrayList<Question> qList = new ArrayList<>();
+
 }

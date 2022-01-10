@@ -14,25 +14,22 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.example.quizz.R;
 import com.example.quizz.data.Constants;
 import com.example.quizz.data.gameData.Categories;
 import com.example.quizz.data.playerData.Player;
 import com.example.quizz.data.playerData.Statistics;
 import com.example.quizz.gameLogic.PlayerManager;
-import com.example.quizz.gameLogic.gamemodes.Gamemode_mp;
 import com.example.quizz.view.fragments.LoginFragment;
 import com.example.quizz.view.fragments.ShowPlayerFragment;
 
 
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button openSingleplayer, openMultiplayer, openStats, saveStats, resetStats, test;
+    private Button openSingleplayer, openMultiplayer, openStats, saveStats, resetStats;
     private ImageButton openProfileChooser;
     private ImageButton openPlayerView;
     private TextView playerName;
@@ -54,22 +51,19 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         setUpOnClicks();
         checkForNewData();
         loadData();
-
-        System.out.println(" ON CREATE Current Player: " + currentPlayer.getPlayerID() + " " + currentPlayer.getPlayerName() + "STATS" + currentPlayer.getStats().getTotalAnswers());
-        System.out.println(" ON CREATE P MANAGER Current Player: " + pManager.getCurrentPlayer().getPlayerID() + " " + pManager.getCurrentPlayer().getPlayerName() + "STATS" + pManager.getCurrentPlayer().getStats().getTotalAnswers());
-
-
     }
 
     /**
      * Sets variables and initializes the View
      */
     public void initVariables() {
-        pref = getSharedPreferences(Constants.appConstant, 0);      //todo replace with file Strings -> set to "MYAPP" -> or app ID
+        pref = getSharedPreferences(Constants.appConstant, 0);
 
         // **************Debug Buttons**************
         saveStats = findViewById(R.id.saveStats);
         resetStats = findViewById(R.id.resetStats);
+        saveStats.setVisibility(View.INVISIBLE);
+        resetStats.setVisibility(View.INVISIBLE);
         //******************************************
         // Buttons
         openSingleplayer = findViewById(R.id.singleplayerBtn);
@@ -80,7 +74,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         openPlayerView = findViewById(R.id.mainProfileIcon);
 
 
-        test = findViewById(R.id.TEST);
+
 
 
     }
@@ -97,13 +91,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             currentPlayer = (Player) getIntent().getSerializableExtra(Constants.playerConstant);
             pManager.saveCurrentPlayer(currentPlayer, currentPlayer.getPlayerName());
             pManager.setCurrentPlayer(currentPlayer);
-            // pManager.chooseCurrentPlayer(currentPlayer.getPlayerName());
-            // pManager.saveCurrentPlayer(currentPlayer, currentPlayer.getPlayerID());
-
-            System.out.println(" CHECK FOR DATA Current Player: " + currentPlayer.getPlayerID() + " " + currentPlayer.getPlayerName() + "STATS" + currentPlayer.getStats().getTotalAnswers());
-            System.out.println(" CHECK FOR DATA P MANAGER Current Player: " + pManager.getCurrentPlayer().getPlayerID() + " "
-                    + pManager.getCurrentPlayer().getPlayerName() + "STATS" + pManager.getCurrentPlayer().getStats().getTotalAnswers());
-            System.out.println("WEIRDOOOOO CHECK DATA" + pManager.getProfiles().getPlayerWithName(pManager.getProfiles().getCurrentPlayer()));
             saveStats();
         } else {
             Toast.makeText(this, "No Data Found", Toast.LENGTH_SHORT).show();
@@ -115,7 +102,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
      */
     private void loadData() {
         //Loads the data from the playerManager
-        pManager.loadFromJson(pref.getString(Constants.statsConstant, ""));      //todo replace with string file -> change to "stats"
+        pManager.loadFromJson(pref.getString(Constants.statsConstant, ""));
         // when there are no profiles (JSON empty) a new profile will be created -> opens the relevant fragments
         if (pManager.getProfiles() == null) {
             openProfileChooser.setImageResource(R.drawable.ic_baseline_close_24);
@@ -123,24 +110,11 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             openFragmentFirstTime();
             // Updates instances
             pManager.setCurrentPlayer(currentPlayer);
-            //pManager.saveCurrentPlayer(currentPlayer, currentPlayer.getPlayerID());
             currentPlayer.setStats(new Statistics());
-
-
             // When there is at least one profile, the view gets updated for the current player, which is currently saved in the SharedPreferences
         } else {
-            System.out.println("LOADING ...");
-
             pManager.setCurrentPlayer(pManager.getProfiles().getPlayerWithName(pManager.getProfiles().getCurrentPlayer()));
-            System.out.println("WEIRDOOOOO" + pManager.getProfiles().getCurrentPlayer());
-            System.out.println("WEIRDOOOOO" + pManager.getProfiles().getPlayerWithName(pManager.getProfiles().getCurrentPlayer()));
-            System.out.println("WEIRDOOOOO LOAD" + pManager.getProfiles().getPlayerWithName(pManager.getProfiles().getCurrentPlayer()));
             currentPlayer = pManager.getCurrentPlayer();
-
-            //System.out.println(" LOADING Current Player: " + currentPlayer.getPlayerID() + " " + currentPlayer.getPlayerName() + "STATS" + currentPlayer.getStats().getTotalAnswers());
-            // System.out.println(" LOADING P MANAGER Current Player: " + pManager.getCurrentPlayer().getPlayerID() + " "
-            //  + pManager.getCurrentPlayer().getPlayerName() + "STATS" + pManager.getCurrentPlayer().getStats().getTotalAnswers());
-
             playerName.setText(currentPlayer.getPlayerName());
             openPlayerView.setImageResource(currentPlayer.getPlayerIcon());
 
@@ -162,7 +136,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
      * When the fragments are opened for the first time
      */
     private void openFragmentFirstTime() {
-        // wird in loadData aufgerufen
         FragmentTransaction fT = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
         fT.setCustomAnimations(R.anim.scale_up, R.anim.scale_down);
         fT.replace(R.id.FrameLayout, choosePlayerFragment);
@@ -180,11 +153,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         // openSettings.setOnClickListener(this);
         openProfileChooser.setOnClickListener(this);
         openPlayerView.setOnClickListener(this);
-
         saveStats.setOnClickListener(this);
         resetStats.setOnClickListener(this);
-
-        test.setOnClickListener(this);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -218,23 +188,10 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.saveStats:
                 saveStats();
-                System.out.println("SAVED");
                 break;
             case R.id.resetStats:
                 resetStats();
                 break;
-
-
-            case R.id.TEST:
-                /*
-                Intent toMPTEST = new Intent(MainMenuActivity.this, Gamemode_mp.class);
-                toMPTEST.putExtra(Constants.playerConstant, pManager.getCurrentPlayer());
-                startActivity(toMPTEST);
-
-                 */
-                loadData();
-
-
             default:
                 break;
         }
@@ -243,7 +200,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     /**
      * Starts the Singleplayer Mode
      */
-    public void startSingleplayer() {
+    private void startSingleplayer() {
         saveStats();
         Intent toSingleplayer = new Intent(MainMenuActivity.this, ChooseGamemodeActivity.class);
         toSingleplayer.putExtra(Constants.playerConstant, pManager.getCurrentPlayer());
@@ -253,7 +210,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     /**
      * Starts the Multiplayer Mode
      */
-    public void startMultiplayer() {
+    private void startMultiplayer() {
         saveStats();
         Intent toMultiplayer = new Intent(MainMenuActivity.this, MultiplayerActivity.class);
         toMultiplayer.putExtra(Constants.playerConstant, pManager.getCurrentPlayer());
@@ -263,7 +220,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     /**
      * Starts the Stats Screen
      */
-    public void startStats() {
+    private void startStats() {
         Intent toStats = new Intent(MainMenuActivity.this, StatisticsActivity.class);
         // statisticsSimulation(); // Integrationstest
         currentPlayer = pManager.getCurrentPlayer();
@@ -275,19 +232,18 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
      * SharedPreferences:
      * Saves the stats of the current player with SharedPreferences
      */
-    public void saveStats() {
+    private void saveStats() {
         ed = pref.edit();
         ed.putString(Constants.statsConstant, pManager.saveToJson());
         ed.apply();
-
-        System.out.println("WEIRDOOOOO SAVED" + pManager.getProfiles().getPlayerWithName(pManager.getProfiles().getCurrentPlayer()));
     }
 
     /**
+     * DEBUG UI Methode
      * SharedPreferences:
      * Resets all stats
      */
-    public void resetStats() {
+    private void resetStats() {
         ed = pref.edit();
         pManager.getCurrentPlayer().setStats(new Statistics());
         ed.putString(Constants.statsConstant, pManager.saveToJson());
@@ -353,9 +309,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         }
         fT.replace(R.id.FrameLayout, frag);
         fT.commit();
-
-        //todo add boolean to determine if its connected to the button
-
         ImageViewAnimatedChangeIn(this, openProfileChooser, R.drawable.ic_baseline_close_24);
     }
 
@@ -499,7 +452,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
-        // saveStats();
     }
 
     @Override

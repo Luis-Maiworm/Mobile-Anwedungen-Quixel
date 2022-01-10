@@ -20,13 +20,13 @@ public class ChooseGamemodeActivity extends AppCompatActivity {
     // Gamemode Names
     private String[] names;
     // Gamemode Icons
-    private final int[] icons = {R.drawable.cat_icon10_computer, R.drawable.cat_icon10_computer, R.drawable.cat_icon10_computer};
+    private final int[] icons = {R.drawable.cat_icon10_computer, R.drawable.cat_icon10_computer};
     // RV Setup
-    RecyclerView recyclerViewCategory;
-    CategoryRVAdapter rvAdapter;
-    GridLayoutManager gridLayoutManager;
+    private RecyclerView recyclerViewCategory;
+    private CategoryRVAdapter rvAdapter;
+    private GridLayoutManager gridLayoutManager;
     // Player instance
-    Player activePlayer;
+    private Player activePlayer;
     // Data Utility
     private TransferUtility utility;
 

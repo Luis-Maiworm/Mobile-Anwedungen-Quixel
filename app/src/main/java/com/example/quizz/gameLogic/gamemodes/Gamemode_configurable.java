@@ -6,10 +6,7 @@ import com.example.quizz.R;
 import com.example.quizz.data.gameData.Difficulties;
 import com.example.quizz.data.gameData.Types;
 import com.example.quizz.view.GamemodeActivity;
-
-import java.util.Locale;
 import java.util.Objects;
-
 
 public class Gamemode_configurable extends GamemodeActivity implements IGameSettings {
 
@@ -31,11 +28,8 @@ public class Gamemode_configurable extends GamemodeActivity implements IGameSett
     public void begin() {
         // Gets the data
         String difficulty = getIntent().getStringExtra("difficulty");
-        System.out.println("DIFFI" + difficulty);
         String type = getIntent().getStringExtra("type");
-        System.out.println("TYPE" + type);
         int value = getIntent().getIntExtra("value", 10);
-        System.out.println("VALUE: " + value);
         // Starts the custom game
         super.begin(getTypeEnumByString(type), Objects.requireNonNull(getDifficultyEnumByString(difficulty)).toUpperCase(), value);
     }

@@ -1,23 +1,17 @@
 package com.example.quizz.gameLogic;
-import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.example.quizz.data.playerData.Player;
 import com.google.gson.Gson;
 import com.example.quizz.data.playerData.Profile;
 import com.example.quizz.data.playerData.Statistics;
-import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- * The StatisticsManager includes methods and operations acting as the main interface between the GUI and the GameLogic.
+ * The PlayerManager includes methods and operations acting as the main interface between the GUI and the GameLogic.
  * It contains the original {@link Profile} instance. It can load and save the state of the Profile. It can set
  * the currentPlayer which will be the {@link Player} to operate on during the whole game process.
  */
-
-
-//todo StatisticsManager ->
 
 public class PlayerManager implements Parcelable {
 
@@ -97,7 +91,8 @@ public class PlayerManager implements Parcelable {
 
 
     /**
-     *
+     * Creates a new Player and adds it to the profiles
+     * @param player New Player
      */
     public void createNewPlayer(Player player) throws Exception {
         int code = this.profiles.nameIsValid(player.getPlayerName());

@@ -14,18 +14,18 @@ import com.example.quizz.R;
 import com.example.quizz.data.Constants;
 import com.example.quizz.data.TransferUtility;
 import com.example.quizz.data.playerData.Player;
-import com.example.quizz.gameLogic.PlayerManager;
+
 
 public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.CategoryViewHolder> {
 
-    String[] names;
-    int[] icons;
-    Context context;
-    LayoutInflater inflater;
-    String identifier;
-    String currentGamemode;
-    TransferUtility transferUtility;
-    Player activePlayer;
+    private String[] names;
+    private int[] icons;
+    private Context context;
+    private LayoutInflater inflater;
+    private String identifier;
+    private String currentGamemode;
+    private TransferUtility transferUtility;
+    private Player activePlayer;
 
 
     public CategoryRVAdapter(Context context, String[] names, int[] icons, String identifier, TransferUtility transferUtility) {

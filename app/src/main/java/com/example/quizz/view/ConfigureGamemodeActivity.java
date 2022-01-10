@@ -131,7 +131,6 @@ public class ConfigureGamemodeActivity extends AppCompatActivity implements Adap
         builder.setPositiveButton(R.string.quitYes, (dialog, id) -> {
             try {
                 value = checkQuestionValue();
-                System.out.println("VALUE: " + value);
             } catch (IOException | QueryException e) {
                 e.printStackTrace();
             }
@@ -165,9 +164,6 @@ public class ConfigureGamemodeActivity extends AppCompatActivity implements Adap
      */
     private int checkQuestionValue() throws IOException, QueryException {
         List<Question> questionList;
-        System.out.println(Categories.valueOf(getIntent().getStringExtra("category").toUpperCase()).getId());
-        System.out.println(getDifficultyEnumByString(difficulty).toUpperCase());
-        System.out.println(getTypeEnumByString(type).toUpperCase());
         questionList = questionManager.getApiData(50, Categories.valueOf(getIntent().getStringExtra("category").toUpperCase()).getId(), getDifficultyEnumByString(difficulty).toLowerCase(), getTypeEnumByString(type).toLowerCase());
         return questionList.size();
     }

@@ -4,7 +4,6 @@ import com.example.quizz.data.gameData.Categories;
 import com.example.quizz.data.playerData.Player;
 import com.example.quizz.data.playerData.Statistics;
 import com.example.quizz.questionManager.Question;
-import com.example.quizz.questionManager.QuestionManager;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -22,14 +21,11 @@ import java.util.Map;
  * The class is independent and can be created everytime it's needed. Doesn't need to get passed through the whole lifecycle!
  *
  */
-
 public class StatisticsAnalyser {
 
     Statistics s;
-
     public final boolean ASC = true;
     public final boolean DESC = false;
-
     HashMap<Categories, Double> categoriesPercentageList = new HashMap<>();
 
     /**
@@ -70,7 +66,6 @@ public class StatisticsAnalyser {
         }
 
 
-
     /**
      *
      * @return percentage of right answers of ALL categories.
@@ -95,12 +90,19 @@ public class StatisticsAnalyser {
                 categoriesPercentageList.put(c, ratio);
             }
             else {
-                if (!Double.isNaN(ratio)) categoriesPercentageList.put(c, ratio);           // if the ratio is NOT A NUMBER, put the value+category in the map -> gives us a list with every category  used
+                // if the ratio is NOT A NUMBER, put the value+category in the map -> gives us a list with every category  used
+                if (!Double.isNaN(ratio)) categoriesPercentageList.put(c, ratio);
             }
         }
         return returnSortedList(categoriesPercentageList, order);
     }
 
+    /**
+     * Returns a sorted category list
+     * @param unsortedMap old map
+     * @param order ascending or descending
+     * @return sorted category list
+     */
     private static HashMap<Categories, Double> returnSortedList(HashMap<Categories, Double> unsortedMap, boolean order){
         List<Map.Entry<Categories, Double>> list = new LinkedList<Map.Entry<Categories, Double>>(unsortedMap.entrySet());
 

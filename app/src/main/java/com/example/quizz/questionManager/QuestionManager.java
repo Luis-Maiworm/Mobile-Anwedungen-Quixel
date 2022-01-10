@@ -17,16 +17,12 @@ import static java.lang.String.valueOf;
 /**
  * {@code QuestionManager} manages all API calls and data types.
  */
-
-//TODO: Decoden von Sonderzeichen. !!!!!
-
 public class QuestionManager implements IQuestionManager {
 
     private final Gson gson = new Gson();
 
 
     public QuestionManager(){
-
     }
 
 
@@ -95,7 +91,6 @@ public class QuestionManager implements IQuestionManager {
      *
      */
 
-    //TODO Abspeicherung von Token - und Code Auswertung = evtl. resetten
 
     /**
      * Generates a new {@link SessionToken}.
@@ -176,7 +171,6 @@ public class QuestionManager implements IQuestionManager {
 
         return qList;
     }
-    //todo whitespaces mit trim(deprecated) oder strip(aktueller). Evtl noch special split(regular expression) -> prog3 beleg
 
 
     /**
@@ -247,7 +241,7 @@ public class QuestionManager implements IQuestionManager {
      * @param jsonString will be generated from the {@link #convertURL(URL)} method.
      * @return {@link QuestionData} object, storing informations from the jsonString.
      */
-    public QuestionData convertJsonString(String jsonString) {                   // jsonString -> Question Objekt
+    public QuestionData convertJsonString(String jsonString) {                   // jsonString -> Question object
         return gson.fromJson(jsonString, QuestionData.class);
     }
 

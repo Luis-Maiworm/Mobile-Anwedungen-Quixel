@@ -132,7 +132,7 @@ public class MultiplayerActivity extends AppCompatActivity implements View.OnCli
 
     List<BluetoothDevice> prevState = new ArrayList<>();
     // sollte eigentlich an allen neu hinzugekommenen positionen updaten / notifien...
-    public void notifyAlgo(){
+    private void notifyAlgo(){
         List<BluetoothDevice> temp = bManager.getmDevices();
 
         for(int i = prevState.size(); prevState.size() < temp.size(); i++){

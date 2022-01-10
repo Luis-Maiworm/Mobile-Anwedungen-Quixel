@@ -20,16 +20,7 @@ public class Question implements Serializable {
     private String question;
     private String correct_answer;
     private List<String> incorrect_answers;
-    public boolean isCorrect;
-    public String getCategoryString(){
-        return this.category;
-    }
-    public String getTypeString(){
-        return this.type;
-    }
-    public String getDifficultyString(){
-        return this.difficulty;
-    }
+    private boolean isCorrect;
 
     public Categories getCategory() {
         for(Categories c : Categories.values()){
@@ -39,6 +30,7 @@ public class Question implements Serializable {
         }
         return null;
     }
+
     public void setCategory(String category) {
         this.category = category;
     }
@@ -51,6 +43,7 @@ public class Question implements Serializable {
         }
         return null;
     }
+
     public void setType(String type) {
         this.type = type;
     }
@@ -63,6 +56,7 @@ public class Question implements Serializable {
         }
         return null;
     }
+
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
     }
@@ -70,6 +64,7 @@ public class Question implements Serializable {
     public String getQuestion() {
         return question;
     }
+
     public void setQuestion(String question) {
         this.question = question;
     }
@@ -77,8 +72,21 @@ public class Question implements Serializable {
     public String getCorrect_answer() {
         return correct_answer;
     }
+
     public void setCorrect_answer(String correct_answer) {
         this.correct_answer = correct_answer;
+    }
+
+    public String getCategoryString(){
+        return this.category;
+    }
+
+    public String getTypeString(){
+        return this.type;
+    }
+
+    public String getDifficultyString(){
+        return this.difficulty;
     }
 
     public ArrayList<String> getAllAnswers() {
@@ -92,6 +100,7 @@ public class Question implements Serializable {
     public List<String> getIncorrect_answers() {
         return incorrect_answers;
     }
+
     public void setIncorrect_answers(List<String> incorrect_answers) {
         this.incorrect_answers = incorrect_answers;
     }

@@ -29,9 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:backgroundTint="#2C7B83"
-
         android:layoutAnimation="@anim/layout_animation"
-
         android:text="@string/SinglePlayerBtnText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,11 +40,9 @@
     <Button
         android:id="@+id/multiplayerBtn"
         android:layout_width="wrap_content"
-
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:backgroundTint="#2C7B83"
-
         android:text="@string/MultiPlayerBtnText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -55,8 +51,6 @@
     <Button
         android:id="@+id/statsBtn"
         android:layout_width="wrap_content"
-
-
         android:layout_height="wrap_content"
         android:backgroundTint="#2C7B83"
         android:text="@string/StatsBtnText"
@@ -69,8 +63,6 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/FrameLayout"
-
-
         android:layout_width="331dp"
         android:layout_height="533dp"
         android:layoutAnimation="@anim/layout_animation"
@@ -123,6 +115,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
+
     <Button
         android:id="@+id/saveStats"
         android:layout_width="wrap_content"
@@ -136,18 +129,6 @@
         app:layout_constraintTop_toBottomOf="@+id/gameTitle"
         app:layout_constraintVertical_bias="0.178" />
 
-    <Button
-        android:id="@+id/TEST"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="25dp"
-        android:text="TEST"
-        app:layout_constraintBottom_toTopOf="@+id/FrameLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gameTitle"
-        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/resetStats"

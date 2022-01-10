@@ -18,26 +18,19 @@ import java.nio.charset.Charset;
 import java.util.UUID;
 
 public class BluetoothConnection {
+
     private static final String TAG = "BluetoothConnection";
     private static final String NAME = "Quixel";
     private static final UUID MY_UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");    // todo ?
-
     private final BluetoothAdapter bluetoothAdapter;
     Context mContext;
-
     private AcceptThread mAcceptThread;
-
     private ConnectThread mConnectThread;
     private BluetoothDevice mmDevice;
     private UUID deviceUUID;
     ProgressDialog mProgressDialog;
     Wrapper wrap;
     private ConnectedThread mConnectedThread;
-
-    public String getIncomingMessage() {
-        return this.incomingMessage;
-    }
-
     String incomingMessage;
 
     private ObjectInputStream ois;
@@ -52,6 +45,9 @@ public class BluetoothConnection {
 
     public Wrapper getWrapper(){
         return this.wrap;
+    }
+    public String getIncomingMessage() {
+        return this.incomingMessage;
     }
 
     private class AcceptThread extends Thread {
@@ -94,7 +90,7 @@ public class BluetoothConnection {
                 connected(socket, mmDevice);
 
                 try {
-                    mmServerSocket.close();     //todo ? necesary?
+                    mmServerSocket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -217,7 +213,6 @@ public class BluetoothConnection {
     }
 
 
-
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
@@ -251,7 +246,6 @@ public class BluetoothConnection {
 
 
             // this code should be executed, if its determined what format ur reading from... if its an object, this code should be executed
-            // or: execute it always. it doesnt change the way
             try{
                 oos = new ObjectOutputStream(mmOutStream);
                 oos.flush();
@@ -262,9 +256,6 @@ public class BluetoothConnection {
                 Log.d(TAG, e.getMessage());
                 e.printStackTrace();
             }
-
-            //todo another stream (object in/output stream)
-            //todo switch after Object type (parameter), so the program can send strings, bytes OR objects as it pleases -> generic
         }
 
 
@@ -277,31 +268,11 @@ public class BluetoothConnection {
             while(true){
 
                 try{
-
-
-                    //todo check how long this while is being executed... -> check hows it acting (is it consistently reading?
-                    // and if it read some bytes, and some more are being added, what happens?
-                    // test it.
                     bytes = mmInStream.read(buffer);
                     incomingMessage = new String(buffer, 0, bytes);
 
-
-
-                    System.out.println("Nachricht"+incomingMessage);
-
-/*
-                    List<Question> questionList = new ArrayList<>();
-                    Wrapper wrap = new Wrapper();
-                    try {
-                        wrap = (Wrapper) ois.readObject();
-                        System.out.println("liste" + wrap.getqList().get(0).getQuestion());
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-*/
                     try{
                         wrap = (Wrapper) deserialize(buffer);
-                        System.out.println("question reading:::::::: " + wrap.getqList().get(0).getQuestion());
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }
